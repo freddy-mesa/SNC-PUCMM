@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 69fd8084ee02f124a99f1c0d09326fa3
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - Object_to_rotate: {fileID: 101140, guid: fcf4291d76e35794d9c7162a4091437c, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
