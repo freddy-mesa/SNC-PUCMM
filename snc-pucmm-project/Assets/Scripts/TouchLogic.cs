@@ -4,7 +4,6 @@ using System.Collections;
 public class TouchLogic : MonoBehaviour
 {
 	public static int currentTouch = 0;
-	public static bool isZooming = false;
 	private Ray ray;
 	private RaycastHit rayHitInfo = new RaycastHit();
 
@@ -23,7 +22,7 @@ public class TouchLogic : MonoBehaviour
 				currentTouch = i;
 
 				//executes this code for current touch (i) on screen
-				if(this.guiTexture != null && (this.guiTexture.HitTest(Input.GetTouch(i).position)))
+				if(this.gameObject != null && (this.guiText.HitTest(Input.GetTouch(i).position)))
 				{
 					//if current touch hits our guitexture, run this code
 					if(Input.GetTouch(i).phase == TouchPhase.Began)

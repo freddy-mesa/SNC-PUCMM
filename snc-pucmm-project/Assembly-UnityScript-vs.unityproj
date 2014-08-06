@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\AccessDB.js" />
-     <Compile Include="Assets\Scripts\ModelRotation.js" />
      <Compile Include="Assets\Scripts\ScriptDB.js" />
      <None Include="Assets\NGUI\Examples\Shaders\Unlit - Depth Cutout.shader" />
      <None Include="Assets\NGUI\ReadMe - 3.6.8.txt" />

@@ -181,9 +181,10 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
      <Compile Include="Assets\Scripts\AxeManager.cs" />
+     <Compile Include="Assets\Scripts\CameraMovement.cs" />
+     <Compile Include="Assets\Scripts\CameraZoomRotation.cs" />
      <Compile Include="Assets\Scripts\GPSManager.cs" />
-     <Compile Include="Assets\Scripts\PinchZoom.cs" />
-     <Compile Include="Assets\Scripts\SwipeRotation.cs" />
+     <Compile Include="Assets\Scripts\SncPucmmUtils.cs" />
      <Compile Include="Assets\Scripts\TapTouch.cs" />
      <Compile Include="Assets\Scripts\TouchLogic.cs" />
      <None Include="Assets\NGUI\Examples\Shaders\Unlit - Depth Cutout.shader" />

@@ -21,15 +21,15 @@ public class GPSManager : MonoBehaviour {
 	const string CAMARA_NAME_1 = "Vista_1er_Persona";
 	const string CAMARA_NAME_2 = "Vista_3er_Persona";
 
-	float latitude;
-	float longitude;
-	float altitude;
+	float latitude = 0f;
+	float longitude = 0f;
+	//float altitude;
 
 	AndroidJavaClass gpsActivityJavaClass;
 
 	void Start () {
-		AndroidJNI.AttachCurrentThread();
-		gpsActivityJavaClass = new AndroidJavaClass("com.test.app.GPSTest");
+		//AndroidJNI.AttachCurrentThread();
+		//gpsActivityJavaClass = new AndroidJavaClass("com.test.app.GPSTest");
 
 		lblAltitude.text = "Altitude: 0";
 		lblLongitude.text = "Longitude: 0";
@@ -37,9 +37,9 @@ public class GPSManager : MonoBehaviour {
 	}
 
 	void Update() {
-		latitude = gpsActivityJavaClass.CallStatic<float>("GetLatitude");
-		longitude = gpsActivityJavaClass.CallStatic<float>("GetLongitude");
-		altitude = gpsActivityJavaClass.CallStatic<float>("GetAltitude");
+		//latitude = gpsActivityJavaClass.CallStatic<float>("GetLatitude");
+		//longitude = gpsActivityJavaClass.CallStatic<float>("GetLongitude");
+		//altitude = gpsActivityJavaClass.CallStatic<float>("GetAltitude");
 		//var accuracy = gpsActivityJavaClass.CallStatic<float>("GetAccuracy");
 
 		//longitude = -70.684535f;
