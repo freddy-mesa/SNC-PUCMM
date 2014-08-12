@@ -1,12 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class GPSManager : MonoBehaviour {
-	public UILabel lblAltitude;
-	public UILabel lblLongitude;
-	public UILabel lblLatitude;
-	public UILabel lblComponentX;
-	public UILabel lblComponentZ;
+	public TextMesh lblAltitude;
+	public TextMesh lblLongitude;
+	public TextMesh lblLatitude;
+	public TextMesh lblComponentX;
+	public TextMesh lblComponentZ;
 
 	public float planeAxeZ;
 	public float planeAxeX;
@@ -23,7 +23,7 @@ public class GPSManager : MonoBehaviour {
 
 	float latitude = 0f;
 	float longitude = 0f;
-	//float altitude;
+	float altitude = 0f;
 
 	AndroidJavaClass gpsActivityJavaClass;
 
@@ -48,7 +48,7 @@ public class GPSManager : MonoBehaviour {
 		//planeAxeX = ORIGEN_LON + Mathf.Abs (ORIGEN_LON - longitude);
 		//planeAxeY = ORIGEN_LAT + Mathf.Abs (ORIGEN_LAT - latitude);
 
-		//lblAltitude.text = "Altitude: " + altitude.ToString ();
+		lblAltitude.text = "Altitude: " + altitude.ToString ();
 		lblLongitude.text = "Longitude: " + longitude.ToString ();
 		lblLatitude.text = "Latitude: " + latitude.ToString ();
 
@@ -76,19 +76,10 @@ public class GPSManager : MonoBehaviour {
 			planeAxeZ = totalMetrosLargo - planeAxeZ;
 		}
 
-		lblComponentX.text = planeAxeX.ToString();
-		lblComponentZ.text = planeAxeZ.ToString();
+		lblComponentX.text = "Pos X: " + planeAxeX.ToString();
+		lblComponentZ.text = "Pos Z: " + planeAxeZ.ToString();
 
-		planeAxeX *= 0.0015625f;
-		planeAxeZ *= 0.0015625f;
-
-		character.transform.position = new Vector3(
-			planeAxeX, 0.1f * 0.0015625f, planeAxeZ
-		);
-
-		character.transform.eulerAngles = new Vector3(
-			AxeManager.positionAxeX, AxeManager.positionAxeY, AxeManager.positionAxeZ
-		);
+		character.transform.position = new Vector3(planeAxeX, 0.1f, planeAxeZ);
 		
 		if(this.name.Equals("Vista_1er_Persona"))
 		{
@@ -114,12 +105,9 @@ public class GPSManager : MonoBehaviour {
 		var componentAxeX = Distance(ORIGEN_LAT,ORIGEN_LON,ORIGEN_LAT,longitude);
 		return (float)componentAxeX;
 	}
-
 	
 	public float getDistanciaComponentZ(){
 		var componentAxeZ = Distance(ORIGEN_LAT,ORIGEN_LON,latitude,ORIGEN_LON);
 		return (float)componentAxeZ;
 	}
-
-
 }
