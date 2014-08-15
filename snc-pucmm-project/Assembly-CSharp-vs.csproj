@@ -46,15 +46,37 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\CameraMovement.cs" />
-     <Compile Include="Assets\Scripts\CameraZoomRotation.cs" />
-     <Compile Include="Assets\Scripts\GPSManager.cs" />
-     <Compile Include="Assets\Scripts\GUI\UIButtonManager.cs" />
-     <Compile Include="Assets\Scripts\GUI\UIManager.cs" />
-     <Compile Include="Assets\Scripts\GUI\UIMenuDescriptor.cs" />
-     <Compile Include="Assets\Scripts\TouchManager.cs" />
+     <Compile Include="Assets\Scripts\Controller\ModelPool.cs" />
+     <Compile Include="Assets\Scripts\Controller\UIButtonManager.cs" />
+     <Compile Include="Assets\Scripts\Controller\UIManager.cs" />
+     <Compile Include="Assets\Scripts\Controller\UIMenuManager.cs" />
+     <Compile Include="Assets\Scripts\Database\SQLiteService.cs" />
+     <Compile Include="Assets\Scripts\Model\Building.cs" />
+     <Compile Include="Assets\Scripts\Model\ModelObject.cs" />
+     <Compile Include="Assets\Scripts\Model\UIMenu.cs" />
+     <Compile Include="Assets\Scripts\Utils\GPSManager.cs" />
+     <Compile Include="Assets\Scripts\Utils\Movement.cs" />
+     <Compile Include="Assets\Scripts\Utils\State.cs" />
+     <Compile Include="Assets\Scripts\Utils\TextureResolution.cs" />
+     <Compile Include="Assets\Scripts\Utils\TouchManager.cs" />
+     <Compile Include="Assets\Scripts\Utils\ZoomRotation.cs" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\build.xml" />
+ <Reference Include="I18N">
+ <HintPath>Assets\Assemblies\I18N.dll</HintPath>
+ </Reference>
+ <Reference Include="I18N.West">
+ <HintPath>Assets\Assemblies\I18N.West.dll</HintPath>
+ </Reference>
+ <Reference Include="Mono.Data.Sqlite">
+ <HintPath>Assets\Assemblies\Mono.Data.Sqlite.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Data">
+ <HintPath>Assets\Assemblies\System.Data.dll</HintPath>
+ </Reference>
+ <Reference Include="System">
+ <HintPath>Assets\Assemblies\System.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
