@@ -28,27 +28,22 @@ namespace SncPucmm.Utils
 		void Update ()
 		{
 			//is there a touch on screen?
-			if(Input.touches.Length <= 0)
-			{
-				//if no touches then execute this code
-			}
-			else //if there is a touch
-			{
+			if(Input.touches.Length > 0){
+
 				//loop through all the the touches on screen
-				for(int i = 0; i < Input.touchCount; i++)
-				{
+				for(int i = 0; i < Input.touchCount; i++){
 					currentTouch = i;
+
+					//obteniendo la posicion del objecto
+					Vector3 objectPosition = new Vector3(
+						Input.GetTouch(i).position.x, Input.GetTouch(i).position.y, 0f
+					);
 
 					if(State.GetCurrentState().Equals(eState.Exploring))
 					{
-						if(Input.GetTouch(i).phase == TouchPhase.Ended && this is UIManager)
-						{
-							Vector3 objectPosition = new Vector3(
-								Input.GetTouch(i).position.x, Input.GetTouch(i).position.y, 0f
-							);
+						if(Input.GetTouch(i).phase == TouchPhase.Ended && this is UIManager){
 
 							ray = Camera.main.ScreenPointToRay(objectPosition);
-
 							if(Physics.Raycast(ray, out rayHitInfo)){
 
 								var buildingObject = rayHitInfo.transform.gameObject;
@@ -58,72 +53,43 @@ namespace SncPucmm.Utils
 								}
 							}
 						} 
-						else if (this is Movement || this is ZoomRotation)
-						{
-							if(Input.GetTouch(i).phase == TouchPhase.Began && this is Movement)
-							{
+						else if (this is Movement || this is ZoomRotation){
+							if(Input.GetTouch(i).phase == TouchPhase.Began && this is Movement){
 								this.SendMessage("OnTouchBeganAnyWhere");
 							}
-							if(Input.GetTouch(i).phase == TouchPhase.Ended && this is Movement)
-							{
-								this.SendMessage("OnTouchEndedAnywhere");
-							}
-							if(Input.GetTouch(i).phase == TouchPhase.Moved)
-							{
+							if(Input.GetTouch(i).phase == TouchPhase.Moved){
 								this.SendMessage("OnTouchMovedAnywhere");
 							}
-							if(Input.GetTouch(i).phase == TouchPhase.Stationary && this is ZoomRotation)
-							{
+							if(Input.GetTouch(i).phase == TouchPhase.Stationary && this is ZoomRotation){
 								this.SendMessage("OnTouchStayedAnywhere");
 							}
 						}
-					} 
+					}
 
-					if(State.GetCurrentState().Equals(eState.GUISystem))
-					{
-						if (this is UIButtonManager)
-						{
-							Vector3 buttonPosition = new Vector3(
-								Input.GetTouch(i).position.x, Input.GetTouch(i).position.y, 0f
-							);
+					if (this is UIButton){
+						bool isHover = false;
 
-							bool isHover = false;
+						if(this.guiTexture != null && this.guiTexture.HitTest(objectPosition)){
+							if(Input.GetTouch(i).phase == TouchPhase.Began){
+								this.SendMessage("OnTouchHoverButton");
+								isHover = true;
+							}
+							if(Input.GetTouch(i).phase == TouchPhase.Stationary){
+								this.SendMessage("OnTouchHoverButton");
+								isHover = true;
+							}
+							if(Input.GetTouch(i).phase == TouchPhase.Ended){
+								this.SendMessage("OnTouchButton");
+							}
 
-							if(this.guiTexture != null && this.guiTexture.HitTest(buttonPosition))
-							{
-								if(Input.GetTouch(i).phase == TouchPhase.Began)
-								{
-									this.SendMessage("OnTouchHoverButton");
-									isHover = true;
-								}
-								if(Input.GetTouch(i).phase == TouchPhase.Stationary)
-								{
-									this.SendMessage("OnTouchHoverButton");
-									isHover = true;
-								}
-								if(Input.GetTouch(i).phase == TouchPhase.Ended)
-								{
-									this.SendMessage("OnTouchButton");
-								}
-								if(!isHover)
-								{
-									this.SendMessage("OnTouchNormalButton");
-								}
+							if(!isHover){
+								this.SendMessage("OnTouchNormalButton");
 							}
 						}
 					}
 				}
 			}
 		}
-
-//		private GameObject getBuildingParent(GameObject gameObject){
-//			if(gameObject.tag.Equals("Building"))
-//			   return gameObject;
-//			else if(gameObject.name.Equals("PUCMM"))
-//				return null;
-//			else
-//				return getBuildingParent(gameObject.transform.parent.gameObject);
-//		}
 	}
 }
 

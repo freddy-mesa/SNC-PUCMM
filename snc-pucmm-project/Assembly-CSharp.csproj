@@ -47,20 +47,23 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Controller\ModelPool.cs" />
-     <Compile Include="Assets\Scripts\Controller\UIButtonManager.cs" />
+     <Compile Include="Assets\Scripts\Controller\UIButton.cs" />
      <Compile Include="Assets\Scripts\Controller\UIManager.cs" />
      <Compile Include="Assets\Scripts\Controller\UIMenuManager.cs" />
      <Compile Include="Assets\Scripts\Database\SQLiteService.cs" />
      <Compile Include="Assets\Scripts\Model\Building.cs" />
      <Compile Include="Assets\Scripts\Model\ModelObject.cs" />
      <Compile Include="Assets\Scripts\Model\UIMenu.cs" />
+     <Compile Include="Assets\Scripts\Utils\AnimationManager.cs" />
      <Compile Include="Assets\Scripts\Utils\GPSManager.cs" />
      <Compile Include="Assets\Scripts\Utils\Movement.cs" />
+     <Compile Include="Assets\Scripts\Utils\OrientationManager.cs" />
+     <Compile Include="Assets\Scripts\Utils\ResolutionManager.cs" />
      <Compile Include="Assets\Scripts\Utils\State.cs" />
-     <Compile Include="Assets\Scripts\Utils\TextureResolution.cs" />
      <Compile Include="Assets\Scripts\Utils\TouchManager.cs" />
      <Compile Include="Assets\Scripts\Utils\ZoomRotation.cs" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
      <None Include="Assets\Plugins\Android\build.xml" />
  <Reference Include="I18N">
  <HintPath>Assets\Assemblies\I18N.dll</HintPath>
@@ -77,6 +80,10 @@
  <Reference Include="System">
  <HintPath>Assets\Assemblies\System.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{8E6CEC6E-9A52-E0D1-2B98-6988BB1556CF}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

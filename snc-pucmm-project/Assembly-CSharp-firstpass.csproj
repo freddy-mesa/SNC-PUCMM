@@ -5,11 +5,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{648E857F-FD6D-918C-3E6C-38EE51A40D28}</ProjectGuid>
+	<ProjectGuid>{8E6CEC6E-9A52-E0D1-2B98-6988BB1556CF}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
-	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
 	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
 	<FileAlignment>512</FileAlignment>
 	<BaseDirectory>Assets</BaseDirectory>
@@ -46,22 +46,10 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Controller\ModelPool.cs" />
-     <Compile Include="Assets\Scripts\Controller\UIButton.cs" />
-     <Compile Include="Assets\Scripts\Controller\UIManager.cs" />
-     <Compile Include="Assets\Scripts\Controller\UIMenuManager.cs" />
-     <Compile Include="Assets\Scripts\Database\SQLiteService.cs" />
-     <Compile Include="Assets\Scripts\Model\Building.cs" />
-     <Compile Include="Assets\Scripts\Model\ModelObject.cs" />
-     <Compile Include="Assets\Scripts\Model\UIMenu.cs" />
-     <Compile Include="Assets\Scripts\Utils\AnimationManager.cs" />
-     <Compile Include="Assets\Scripts\Utils\GPSManager.cs" />
-     <Compile Include="Assets\Scripts\Utils\Movement.cs" />
-     <Compile Include="Assets\Scripts\Utils\OrientationManager.cs" />
-     <Compile Include="Assets\Scripts\Utils\ResolutionManager.cs" />
-     <Compile Include="Assets\Scripts\Utils\State.cs" />
-     <Compile Include="Assets\Scripts\Utils\TouchManager.cs" />
-     <Compile Include="Assets\Scripts\Utils\ZoomRotation.cs" />
+     <Compile Include="Assets\Plugins\Pixelplacement\iTween\Sample\MoveSample.cs" />
+     <Compile Include="Assets\Plugins\Pixelplacement\iTween\Sample\RotateSample.cs" />
+     <Compile Include="Assets\Plugins\Pixelplacement\iTween\Sample\SampleInfo.cs" />
+     <Compile Include="Assets\Plugins\Pixelplacement\iTween\iTween.cs" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
      <None Include="Assets\Plugins\Android\build.xml" />
@@ -80,10 +68,6 @@
  <Reference Include="System">
  <HintPath>Assets\Assemblies\System.dll</HintPath>
  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
-      <Project>{8E6CEC6E-9A52-E0D1-2B98-6988BB1556CF}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

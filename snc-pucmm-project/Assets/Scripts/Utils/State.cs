@@ -8,7 +8,7 @@ namespace SncPucmm.Utils
 		NavigationSystem,
 		SecuritySystem,
 		TourSystem,
-		GUISystem,
+		GUISystem = 8,
 		Exit
 	}
 

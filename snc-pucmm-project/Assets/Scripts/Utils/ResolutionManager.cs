@@ -3,17 +3,19 @@ using UnityEngine;
 
 namespace SncPucmm.Utils
 {
-	public class TextureResolution : MonoBehaviour
-	{		
+	public class ResolutionManager : MonoBehaviour
+	{
 		void Start()
 		{
 			IterateAllChildrens(this.transform);
 		}
 
 		private void IterateAllChildrens(Transform parent){
-			if(parent.guiTexture != null || parent.guiText != null){
-				Rect pi = parent.guiTexture.pixelInset;
-				parent.guiTexture.pixelInset = new Rect(pi.x*2, pi.y*2, pi.width*2, pi.height*2);
+
+			if(parent.guiText != null){
+				var _ratio = 19f;
+				var _fontSize = Mathf.Min(Screen.width, Screen.height) / _ratio;
+				parent.guiText.fontSize = Convert.ToInt32(_fontSize);
 			}
 
 			foreach (Transform child in parent){
