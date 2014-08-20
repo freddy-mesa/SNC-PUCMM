@@ -19,6 +19,8 @@ namespace SncPucmm.Controller
 		{
 			_menuList = new List<UIMenu>();
 			_guiObject = GameObject.Find("GUI");
+
+           this.AddMenu("GUIMainMenu");
 		}
 		#endregion
 
@@ -50,8 +52,11 @@ namespace SncPucmm.Controller
 		/// Removes the current menu.
 		/// </summary>
 		public void RemoveCurrentMenu(){
-			ActivateCurrentMenu(false);
-			_menuList.Remove(GetCurrentMenu());
+            if (this._menuList.Count > 1)
+            {
+                ActivateCurrentMenu(false);
+                _menuList.Remove(GetCurrentMenu());
+            }
 		}
 
 		/// <summary>
@@ -67,11 +72,11 @@ namespace SncPucmm.Controller
 		/// </summary>
 		/// <returns><c>true</c>, if no menu left, <c>false</c> otherwise.</returns>
 		public bool NoMenuLeft(){
-			if(_menuList.Count == 0)
+			if(_menuList.Count == 1)
 				return true;
 
 			//Active Last Menu
-			ActivateCurrentMenu(false);
+			ActivateCurrentMenu(true);
 			return false;
 		}
 

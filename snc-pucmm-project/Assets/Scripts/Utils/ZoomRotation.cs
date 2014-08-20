@@ -11,13 +11,13 @@ namespace SncPucmm.Utils
 		private Vector2 lastTouch2 = Vector2.zero;
 		
 		//Zoom
-		public float zoomSpeed = 0.5f;
+		public float zoomSpeed = 100f;
 		private float zoomFactor = 0.0f;
 		private float currentDistance = 0.0f;
 		private float lastDistance = 0.0f;
 		
 		//Rotation
-		public float rotationSpeed = 5f;		//Rotation Speed Factor
+		public float rotationSpeed = 2f;		//Rotation Speed Factor
 		
 		void OnTouchMovedAnywhere()
 		{
@@ -56,14 +56,18 @@ namespace SncPucmm.Utils
 					
 					float angleOffSet = Vector2.Angle(previousDistance, currentDistance);
 
-					if (!TouchManager.isMoving || !TouchManager.isZooming){
-						if(angleOffSet > 0.2f){
+					if (!TouchManager.isMoving || !TouchManager.isZooming)
+                    {
+						if(angleOffSet > 0.1f){
 							TouchManager.isRotating = true;
-							if(Vector3.Cross(previousDistance, currentDistance).z > 0){
+							if(Vector3.Cross(previousDistance, currentDistance).z > 0)
+                            {
 								//Rotation Clockwise
 								this.transform.Rotate(0f, angleOffSet * rotationSpeed, 0f);
 								this.transform.eulerAngles = new Vector3(15f, this.transform.eulerAngles.y, 0f);
-							} else if(Vector3.Cross(previousDistance, currentDistance).z < 0){
+							} 
+                            else if(Vector3.Cross(previousDistance, currentDistance).z < 0)
+                            {
 								//Rotation Counter Clockwise
 								this.transform.Rotate(0f, angleOffSet * rotationSpeed * -1, 0f);
 								this.transform.eulerAngles = new Vector3(15f, this.transform.eulerAngles.y, 0f);
@@ -75,8 +79,9 @@ namespace SncPucmm.Utils
 						}
 					}
 				}
-				//Zooming, si no es ta rotando
-				if (!TouchManager.isRotating || !TouchManager.isMoving){
+				//Zooming, si no está rotando
+				if (!TouchManager.isRotating || !TouchManager.isMoving)
+                {
 					TouchManager.isZooming = true;
 					
 					//Obtain distance magnitude when is Zooming  

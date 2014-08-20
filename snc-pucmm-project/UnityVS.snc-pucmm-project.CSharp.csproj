@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C0CE86BD-10BF-A8D6-ABD3-D724197FB855}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace></RootNamespace>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Debug\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>DEBUG;TRACE;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_3;UNITY_4_3;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_3;UNITY_4_3;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Core" />
+    <Reference Include="Boo.Lang" />
+    <Reference Include="UnityScript.Lang" />
+    <Reference Include="UnityEngine">
+      <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Mono.Data">
+      <HintPath>Assets\Plugins\Mono.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Data.Sqlite">
+      <HintPath>Assets\Plugins\Mono.Data.Sqlite.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Data.SqliteClient">
+      <HintPath>Assets\Plugins\Mono.Data.SqliteClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <HintPath>Assets\Plugins\System.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data">
+      <HintPath>Assets\Plugins\System.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.EnterpriseServices">
+      <HintPath>Assets\Plugins\System.EnterpriseServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security">
+      <HintPath>Assets\Plugins\System.Security.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="UnityVS.snc-pucmm-project.CSharp.Plugins.csproj">
+      <Project>{EB55A21B-5999-4370-1784-09495C46F4CC}</Project>
+      <Name>UnityVS.snc-pucmm-project.CSharp.Plugins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\dbAccess.cs" />
+    <Compile Include="Assets\Main.cs" />
+    <Compile Include="Assets\Scripts\Controller\ModelPool.cs" />
+    <Compile Include="Assets\Scripts\Controller\UIButton.cs" />
+    <Compile Include="Assets\Scripts\Controller\UIManager.cs" />
+    <Compile Include="Assets\Scripts\Controller\UIMenuManager.cs" />
+    <Compile Include="Assets\Scripts\Database\SQLiteService.cs" />
+    <Compile Include="Assets\Scripts\Model\Building.cs" />
+    <Compile Include="Assets\Scripts\Model\ModelObject.cs" />
+    <Compile Include="Assets\Scripts\Model\UIMenu.cs" />
+    <Compile Include="Assets\Scripts\Utils\AnimationManager.cs" />
+    <Compile Include="Assets\Scripts\Utils\GPSManager.cs" />
+    <Compile Include="Assets\Scripts\Utils\Movement.cs" />
+    <Compile Include="Assets\Scripts\Utils\OrientationManager.cs" />
+    <Compile Include="Assets\Scripts\Utils\ResolutionManager.cs" />
+    <Compile Include="Assets\Scripts\Utils\State.cs" />
+    <Compile Include="Assets\Scripts\Utils\TouchManager.cs" />
+    <Compile Include="Assets\Scripts\Utils\ZoomRotation.cs" />
+    <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+    <None Include="Assets\Plugins\Android\build.xml" />
+    <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
+</Project>

@@ -1,15 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Controller\UIButton.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Controller\UIMenuManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Utils\AnimationManager.cs" Line="11" Column="29" />
-      <File FileName="Assets\Plugins\Pixelplacement\iTween\Sample\MoveSample.cs" Line="11" Column="1" />
-      <File FileName="Assets\Scripts\Controller\UIButton.cs" Line="30" Column="20" />
-      <File FileName="Assets\Scripts\Controller\UIManager.cs" Line="15" Column="55" />
+      <File FileName="Assets\Scripts\Controller\UIManager.cs" Line="45" Column="1" />
+      <File FileName="Assets\Scripts\Database\SQLiteService.cs" Line="57" Column="40" />
+      <File FileName="Assets\Scripts\Controller\UIMenuManager.cs" Line="62" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="C:\Users\Freddy Mesa\Documents\proyecto-snc-pucmm\snc-pucmm-project\Assets\Scripts\Controller\UIManager.cs" line="27" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
