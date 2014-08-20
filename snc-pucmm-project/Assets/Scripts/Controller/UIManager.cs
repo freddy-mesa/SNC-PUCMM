@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 using SncPucmm.Utils;
 using SncPucmm.Database;
 using SncPucmm.Model;
@@ -11,37 +12,36 @@ namespace SncPucmm.Controller
 	{
 		#region Metodos
 
-		void Awake(){
-			UIMenuManager.GetInstance().AddMenu("GUIMainMenu");
-		}
-
 		/// <summary>
 		/// Raises the touch building event.
 		/// </summary>
 		/// <param name="buildingAbbreviationName">Building abbreviation name.</param>
 		public void OnTouchBuilding(string buildingAbbreviationName)
 		{
-			UIMenuManager.GetInstance().AddMenu("GUIMenuDescriptor");
+            var menuManager = UIMenuManager.GetInstance();
+            menuManager.AddMenu("GUIMenuDescriptor");
+            
+            var sqliteService = SQLiteService.GetInstance();
+            var dataReader = sqliteService.SelectQuery(
+				"Ubicacion", null, new Dictionary<string, object> {
+					{"abreviacion", buildingAbbreviationName}
+				}
+			);
 
-//			var dataReader = SQLiteService.GetInstance().SelectQuery(
-//				"ubicacion", null, new Dictionary<string, object> {
-//					{"abreviacion", buildingAbbreviationName}
-//				}
-//			);
-//
-//			while (dataReader.Read()){
-//				ModelPool.GetInstance().Add("building", new Building(
-//					Convert.ToInt32(dataReader["idUbicacion"]),
-//					Convert.ToString(dataReader["nombre"]), 
-//					Convert.ToString(dataReader["abreviacion"]),
-//					UIMenuManager.GetInstance().GetCurrentMenu().Name
-//				));
-//			}
-//
-//			var lblBuildingName = UIMenuManager.GetInstance().Find(UIMenuManager.GetInstance().GetCurrentMenu().Name)
-//				.transform.FindChild("LabelBuildingName");
+            var modelPool = ModelPool.GetInstance();
+			while (dataReader.Read())
+            {
+                modelPool.Add("building", new Building(
+					Convert.ToInt32(dataReader["idUbicacion"]),
+					Convert.ToString(dataReader["nombre"]), 
+					Convert.ToString(dataReader["abreviacion"]),
+                    menuManager.GetCurrentMenu().Name
+				));
+			}
 
-//			lblBuildingName.guiText.text = FormatStringLabel(((Building) ModelPool.GetInstance().GetValue("building")).Name);
+            var lblBuildingName = menuManager.Find(menuManager.GetCurrentMenu().Name).transform.FindChild("LabelBuildingName");
+
+			lblBuildingName.guiText.text = FormatStringLabel(((Building) modelPool.GetValue("building")).Name);
 
 			State.ChangeState(eState.GUISystem);
 		}

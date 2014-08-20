@@ -21,6 +21,11 @@ namespace SncPucmm.Utils
 		/// </summary>
 		private RaycastHit rayHitInfo = new RaycastHit();
 
+        /// <summary>
+        /// Tapped Building Name
+        /// </summary>
+        private string buildingTapped = string.Empty;
+
 		public static bool isMoving = false;
 		public static bool isZooming = false;
 		public static bool isRotating = false;
@@ -28,10 +33,11 @@ namespace SncPucmm.Utils
 		void Update ()
 		{
 			//is there a touch on screen?
-			if(Input.touches.Length > 0){
-
+			if(Input.touches.Length > 0)
+            {
 				//loop through all the the touches on screen
-				for(int i = 0; i < Input.touchCount; i++){
+				for(int i = 0; i < Input.touchCount; i++)
+                {
 					currentTouch = i;
 
 					//obteniendo la posicion del objecto
@@ -41,19 +47,36 @@ namespace SncPucmm.Utils
 
 					if(State.GetCurrentState().Equals(eState.Exploring))
 					{
-						if(Input.GetTouch(i).phase == TouchPhase.Ended && this is UIManager){
+                        if(this is UIManager)
+                        {
+                            if (Input.GetTouch(i).phase == TouchPhase.Began)
+                            {
+                                ray = Camera.main.ScreenPointToRay(objectPosition);
+                                if (Physics.Raycast(ray, out rayHitInfo))
+                                {
+                                    var buildingObject = rayHitInfo.transform.gameObject;
+                                    if (buildingObject != null && buildingObject.tag.Equals("Building")) 
+                                    {
+                                        buildingTapped = buildingObject.name;
+                                    }            
+                                }
+                            }
+                            else if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                            {
+                                ray = Camera.main.ScreenPointToRay(objectPosition);
+                                if (Physics.Raycast(ray, out rayHitInfo))
+                                {
+                                    var buildingObject = rayHitInfo.transform.gameObject;
 
-							ray = Camera.main.ScreenPointToRay(objectPosition);
-							if(Physics.Raycast(ray, out rayHitInfo)){
-
-								var buildingObject = rayHitInfo.transform.gameObject;
-
-								if(buildingObject != null && buildingObject.tag.Equals("Building")){
-									this.SendMessage("OnTouchBuilding", buildingObject.name);	
-								}
-							}
-						} 
-						else if (this is Movement || this is ZoomRotation){
+                                    if (buildingObject != null && buildingObject.tag.Equals("Building") && buildingTapped.Equals(buildingObject.name))
+                                    {
+                                        this.SendMessage("OnTouchBuilding", buildingObject.name);
+                                    }
+                                }
+                            }
+                        }
+						else if (this is Movement || this is ZoomRotation)
+                        {
 							if(Input.GetTouch(i).phase == TouchPhase.Began && this is Movement){
 								this.SendMessage("OnTouchBeganAnyWhere");
 							}
@@ -65,28 +88,33 @@ namespace SncPucmm.Utils
 							}
 						}
 					}
+                    if (this is UIButton)
+                    {
+                        bool isHover = false;
 
-					if (this is UIButton){
-						bool isHover = false;
+                        if (this.guiTexture != null && this.guiTexture.HitTest(objectPosition))
+                        {
+                            if (Input.GetTouch(i).phase == TouchPhase.Began)
+                            {
+                                this.SendMessage("OnTouchHoverButton");
+                                isHover = true;
+                            }
+                            else if (Input.GetTouch(i).phase == TouchPhase.Stationary)
+                            {
+                                this.SendMessage("OnTouchHoverButton");
+                                isHover = true;
+                            }
+                            else if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                            {
+                                this.SendMessage("OnTouchButton");
+                            }
 
-						if(this.guiTexture != null && this.guiTexture.HitTest(objectPosition)){
-							if(Input.GetTouch(i).phase == TouchPhase.Began){
-								this.SendMessage("OnTouchHoverButton");
-								isHover = true;
-							}
-							if(Input.GetTouch(i).phase == TouchPhase.Stationary){
-								this.SendMessage("OnTouchHoverButton");
-								isHover = true;
-							}
-							if(Input.GetTouch(i).phase == TouchPhase.Ended){
-								this.SendMessage("OnTouchButton");
-							}
-
-							if(!isHover){
-								this.SendMessage("OnTouchNormalButton");
-							}
-						}
-					}
+                            if (this.guiTexture.gameObject.activeSelf && !isHover)
+                            {
+                                this.SendMessage("OnTouchNormalButton");
+                            }
+                        }
+                    }
 				}
 			}
 		}

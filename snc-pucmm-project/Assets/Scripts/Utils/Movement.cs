@@ -8,8 +8,8 @@ namespace SncPucmm.Utils
 		private Vector2 previousPosition;		//Posicion antes del Slice
 		private Vector2 currentPosition;		//Posicion final del Slice
 		
-		public float movementFactor = 1f;		//Min Limit 
-		public float movementSpeed = 0.01f;		//Movement Speed
+		public float movementFactor = 5f;		//Min Limit 
+		public float movementSpeed = 150f;		//Movement Speed
 		
 		private float posX = 0.0f;				//distance in X axe
 		private float posZ = 0.0f;				//distance in Z axe
@@ -17,7 +17,8 @@ namespace SncPucmm.Utils
 		void OnTouchBeganAnyWhere()
 		{
 			//Getting the first touch's position
-			if(Input.touchCount == 1){
+			if(Input.touchCount == 1)
+            {
 				previousPosition = Input.GetTouch(0).position;
 			}
 		}
@@ -28,8 +29,8 @@ namespace SncPucmm.Utils
 			if(!TouchManager.isRotating || !TouchManager.isZooming)
 			{
 				//Be sure that it's a slice, only one touchCount
-				if(Input.touchCount == 1){
-					
+				if(Input.touchCount == 1)
+                {
 					TouchManager.isMoving = true;
 					
 					//Getting Actual touch's position
@@ -42,11 +43,13 @@ namespace SncPucmm.Utils
 					if(Mathf.Abs(touchDelta) > movementFactor)
 					{
 						//Orientacion Vectical
-						if(this.transform.eulerAngles.y > 6 || this.transform.eulerAngles.y < -6){
+						if(this.transform.eulerAngles.y > 6 || this.transform.eulerAngles.y < -6)
+                        {
 							posX -= Input.GetTouch(0).deltaPosition.x * movementSpeed * Time.deltaTime;
 							posZ += Input.GetTouch(0).deltaPosition.y * movementSpeed * Time.deltaTime;
 						}
-						else if(touchDelta >= 0){
+						else if(touchDelta >= 0)
+                        {
 							//Left
 							if(currentPosition.x - previousPosition.x > currentPosition.y - previousPosition.y){
 								//Getting Meter/Second in X's axe
@@ -54,7 +57,8 @@ namespace SncPucmm.Utils
 								posZ = 0f;
 							} 
 							//Top
-							else {
+							else
+                            {
 								//Getting Meter/Second in Z's axe
 								posX = 0f;
 								posZ += touchDelta * movementSpeed * Time.deltaTime;
@@ -62,13 +66,15 @@ namespace SncPucmm.Utils
 						} 
 						else {
 							//Bottom
-							if(currentPosition.x - previousPosition.x > currentPosition.y - previousPosition.y){
+							if(currentPosition.x - previousPosition.x > currentPosition.y - previousPosition.y)
+                            {
 								//Getting Meter/Second in Z's axe
 								posX = 0f;
 								posZ += touchDelta * movementSpeed * Time.deltaTime;
 							} 
 							//Right
-							else {
+							else 
+                            {
 								//Getting Meter/Second in X's axe
 								posX += touchDelta * movementSpeed * Time.deltaTime;
 								posZ = 0f;
@@ -86,7 +92,7 @@ namespace SncPucmm.Utils
 						//Se Traslada la camara mediante la inversion de la direccion (Modo natural del touch)
 						this.transform.Translate(
 							new Vector3(-posX, 0f, -posZ)
-							);
+						);
 						
 						//Se inclina la camara
 						this.transform.eulerAngles = new Vector3(15f, this.transform.eulerAngles.y, 0f);
