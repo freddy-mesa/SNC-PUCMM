@@ -7,14 +7,16 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C0CE86BD-10BF-A8D6-ABD3-D724197FB855}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -75,24 +77,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\dbAccess.cs" />
-    <Compile Include="Assets\Main.cs" />
-    <Compile Include="Assets\Scripts\Controller\ModelPool.cs" />
-    <Compile Include="Assets\Scripts\Controller\UIButton.cs" />
-    <Compile Include="Assets\Scripts\Controller\UIManager.cs" />
-    <Compile Include="Assets\Scripts\Controller\UIMenuManager.cs" />
+    <Compile Include="Assets\Scripts\Controller\TextSearchController.cs" />
+    <Compile Include="Assets\Scripts\Controller\ModelPoolController.cs" />
+    <Compile Include="Assets\Scripts\Controller\UIButtonController.cs" />
+    <Compile Include="Assets\Scripts\Controller\UIController.cs" />
+    <Compile Include="Assets\Scripts\Controller\UIMenuController.cs" />
     <Compile Include="Assets\Scripts\Database\SQLiteService.cs" />
     <Compile Include="Assets\Scripts\Model\Building.cs" />
     <Compile Include="Assets\Scripts\Model\ModelObject.cs" />
     <Compile Include="Assets\Scripts\Model\UIMenu.cs" />
     <Compile Include="Assets\Scripts\Utils\AnimationManager.cs" />
+    <Compile Include="Assets\Scripts\Utils\KeyboardManager.cs" />
     <Compile Include="Assets\Scripts\Utils\GPSManager.cs" />
-    <Compile Include="Assets\Scripts\Utils\Movement.cs" />
-    <Compile Include="Assets\Scripts\Utils\OrientationManager.cs" />
+    <Compile Include="Assets\Scripts\Utils\MovementManager.cs" />
     <Compile Include="Assets\Scripts\Utils\ResolutionManager.cs" />
     <Compile Include="Assets\Scripts\Utils\State.cs" />
     <Compile Include="Assets\Scripts\Utils\TouchManager.cs" />
-    <Compile Include="Assets\Scripts\Utils\ZoomRotation.cs" />
+    <Compile Include="Assets\Scripts\Utils\ZoomRotationManager.cs" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Plugins\Android\build.xml" />
     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />

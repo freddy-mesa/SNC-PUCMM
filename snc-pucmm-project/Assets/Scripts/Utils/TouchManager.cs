@@ -30,7 +30,7 @@ namespace SncPucmm.Utils
 		public static bool isZooming = false;
 		public static bool isRotating = false;
 
-		void Update ()
+		public void Update ()
 		{
 			//is there a touch on screen?
 			if(Input.touches.Length > 0)
@@ -47,7 +47,7 @@ namespace SncPucmm.Utils
 
 					if(State.GetCurrentState().Equals(eState.Exploring))
 					{
-                        if(this is UIManager)
+                        if(this is UIController)
                         {
                             if (Input.GetTouch(i).phase == TouchPhase.Began)
                             {
@@ -75,20 +75,20 @@ namespace SncPucmm.Utils
                                 }
                             }
                         }
-						else if (this is Movement || this is ZoomRotation)
+						else if (this is MovementManager || this is ZoomRotationManager)
                         {
-							if(Input.GetTouch(i).phase == TouchPhase.Began && this is Movement){
+							if(Input.GetTouch(i).phase == TouchPhase.Began && this is MovementManager){
 								this.SendMessage("OnTouchBeganAnyWhere");
 							}
 							if(Input.GetTouch(i).phase == TouchPhase.Moved){
 								this.SendMessage("OnTouchMovedAnywhere");
 							}
-							if(Input.GetTouch(i).phase == TouchPhase.Stationary && this is ZoomRotation){
+							if(Input.GetTouch(i).phase == TouchPhase.Stationary && this is ZoomRotationManager){
 								this.SendMessage("OnTouchStayedAnywhere");
 							}
 						}
 					}
-                    if (this is UIButton)
+                    if (this is UIButtonController)
                     {
                         bool isHover = false;
 
@@ -115,9 +115,18 @@ namespace SncPucmm.Utils
                             }
                         }
                     }
+                    if (this is TextSearchController)
+                    {
+                        if (this.guiTexture != null && (this.guiTexture.HitTest(objectPosition)))
+                        {
+                            if (Input.GetTouch(i).phase == TouchPhase.Began)
+                            {
+                                this.SendMessage("InitializeKeyboard");
+                            }
+                        }
+                    }
 				}
 			}
 		}
 	}
 }
-
