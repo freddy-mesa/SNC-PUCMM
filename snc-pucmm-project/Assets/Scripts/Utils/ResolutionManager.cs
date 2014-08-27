@@ -5,22 +5,23 @@ namespace SncPucmm.Utils
 {
 	public class ResolutionManager : MonoBehaviour
 	{
-		void Start()
+        public float originWidth = 800;
+        public float originHeight = 1280;
+
+        void Start()
 		{
-			IterateAllChildrens(this.transform);
-		}
+            float scalex = (float)(Screen.width) / originWidth; //your scale x
+            float scaley = (float)(Screen.height) / originHeight; //your scale y
+            
+            var allGUIText = GameObject.FindObjectsOfType<GUIText>(); //all GUIText
 
-		private void IterateAllChildrens(Transform parent){
-
-			if(parent.guiText != null){
-				var _ratio = 19f;
-				var _fontSize = Mathf.Min(Screen.width, Screen.height) / _ratio;
-				parent.guiText.fontSize = Convert.ToInt32(_fontSize);
-			}
-
-			foreach (Transform child in parent){
-				IterateAllChildrens(child);
-			}
+            foreach (GUIText item in allGUIText)
+            {
+                Vector2 pixOff = item.pixelOffset; //your pixel offset on screen
+                int origSizeText = item.fontSize;
+                item.pixelOffset = new Vector2(pixOff.x * scalex, pixOff.y * scaley);
+                item.fontSize = origSizeText * (int)scalex;
+            }
 		}
 	}
 }

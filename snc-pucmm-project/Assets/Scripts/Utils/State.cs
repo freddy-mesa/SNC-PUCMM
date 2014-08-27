@@ -5,6 +5,7 @@ namespace SncPucmm.Utils
 	public enum eState
 	{
 		Exploring,
+        Writing,
 		NavigationSystem,
 		SecuritySystem,
 		TourSystem,

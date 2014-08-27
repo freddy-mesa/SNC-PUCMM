@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using SncPucmm.Controller;
+using SncPucmm.Controller.Utils;
 
 namespace SncPucmm.Utils
 {
@@ -47,7 +48,7 @@ namespace SncPucmm.Utils
 
 					if(State.GetCurrentState().Equals(eState.Exploring))
 					{
-                        if(this is UIController)
+                        if (this is UIModelController)
                         {
                             if (Input.GetTouch(i).phase == TouchPhase.Began)
                             {
@@ -77,13 +78,16 @@ namespace SncPucmm.Utils
                         }
 						else if (this is MovementManager || this is ZoomRotationManager)
                         {
-							if(Input.GetTouch(i).phase == TouchPhase.Began && this is MovementManager){
+							if(Input.GetTouch(i).phase == TouchPhase.Began && this is MovementManager)
+                            {
 								this.SendMessage("OnTouchBeganAnyWhere");
 							}
-							if(Input.GetTouch(i).phase == TouchPhase.Moved){
+							if(Input.GetTouch(i).phase == TouchPhase.Moved)
+                            {
 								this.SendMessage("OnTouchMovedAnywhere");
 							}
-							if(Input.GetTouch(i).phase == TouchPhase.Stationary && this is ZoomRotationManager){
+							if(Input.GetTouch(i).phase == TouchPhase.Stationary && this is ZoomRotationManager)
+                            {
 								this.SendMessage("OnTouchStayedAnywhere");
 							}
 						}
@@ -117,11 +121,37 @@ namespace SncPucmm.Utils
                     }
                     if (this is TextSearchController)
                     {
-                        if (this.guiTexture != null && (this.guiTexture.HitTest(objectPosition)))
+                        //Touch for open the keyboard
+                        if (this.guiTexture != null && this.guiTexture.HitTest(objectPosition))
                         {
                             if (Input.GetTouch(i).phase == TouchPhase.Began)
                             {
                                 this.SendMessage("InitializeKeyboard");
+                            }
+                        }
+                    }
+                    if(this is TreeViewController)
+                    {
+                        //Touch for Scrolling in the TreeViewList
+                        if (this.guiTexture != null && this.guiTexture.HitTest(objectPosition))
+                        {
+                            if (Input.GetTouch(i).phase == TouchPhase.Moved)
+                            {
+                                var controller = GetComponent<TreeViewController>();
+                                controller.ScrollPosition = new Vector2(
+                                    controller.ScrollPosition.x,
+                                    Input.GetTouch(i).deltaPosition.y
+                                );
+                            }
+                        }
+                        //Isn't touching the TreeViewList
+                        else 
+                        {
+                            //If isn't the Touch Keyboard Open
+                            if(!KeyboardManager.IsTouchKeyboardOpen)
+                            {
+                                UIUtils.DestroyChilds("GUIMainMenu/HorizontalBar/TreeViewList", true);
+                                State.ChangeState(eState.Exploring);
                             }
                         }
                     }

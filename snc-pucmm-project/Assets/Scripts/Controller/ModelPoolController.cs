@@ -11,7 +11,7 @@ namespace SncPucmm.Controller
         /// <summary>
         /// Dictionario de Objectos del Modelo
         /// </summary>
-		private Dictionary<String,ModelObject> _listModelObject;
+		private Dictionary<String,object> _listModelObject;
 
         /// <summary>
         /// Instancia del Controlador del Pool del Modelo
@@ -24,7 +24,7 @@ namespace SncPucmm.Controller
         
         public ModelPoolController()
 		{
-			_listModelObject = new Dictionary<String,ModelObject>();
+			_listModelObject = new Dictionary<String,object>();
 		}
 		#endregion
 
@@ -46,7 +46,7 @@ namespace SncPucmm.Controller
 		/// </summary>
 		/// <param name="key">Key.</param>
 		/// <param name="value">Value.</param>
-		public void Add(string key, ModelObject value)
+		public void Add(string key, object value)
 		{
 			_listModelObject.Add(key, value);
 		}
@@ -68,7 +68,7 @@ namespace SncPucmm.Controller
 		/// </summary>
 		/// <returns>The value.</returns>
 		/// <param name="key">Key.</param>
-		public ModelObject GetValue(string key){
+		public object GetValue(string key){
 			return _listModelObject[key];
 		}
 
@@ -84,4 +84,3 @@ namespace SncPucmm.Controller
 		#endregion
 	}
 }
-

@@ -6,12 +6,12 @@ using SncPucmm.Utils;
 
 namespace SncPucmm.Controller
 {
-	public class UIButtonController : UIController
+	public class UIButtonController : TouchManager
     {
         #region Atributos
 
-        public Texture2D textureBoxOnNormal;
-        public Texture2D textureBoxOnHover;
+        public Texture textureBoxOnNormal;
+        public Texture textureBoxOnHover;
         
         #endregion
 
@@ -28,7 +28,7 @@ namespace SncPucmm.Controller
         /// <summary>
         /// Raise a touch event on button
         /// </summary>
-        public override void OnTouchButton()
+        public void OnTouchButton()
         {
             if (this.name.Equals("ButttonExit"))
             {
@@ -69,7 +69,7 @@ namespace SncPucmm.Controller
         /// <summary>
         /// Raise a touch hover event on button
         /// </summary>
-        public override void OnTouchHoverButton()
+        public void OnTouchHoverButton()
         {
             this.guiTexture.texture = textureBoxOnHover;
         }
@@ -77,7 +77,7 @@ namespace SncPucmm.Controller
         /// <summary>
         /// Raise a touch normal event on button
         /// </summary>
-        public override void OnTouchNormalButton()
+        public void OnTouchNormalButton()
         {
             this.guiTexture.texture = textureBoxOnNormal;
         }

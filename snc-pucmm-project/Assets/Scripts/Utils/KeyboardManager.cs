@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SncPucmm.Controller.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SncPucmm.Controller
 {
-    class KeyboardManager
+    class KeyboardManager : MonoBehaviour
     {
         #region Atributos
         private static bool _isTouchKeyboardOpen;
@@ -40,30 +41,15 @@ namespace SncPucmm.Controller
             
             _isTouchKeyboardOpen = true;
 
-            var camera = Camera.main;
-            foreach (Transform label in camera.transform)
-            {
-                label.gameObject.SetActive(false);
-            }
+            UIUtils.ActivateCameraLabels(false);
 
-            var guiMainMenu = UIMenuController.GetInstance().Find("GUIMainMenu").gameObject;
-            var horizontalBar = guiMainMenu.transform.FindChild("HorizontalBar").gameObject;
+            var horizontalBar = UIUtils.FindGUI("GUIMainMenu/HorizontalBar").gameObject;
             var searchBox = horizontalBar.transform.FindChild("SearchBoxMainMenu").gameObject;
-            var imgSearchBox = horizontalBar.transform.FindChild("SearchImgMainMenu").gameObject;
+            var imgSearchBox = searchBox.transform.FindChild("SearchImgMainMenu").gameObject;
 
             imgSearchBox.SetActive(false);
 
-            //horizontalBar.transform.localScale.Set(
-            //    horizontalBar.transform.localScale.x,
-            //    0.141f,
-            //    horizontalBar.transform.localScale.z
-            //);
-
-            //horizontalBar.transform.localPosition.Set(
-            //    horizontalBar.transform.localPosition.x,
-            //    36.31999f,
-            //    horizontalBar.transform.localPosition.z
-            //);
+            this.StartCoroutine("WaitSeconds", 2);
         }
 
         public void Close()
@@ -72,35 +58,23 @@ namespace SncPucmm.Controller
 
             _isTouchKeyboardOpen = false;
 
-            var camera = Camera.main;
-            foreach (Transform label in camera.transform)
-            {
-                label.gameObject.SetActive(true);
-            }
-
-            var guiMainMenu = UIMenuController.GetInstance().Find("GUIMainMenu").gameObject;
-            var horizontalBar = guiMainMenu.transform.FindChild("HorizontalBar").gameObject;
+            var horizontalBar = UIUtils.FindGUI("GUIMainMenu/HorizontalBar").gameObject;
             var searchBox = horizontalBar.transform.FindChild("SearchBoxMainMenu").gameObject;
-            var imgSearchBox = horizontalBar.transform.FindChild("SearchImgMainMenu").gameObject;
+            var imgSearchBox = searchBox.transform.FindChild("SearchImgMainMenu").gameObject;
 
             imgSearchBox.SetActive(true);
 
-            //horizontalBar.transform.localScale.Set(
-            //    horizontalBar.transform.localScale.x,
-            //    0.087f,
-            //    horizontalBar.transform.localScale.z
-            //);
-
-            //horizontalBar.transform.localPosition.Set(
-            //    horizontalBar.transform.localPosition.x,
-            //    36.347f,
-            //    horizontalBar.transform.localPosition.z
-            //);
+            this.StartCoroutine("WaitSeconds", 2);
         }
 
         public String GetText()
         {
             return _keyboard.text;
+        }
+
+        IEnumerable WaitSeconds(int time)
+        {
+            yield return new WaitForSeconds(time);
         }
 
         #endregion

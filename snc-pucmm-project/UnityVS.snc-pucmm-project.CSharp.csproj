@@ -79,12 +79,13 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Controller\TextSearchController.cs" />
     <Compile Include="Assets\Scripts\Controller\ModelPoolController.cs" />
+    <Compile Include="Assets\Scripts\Controller\TreeViewController.cs" />
     <Compile Include="Assets\Scripts\Controller\UIButtonController.cs" />
-    <Compile Include="Assets\Scripts\Controller\UIController.cs" />
+    <Compile Include="Assets\Scripts\Controller\UIModelController.cs" />
     <Compile Include="Assets\Scripts\Controller\UIMenuController.cs" />
+    <Compile Include="Assets\Scripts\Controller\UIUtils.cs" />
     <Compile Include="Assets\Scripts\Database\SQLiteService.cs" />
     <Compile Include="Assets\Scripts\Model\Building.cs" />
-    <Compile Include="Assets\Scripts\Model\ModelObject.cs" />
     <Compile Include="Assets\Scripts\Model\UIMenu.cs" />
     <Compile Include="Assets\Scripts\Utils\AnimationManager.cs" />
     <Compile Include="Assets\Scripts\Utils\KeyboardManager.cs" />

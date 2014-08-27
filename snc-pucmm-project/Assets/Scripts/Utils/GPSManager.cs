@@ -27,7 +27,7 @@ namespace SncPucmm.Utils
 		float longitude = 0f;
 		float altitude = 0f;
 		
-		AndroidJavaClass gpsActivityJavaClass;
+		//AndroidJavaClass gpsActivityJavaClass;
 		
 		void Start () {
 			//AndroidJNI.AttachCurrentThread();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using SncPucmm.Model;
+using SncPucmm.Controller.Utils;
 
 namespace SncPucmm.Controller
 {
@@ -9,7 +10,6 @@ namespace SncPucmm.Controller
 	{
 		#region Atributos
 		private List<UIMenu> _menuList;
-		private GameObject _guiObject;
 
         private static UIMenuController _menuManager;
 
@@ -20,8 +20,6 @@ namespace SncPucmm.Controller
         private UIMenuController()
 		{
 			_menuList = new List<UIMenu>();
-			_guiObject = GameObject.Find("GUI");
-
            this.AddMenu("GUIMainMenu");
 		}
 		
@@ -84,28 +82,11 @@ namespace SncPucmm.Controller
 		}
 
 		/// <summary>
-		/// Activates the GU.
-		/// </summary>
-		/// <param name="Activate">If set to <c>true</c> activate.</param>
-		public void ActivateGUI(bool activate){
-			_guiObject.SetActive(activate);
-		}
-
-		/// <summary>
 		/// Activates the current menu.
 		/// </summary>
 		/// <param name="activate">If set to <c>true</c> activate.</param>
 		public void ActivateCurrentMenu(bool activate){
-			Find(GetCurrentMenu().Name).SetActive(activate);
-		}
-
-		/// <summary>
-		/// Finds the child.
-		/// </summary>
-		/// <returns>The child.</returns>
-		/// <param name="Name">Name.</param>
-		public GameObject Find(String name){
-			return _guiObject.transform.FindChild(name).gameObject;
+			UIUtils.FindGUI(GetCurrentMenu().Name).SetActive(activate);
 		}
 
 		#endregion

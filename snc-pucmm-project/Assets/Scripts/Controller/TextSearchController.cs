@@ -2,42 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SncPucmm.Utils;
+using SncPucmm.Database;
+using SncPucmm.Controller.Utils;
 
 namespace SncPucmm.Controller
 {
-    class TextSearchController : TouchManager
+    public class TextSearchController : TouchManager
     {
         #region Atributos
 
         public GUIText textSearch;
-        public KeyboardManager keyboardManager;
+        KeyboardManager keyboardManager;
 
-        #endregion   
-
-        #region Propiedades
-        
-        #endregion        
+        #endregion      
 
         #region Metodos
         
-        void Update()
+        new void Update()
         {
             if (KeyboardManager.IsTouchKeyboardOpen)
             {
                 textSearch.text = keyboardManager.GetText();
-                
+
                 if (keyboardManager.Keyboard.done)
                 {
                     keyboardManager.Close();
                     keyboardManager = null;
                 }
-            }
-            else 
-            {
-                base.Update();
-            }
+            }                
+                
+            base.Update();
         }
 
+        /// <summary>
+        /// Initialize the Keyboard Manager
+        /// </summary>
         void InitializeKeyboard() 
         {
             keyboardManager = new KeyboardManager();

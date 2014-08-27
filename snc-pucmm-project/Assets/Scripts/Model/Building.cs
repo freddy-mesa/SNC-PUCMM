@@ -2,7 +2,7 @@ using System;
 
 namespace SncPucmm.Model
 {
-	public class Building : ModelObject
+	public class Building
 	{
 		#region Atributos
 		string _name;
@@ -26,14 +26,12 @@ namespace SncPucmm.Model
 		#endregion
 
 		#region Contructores
-		public Building (int id, string name, string abbreviaton, string menuName) : this(menuName)
+		public Building (int id, string name, string abbreviaton)
 		{
 			_id = id;
 			_name = name;
 			_abbreviaton = abbreviaton;
 		}
-
-		public Building (string menuName) : base(menuName){}
 
 		#endregion
 	}

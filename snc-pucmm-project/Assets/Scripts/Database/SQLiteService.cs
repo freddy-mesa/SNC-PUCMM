@@ -463,83 +463,83 @@ namespace SncPucmm.Database
             #endregion
 
             #region CoordenadaLocalizacion
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (1,1,19.44023,-70.683369)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (2,1,19.440237,-70.682902)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (3,1,19.43986,-70.682891)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (4,1,19.43986,-70.682891)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (5,2,19.440434,-70.682709)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (6,2,19.440449,-70.682468)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (7,2,19.440081,-70.682452)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (8,2,19.440079,-70.682698)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (9,3,19.440864,-70.683512)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (10,3,19.440873,-70.683209)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (11,3,19.440375,-70.683204)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (12,3,19.440372,-70.683523)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (13,4,19.441171,-70.683106)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (14,4,19.441159,-70.682481)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (15,4,19.440923,-70.682482)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (16,4,19.440923,-70.683114)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (17,5,19.441853,-70.683339)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (18,5,19.441862,-70.682798)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (19,5,19.441703,-70.682787)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (20,5,19.441691,-70.683342)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (21,6,19.442173,-70.683402)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (22,6,19.442181,-70.68284)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (23,6,19.441992,-70.682836)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (24,6,19.441996,-70.683408)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (25,7,19.442315,-70.683633)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (26,7,19.442322,-70.683079)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (27,7,19.442174,-70.683076)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (28,7,19.442179,-70.683628)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (29,8,19.442786,-70.683318)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (30,8,19.44278,-70.682793)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (31,8,19.442657,-70.682794)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (32,8,19.44266,-70.683309)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (33,9,19.442967,-70.681999)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (34,9,19.442963,-70.681488)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (35,9,19.442834,-70.681482)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (36,9,19.442838,-70.682007)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (37,10,19.441628,-70.683687)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (38,10,19.441628,-70.683141)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (39,10,19.441464,-70.683148)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (40,10,19.441465,-70.683334)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (41,10,19.441197,-70.68334)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (42,10,19.441189,-70.683501)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (43,10,19.44147,-70.683513)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (44,10,19.44148,-70.683687)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (45,11,19.443149,-70.683679)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (46,11,19.443151,-70.683147)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (47,11,19.443008,-70.683151)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (48,11,19.443006,-70.683671)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (49,12,19.444131,-70.682992)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (50,12,19.444139,-70.682603)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (51,12,19.443496,-70.682514)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (52,12,19.443547,-70.682928)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (53,13,19.444037,-70.684592)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (54,13,19.444045,-70.684153)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (55,13,19.443407,-70.684158)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (56,13,19.44341,-70.68455)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (57,14,19.442479,-70.684807)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (58,14,19.442499,-70.684536)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (59,14,19.442059,-70.684525)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (60,14,19.442042,-70.684775)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (61,15,19.446231,-70.68363)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (62,15,19.446256,-70.683263)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (63,15,19.445563,-70.683271)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (64,15,19.445563,-70.683614)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (65,16,19.443999,-70.682048)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (66,16,19.444017,-70.681316)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (67,16,19.443382,-70.681299)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (68,16,19.443349,-70.681943)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (69,17,19.44574,-70.681562)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (70,17,19.445753,-70.680594)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (71,17,19.445262,-70.680578)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (72,17,19.445249,-70.681535)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (73,18,19.444108,-70.68552)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (74,18,19.44429,-70.685207)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (75,18,19.444272,-70.68503)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (76,18,19.44403,-70.685174)", false);
-            Query("INSERT INTO CoordenadaLocalizacion VALUES (77,18,19.443969,-70.685542)", false);
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (1,1,19.44023,-70.683369)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (2,1,19.440237,-70.682902)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (3,1,19.43986,-70.682891)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (4,1,19.43986,-70.682891)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (5,2,19.440434,-70.682709)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (6,2,19.440449,-70.682468)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (7,2,19.440081,-70.682452)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (8,2,19.440079,-70.682698)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (9,3,19.440864,-70.683512)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (10,3,19.440873,-70.683209)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (11,3,19.440375,-70.683204)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (12,3,19.440372,-70.683523)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (13,4,19.441171,-70.683106)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (14,4,19.441159,-70.682481)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (15,4,19.440923,-70.682482)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (16,4,19.440923,-70.683114)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (17,5,19.441853,-70.683339)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (18,5,19.441862,-70.682798)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (19,5,19.441703,-70.682787)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (20,5,19.441691,-70.683342)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (21,6,19.442173,-70.683402)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (22,6,19.442181,-70.68284)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (23,6,19.441992,-70.682836)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (24,6,19.441996,-70.683408)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (25,7,19.442315,-70.683633)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (26,7,19.442322,-70.683079)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (27,7,19.442174,-70.683076)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (28,7,19.442179,-70.683628)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (29,8,19.442786,-70.683318)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (30,8,19.44278,-70.682793)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (31,8,19.442657,-70.682794)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (32,8,19.44266,-70.683309)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (33,9,19.442967,-70.681999)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (34,9,19.442963,-70.681488)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (35,9,19.442834,-70.681482)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (36,9,19.442838,-70.682007)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (37,10,19.441628,-70.683687)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (38,10,19.441628,-70.683141)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (39,10,19.441464,-70.683148)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (40,10,19.441465,-70.683334)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (41,10,19.441197,-70.68334)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (42,10,19.441189,-70.683501)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (43,10,19.44147,-70.683513)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (44,10,19.44148,-70.683687)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (45,11,19.443149,-70.683679)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (46,11,19.443151,-70.683147)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (47,11,19.443008,-70.683151)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (48,11,19.443006,-70.683671)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (49,12,19.444131,-70.682992)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (50,12,19.444139,-70.682603)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (51,12,19.443496,-70.682514)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (52,12,19.443547,-70.682928)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (53,13,19.444037,-70.684592)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (54,13,19.444045,-70.684153)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (55,13,19.443407,-70.684158)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (56,13,19.44341,-70.68455)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (57,14,19.442479,-70.684807)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (58,14,19.442499,-70.684536)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (59,14,19.442059,-70.684525)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (60,14,19.442042,-70.684775)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (61,15,19.446231,-70.68363)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (62,15,19.446256,-70.683263)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (63,15,19.445563,-70.683271)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (64,15,19.445563,-70.683614)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (65,16,19.443999,-70.682048)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (66,16,19.444017,-70.681316)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (67,16,19.443382,-70.681299)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (68,16,19.443349,-70.681943)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (69,17,19.44574,-70.681562)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (70,17,19.445753,-70.680594)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (71,17,19.445262,-70.680578)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (72,17,19.445249,-70.681535)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (73,18,19.444108,-70.68552)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (74,18,19.44429,-70.685207)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (75,18,19.444272,-70.68503)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (76,18,19.44403,-70.685174)");
+            Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (77,18,19.443969,-70.685542)");
             #endregion
         }
 
@@ -551,7 +551,7 @@ namespace SncPucmm.Database
 			_databaseConnection = null; 
 		}
 
-        public IDataReader Query(string sqlQuery, bool isReturning) 
+        public IDataReader Query(bool isReturning, string sqlQuery) 
         {
             Debug.Log("Query :" + sqlQuery);
 
@@ -582,7 +582,7 @@ namespace SncPucmm.Database
 		/// <param name="tableName">Table name.</param>
 		/// <param name="columns">Columns.</param>
 		/// <param name="constraints">Constraints.</param>
-        public IDataReader SelectQuery(string tableName, List<string> columns, Dictionary<string, object> constraints)
+        public IDataReader SelectQuery(string tableName, List<string> columns, Dictionary<string, object> constraints, List<string> order)
         {
 			var query = "SELECT ";
 
@@ -605,6 +605,13 @@ namespace SncPucmm.Database
 				}
 				query = query.Substring(0,query.Length-5);
 			}
+
+            if (order != null) 
+            {
+                query += " ORDER BY ";
+                order.ForEach(x => { query += x + ","; } );
+                query = query.Substring(0, query.Length - 1);
+            }
 
             Debug.Log(query);
 
