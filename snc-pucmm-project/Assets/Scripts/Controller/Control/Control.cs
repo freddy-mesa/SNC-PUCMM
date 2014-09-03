@@ -17,7 +17,7 @@ namespace SncPucmm.Controller.Control
 
         public String Name { get { return _name; } }
 
-        public object Tag { get; set; }
+        public object ObjectTag { get; set; }
         
         #endregion
 
@@ -46,7 +46,7 @@ namespace SncPucmm.Controller.Control
             InitEventArgs e = new InitEventArgs();
             e.Mensaje = mensaje;
 
-            if (OnTouchEvent != null)
+            if (OnInitEvent != null)
             {
                 OnInitEvent(this, e);
             }
@@ -68,7 +68,7 @@ namespace SncPucmm.Controller.Control
             ChangeEventArgs e = new ChangeEventArgs();
             e.Mensaje = mensaje;
 
-            if (OnTouchEvent != null)
+            if (OnChangeEvent != null)
             {
                 OnChangeEvent(this, e);
             }
@@ -79,7 +79,7 @@ namespace SncPucmm.Controller.Control
             CloseEventArgs e = new CloseEventArgs();
             e.Mensaje = mensaje;
 
-            if (OnTouchEvent != null)
+            if (OnCloseEvent != null)
             {
                 OnCloseEvent(this, e);
             }

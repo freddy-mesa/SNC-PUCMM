@@ -54,7 +54,7 @@ namespace SncPucmm.View
 					
 					float angleOffSet = Vector2.Angle(previousDistance, currentDistance);
 
-                    if (!UITouch.isMoving || !UITouch.isZooming)
+                    if (!UITouch.isMoving)
                     {
 						if(angleOffSet > 0.1f){
                             UITouch.isRotating = true;

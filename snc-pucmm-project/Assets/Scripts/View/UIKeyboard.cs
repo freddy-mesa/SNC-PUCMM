@@ -6,9 +6,10 @@ using UnityEngine;
 
 namespace SncPucmm.View
 {
-    class UIKeyboard
+    public class UIKeyboard
     {
         #region Atributos
+        
         private static bool _isTouchKeyboardOpen;
         private TouchScreenKeyboard _keyboard;
 
@@ -26,7 +27,7 @@ namespace SncPucmm.View
 
         public UIKeyboard()
         {
-
+            TouchScreenKeyboard.hideInput = true;
         }
 
         #endregion
@@ -43,19 +44,16 @@ namespace SncPucmm.View
 
             UIUtils.ActivateCameraLabels(false);
 
-            var imgSearchBox = UIUtils.FindGUI("GUIMainMenu/HorizontalBar/SearchBoxMainMenu/SearchImgMainMenu").gameObject;
-
+            var imgSearchBox = UIUtils.FindGUI("GUIMenuMain/HorizontalBar/SearchBox/SearchImg").gameObject;
             imgSearchBox.SetActive(false);
         }
 
         public void Close()
         {
             _keyboard = null;
-
             _isTouchKeyboardOpen = false;
 
-            var imgSearchBox = UIUtils.FindGUI("GUIMainMenu/HorizontalBar/SearchBoxMainMenu/SearchImgMainMenu").gameObject;
-
+            var imgSearchBox = UIUtils.FindGUI("GUIMenuMain/HorizontalBar/SearchBox/SearchImg").gameObject;
             imgSearchBox.SetActive(true);
         }
 

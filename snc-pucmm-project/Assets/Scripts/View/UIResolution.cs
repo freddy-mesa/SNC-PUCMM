@@ -12,8 +12,8 @@ namespace SncPucmm.View
 		{
             float scalex = (float)(Screen.width) / originWidth; //your scale x
             float scaley = (float)(Screen.height) / originHeight; //your scale y
-            
-            var allGUIText = GameObject.FindObjectsOfType<GUIText>(); //all GUIText
+
+            var allGUIText = GetComponentsInChildren(typeof(GUIText), true); ; //all GUIText
 
             foreach (GUIText item in allGUIText)
             {

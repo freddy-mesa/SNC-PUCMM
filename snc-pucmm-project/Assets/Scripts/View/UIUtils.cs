@@ -49,6 +49,11 @@ namespace SncPucmm.View
             return guiObject.transform.FindChild(URI).gameObject;
         }
 
+        public static GameObject Find(string URI)
+        {
+            return GameObject.Find(URI);
+        }
+
         public static void DestroyChilds(string URI, bool isGUI) 
         {
             GameObject gameObject;
@@ -59,7 +64,7 @@ namespace SncPucmm.View
             }
             else 
             {
-                gameObject = GameObject.Find(URI);
+                gameObject = Find(URI);
             }
 
             foreach (Transform item in gameObject.transform)

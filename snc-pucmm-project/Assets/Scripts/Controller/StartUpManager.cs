@@ -18,7 +18,7 @@ namespace SncPucmm.Controller
             MenuManager.GetInstance();
             ModelPoolManager.GetInstance();
             SQLiteService.GetInstance();
-            State.ChangeState(eState.Exploring);
+            State.ChangeState(eState.Navigation);
 
             GUIInitializer();
             BuildingInitializer();

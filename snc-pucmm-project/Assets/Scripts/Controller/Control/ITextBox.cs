@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SncPucmm.Controller
+namespace SncPucmm.Controller.Control
 {
-    interface IButton
+    public interface ITextBox
     {
         /// <summary>
-        /// Gets list of buttons
+        /// Gets list of textBox
         /// </summary>
-        /// <returns>List of buttons</returns>
-        List<Button> GetButtonList();
+        /// <returns></returns>
+        List<TextBox> GetTextBoxList();
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 
 using UnityEngine;
 using SncPucmm.View;
+using SncPucmm.Controller.Control;
 
 namespace SncPucmm.Controller
 {
@@ -13,18 +14,18 @@ namespace SncPucmm.Controller
 		#region Atributos
 
 		private List<IMenu> _menuList;
-        private static MenuManager _menuManager;
+		private static MenuManager _menuManager;
 
 		#endregion
 
 		#region Constructor
 
-        private MenuManager()
+		private MenuManager()
 		{
 			_menuList = new List<IMenu>();
 		}
 		
-        #endregion
+		#endregion
 
 		#region Metodos
 
@@ -32,10 +33,10 @@ namespace SncPucmm.Controller
 		/// Gets the instance.
 		/// </summary>
 		/// <returns>The instance.</returns>
-        public static MenuManager GetInstance()
+		public static MenuManager GetInstance()
 		{
 			if(_menuManager == null)
-                _menuManager = new MenuManager();
+				_menuManager = new MenuManager();
 
 			return _menuManager;
 		}
@@ -44,21 +45,21 @@ namespace SncPucmm.Controller
 		/// Adds the menu.
 		/// </summary>
 		/// <param name="menuName">Menu name.</param>
-        public void AddMenu(IMenu newMenu)
-        {
-            _menuList.Add(newMenu);
-            ActivateCurrentMenu(true);
-        }
+		public void AddMenu(IMenu newMenu)
+		{
+			_menuList.Add(newMenu);
+			ActivateCurrentMenu(true);
+		}
 
 		/// <summary>
 		/// Removes the current menu.
 		/// </summary>
 		public void RemoveCurrentMenu(){
-            if (this._menuList.Count > 1)
-            {
-                ActivateCurrentMenu(false);
-                _menuList.Remove(GetCurrentMenu());
-            }
+			if (this._menuList.Count > 1)
+			{
+				ActivateCurrentMenu(false);
+				_menuList.Remove(GetCurrentMenu());
+			}
 		}
 
 		/// <summary>
@@ -88,7 +89,7 @@ namespace SncPucmm.Controller
 		/// <param name="activate">If set to <c>true</c> activate.</param>
 		public void ActivateCurrentMenu(bool activate){
 			var menu = UIUtils.FindGUI(GetCurrentMenu().GetMenuName());
-            menu.SetActive(activate);
+			menu.SetActive(activate);
 		}
 
 		#endregion

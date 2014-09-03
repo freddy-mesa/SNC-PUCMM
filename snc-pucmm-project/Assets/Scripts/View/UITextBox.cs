@@ -12,7 +12,7 @@ namespace SncPucmm.View
     {
         #region Atributos
 
-        public GUIText textSearch;
+        GUIText textSearch;
         UIKeyboard keyboardManager;
         TextBox currentTextBox;
 
@@ -21,6 +21,11 @@ namespace SncPucmm.View
         #endregion
 
         #region Metodos
+
+        void Start()
+        {
+            textSearch = this.transform.FindChild("SearchText").guiText;
+        }
         
         new void Update()
         {
@@ -53,15 +58,26 @@ namespace SncPucmm.View
 
         void OnTouchTextSearchBox(string name) 
         {
+            //Buscando el TextBox
             var menu = MenuManager.GetInstance().GetCurrentMenu() as ITextBox;
             currentTextBox = menu.GetTextBoxList().Find(x => x.Name == name);
+
+            //Initializando el Keyboard
             InitializeKeyboard();
+
+            //Quitando los labels de la camara
+            UIUtils.ActivateCameraLabels(false);
         }
 
         bool IsPreviousTextEquals() 
         {
             isEqualToPreviousText = textSearch.text.Equals(keyboardManager.GetText());
             return isEqualToPreviousText;
+        }
+
+        public UIKeyboard GetUIKeyBoard()
+        {
+            return keyboardManager;
         }
 
         #endregion

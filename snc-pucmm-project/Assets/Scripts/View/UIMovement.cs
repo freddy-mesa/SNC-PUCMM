@@ -9,7 +9,7 @@ namespace SncPucmm.View
 		private Vector2 currentPosition;		//Posicion final del Slice
 		
 		public float movementFactor = 5f;		//Min Limit 
-		public float movementSpeed = 150f;		//Movement Speed
+		public float movementSpeed = 300f;		//Movement Speed
 		
 		private float posX = 0.0f;				//distance in X axe
 		private float posZ = 0.0f;				//distance in Z axe
@@ -18,7 +18,7 @@ namespace SncPucmm.View
 		{
 			//Getting the first touch's position
 			if(Input.touchCount == 1)
-            {
+			{
 				previousPosition = Input.GetTouch(0).position;
 			}
 		}
@@ -26,13 +26,11 @@ namespace SncPucmm.View
 		//Se hace un Slice por delta de movimiento 
 		void OnTouchMovedAnywhere()
 		{
-            if (!UITouch.isRotating || !UITouch.isZooming)
+			if (!UITouch.isRotating || !UITouch.isZooming)
 			{
 				//Be sure that it's a slice, only one touchCount
 				if(Input.touchCount == 1)
-                {
-                    UITouch.isMoving = true;
-					
+				{					
 					//Getting Actual touch's position
 					currentPosition = Input.GetTouch(0).position;
 					
@@ -42,14 +40,15 @@ namespace SncPucmm.View
 					//Revisando si el delta es superior a un limite inferior de movimiento
 					if(Mathf.Abs(touchDelta) > movementFactor)
 					{
-						//Orientacion Vectical
-                        //if(this.transform.eulerAngles.y > 6 || this.transform.eulerAngles.y < -6)
-                        //{
-                        //    posX -= Input.GetTouch(0).deltaPosition.x * movementSpeed * Time.deltaTime;
-                        //    posZ += Input.GetTouch(0).deltaPosition.y * movementSpeed * Time.deltaTime;
-                        //}
+						UITouch.isMoving = true;
+
+						//if(this.transform.eulerAngles.y > 6 || this.transform.eulerAngles.y < -6)
+						//{
+						//    posX -= Input.GetTouch(0).deltaPosition.x * movementSpeed * Time.deltaTime;
+						//    posZ += Input.GetTouch(0).deltaPosition.y * movementSpeed * Time.deltaTime;
+						//}
 						if(touchDelta >= 0)
-                        {
+						{
 							//Left
 							if(currentPosition.x - previousPosition.x > currentPosition.y - previousPosition.y){
 								//Getting Meter/Second in X's axe
@@ -58,7 +57,7 @@ namespace SncPucmm.View
 							} 
 							//Top
 							else
-                            {
+							{
 								//Getting Meter/Second in Z's axe
 								posX = 0f;
 								posZ += touchDelta * movementSpeed * Time.deltaTime;
@@ -67,14 +66,14 @@ namespace SncPucmm.View
 						else {
 							//Bottom
 							if(currentPosition.x - previousPosition.x > currentPosition.y - previousPosition.y)
-                            {
+							{
 								//Getting Meter/Second in Z's axe
 								posX = 0f;
 								posZ += touchDelta * movementSpeed * Time.deltaTime;
 							} 
 							//Right
 							else 
-                            {
+							{
 								//Getting Meter/Second in X's axe
 								posX += touchDelta * movementSpeed * Time.deltaTime;
 								posZ = 0f;
@@ -85,7 +84,7 @@ namespace SncPucmm.View
 						posX = Mathf.Clamp(posX, -1f, 1f);
 						posZ = Mathf.Clamp(posZ, -1f, 1f);
 
-                        var previosPosition = this.transform.position;
+						var previosPosition = this.transform.position;
 						
 						//Preparacion para trasladar la camara, se quitan las rotaciones para que se traslade
 						//solo en X y en Z sin las inclinaciones que la camara tenga
@@ -99,16 +98,16 @@ namespace SncPucmm.View
 						//Se inclina la camara
 						this.transform.eulerAngles = new Vector3(15f, this.transform.eulerAngles.y, 0f);
 
-                        if(this.transform.position.x < -420f || this.transform.position.x > 420f ||
-                           this.transform.position.y < 30f || this.transform.position.y > 250f ||
-                           this.transform.position.z < -650f || this.transform.position.z > 400f)
-                        {
-                            this.transform.position = previosPosition;
-                        }
+						if(this.transform.position.x < -420f || this.transform.position.x > 420f ||
+						   this.transform.position.y < 30f || this.transform.position.y > 250f ||
+						   this.transform.position.z < -650f || this.transform.position.z > 400f)
+						{
+							this.transform.position = previosPosition;
+						}
 					} 
 					else 
 					{
-                        UITouch.isMoving = false;
+						UITouch.isMoving = false;
 					}
 				}
 			}

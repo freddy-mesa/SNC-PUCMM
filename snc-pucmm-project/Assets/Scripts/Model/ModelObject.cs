@@ -8,7 +8,10 @@ namespace SncPucmm.Model
 {
     class ModelObject : MonoBehaviour
     {
-        public int Id;
+        [SerializeField]
+        private int _id;
+
+        public int Id { get { return _id; } set { _id = value; } }
 
         public object ObjectTag { get; set; }
     }

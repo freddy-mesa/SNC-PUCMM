@@ -65,7 +65,7 @@ public class iTween : MonoBehaviour{
 	/* GFX47 MOD END */
 		
 	//private members:
- 	private float runningTime, percentage;
+	private float runningTime, percentage;
 	private float delayStarted; //probably not neccesary that this be protected but it shuts Unity's compiler up about this being "never used"
 	private bool kinematic, isLocal, loop, reverse, wasPaused, physics;
 	private Hashtable tweenArguments;
@@ -85,8 +85,8 @@ public class iTween : MonoBehaviour{
 	private Vector3 postUpdate;
 	private NamedValueColor namedcolorvalue;
 
-    private float lastRealTime; // Added by PressPlay
-    private bool useRealTime; // Added by PressPlay
+	private float lastRealTime; // Added by PressPlay
+	private bool useRealTime; // Added by PressPlay
 	
 	private Transform thisTransform;
 
@@ -202,7 +202,7 @@ public class iTween : MonoBehaviour{
 		public static int cameraFadeDepth = 999999;
 		//path look ahead amount:
 		public static float lookAhead = .05f;
-        public static bool useRealTime = false; // Added by PressPlay
+		public static bool useRealTime = false; // Added by PressPlay
 		//look direction:
 		public static Vector3 up = Vector3.up;
 	}
@@ -1225,7 +1225,7 @@ public class iTween : MonoBehaviour{
 			tempRestriction=target.transform.eulerAngles;
 			switch((string)args["axis"]){
 				case "x":
-				 	tempRestriction.y=tempRotation.y;
+					tempRestriction.y=tempRotation.y;
 					tempRestriction.z=tempRotation.z;
 				break;
 				case "y":
@@ -6557,7 +6557,7 @@ public class iTween : MonoBehaviour{
 		thisTransform = transform;
 			
 		RetrieveArgs();
-        lastRealTime = Time.realtimeSinceStartup; // Added by PressPlay
+		lastRealTime = Time.realtimeSinceStartup; // Added by PressPlay
 	}
 	
 	IEnumerator Start(){
@@ -6814,7 +6814,7 @@ public class iTween : MonoBehaviour{
 		_name=(string)tweenArguments["name"];
 		/* GFX47 MOD END */
 		method=(string)tweenArguments["method"];
-               
+			   
 		if(tweenArguments.Contains("time")){
 			time=(float)tweenArguments["time"];
 		}else{
@@ -6825,7 +6825,7 @@ public class iTween : MonoBehaviour{
 		if(rigidbody != null){
 			physics=true;
 		}
-               
+			   
 		if(tweenArguments.Contains("delay")){
 			delay=(float)tweenArguments["delay"];
 		}else{
@@ -6863,7 +6863,7 @@ public class iTween : MonoBehaviour{
 		}else{
 			loopType = iTween.LoopType.none;	
 		}			
-         
+		 
 		if(tweenArguments.Contains("easetype")){
 			//allows easeType to be set as either an enum(C# friendly) or a string(JS friendly), string case usage doesn't matter to further increase usability:
 			if(tweenArguments["easetype"].GetType() == typeof(EaseType)){
@@ -6902,15 +6902,15 @@ public class iTween : MonoBehaviour{
 			isLocal = Defaults.isLocal;
 		}
 
-        // Added by PressPlay
-        if (tweenArguments.Contains("ignoretimescale"))
-        {
-            useRealTime = (bool)tweenArguments["ignoretimescale"];
-        }
-        else
-        {
-            useRealTime = Defaults.useRealTime;
-        }
+		// Added by PressPlay
+		if (tweenArguments.Contains("ignoretimescale"))
+		{
+			useRealTime = (bool)tweenArguments["ignoretimescale"];
+		}
+		else
+		{
+			useRealTime = Defaults.useRealTime;
+		}
 
 		//instantiates a cached ease equation reference:
 		GetEasingFunction();
@@ -7031,15 +7031,15 @@ public class iTween : MonoBehaviour{
 	//calculate percentage of tween based on time:
 	void UpdatePercentage(){
 
-	        // Added by PressPlay   
-	        if (useRealTime)
-	        {
-	            runningTime += (Time.realtimeSinceStartup - lastRealTime);      
-	        }
-	        else
-	        {
-	            runningTime += Time.deltaTime;
-	        }
+			// Added by PressPlay   
+			if (useRealTime)
+			{
+				runningTime += (Time.realtimeSinceStartup - lastRealTime);      
+			}
+			else
+			{
+				runningTime += Time.deltaTime;
+			}
 	
 			if(reverse){
 				percentage = 1 - runningTime/time;	
@@ -7047,7 +7047,7 @@ public class iTween : MonoBehaviour{
 				percentage = runningTime/time;	
 			}
 	
-	        lastRealTime = Time.realtimeSinceStartup; // Added by PressPlay
+			lastRealTime = Time.realtimeSinceStartup; // Added by PressPlay
 	}
 	
 	void CallBack(string callbackType){
@@ -7164,7 +7164,7 @@ public class iTween : MonoBehaviour{
 			retval = start + diff;
 		}else retval = start + (end - start) * value;
 		return retval;
-    }
+	}
 
 	private float spring(float start, float end, float value){
 		value = Mathf.Clamp01(value);
@@ -7374,7 +7374,7 @@ public class iTween : MonoBehaviour{
 		float period = 1 * 0.3f;
 		s = period / (2 * Mathf.PI) * Mathf.Asin(0);
 		return (amplitude * Mathf.Pow(2, -10 * value) * Mathf.Sin((value * 1 - s) * (2 * Mathf.PI) / period));
-    }
+	}
 	
 	/* GFX47 MOD START */
 	private float easeInElastic(float start, float end, float value){

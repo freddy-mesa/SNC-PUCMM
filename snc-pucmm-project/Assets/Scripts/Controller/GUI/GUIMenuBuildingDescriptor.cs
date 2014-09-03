@@ -63,10 +63,7 @@ namespace SncPucmm.Controller.GUI
 
             if (MenuManager.GetInstance().NoMenuLeft())
             {
-                var modelPool = ModelPoolManager.GetInstance();
-                modelPool.Remove("localizacion");
-
-                State.ChangeState(eState.Exploring);
+                State.ChangeState(eState.Navigation);
             }
         }
 

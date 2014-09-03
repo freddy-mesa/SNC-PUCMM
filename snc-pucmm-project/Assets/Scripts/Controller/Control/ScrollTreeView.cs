@@ -9,19 +9,29 @@ using System.Text;
 
 namespace SncPucmm.Controller.Control
 {
-    public class TreeView : Control
+    public class ScrollTreeView : Control, IButton
     {
         #region Atributos
+
+        private List<Button> buttonList;
 
         #endregion
 
         #region Contructor
 
-        public TreeView(string name) : base(name) { }
+        public ScrollTreeView(string name) : base(name) 
+        {
+            buttonList = new List<Button>();
+        }
 
         #endregion
 
         #region Metodos
+        
+        public List<Button> GetButtonList()
+        {
+            return buttonList;
+        }
 
         #endregion
     }
