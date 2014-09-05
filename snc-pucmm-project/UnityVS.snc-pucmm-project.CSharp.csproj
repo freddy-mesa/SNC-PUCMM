@@ -79,30 +79,33 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Controller\Control\Button.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\Control.cs" />
+    <Compile Include="Assets\Scripts\Controller\Control\IButton.cs" />
+    <Compile Include="Assets\Scripts\Controller\Control\IMenu.cs" />
+    <Compile Include="Assets\Scripts\Controller\Control\IScrollTreeView.cs" />
+    <Compile Include="Assets\Scripts\Controller\Control\ITextBox.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\Label.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\ScrollTreeView.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\TextBox.cs" />
     <Compile Include="Assets\Scripts\Controller\EventHandler.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuBuildingDescriptor.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuMain.cs" />
-    <Compile Include="Assets\Scripts\Controller\Control\IButton.cs" />
-    <Compile Include="Assets\Scripts\Controller\Control\IMenu.cs" />
-    <Compile Include="Assets\Scripts\Controller\Control\IScrollTreeView.cs" />
-    <Compile Include="Assets\Scripts\Controller\Control\ITextBox.cs" />
     <Compile Include="Assets\Scripts\Controller\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Controller\ModelPoolManager.cs" />
+    <Compile Include="Assets\Scripts\Model\Navigation\PathData.cs" />
+    <Compile Include="Assets\Scripts\Controller\Navigation\Graph.cs" />
     <Compile Include="Assets\Scripts\Controller\StartUpManager.cs" />
     <Compile Include="Assets\Scripts\Controller\State.cs" />
     <Compile Include="Assets\Scripts\Database\SQLiteService.cs" />
     <Compile Include="Assets\Scripts\Model\Localizacion.cs" />
     <Compile Include="Assets\Scripts\Model\ModelObject.cs" />
+    <Compile Include="Assets\Scripts\Model\Navigation\Neighbor.cs" />
+    <Compile Include="Assets\Scripts\Model\Navigation\Node.cs" />
+    <Compile Include="Assets\Scripts\Model\Navigation\DijkstraPath.cs" />
+    <Compile Include="Assets\Scripts\Model\Navigation\SectionNodes.cs" />
     <Compile Include="Assets\Scripts\Model\Ubicacion.cs" />
-    <Compile Include="Assets\Scripts\Navigation\Graph.cs" />
-    <Compile Include="Assets\Scripts\Navigation\Neighbor.cs" />
-    <Compile Include="Assets\Scripts\Navigation\Node.cs" />
-    <Compile Include="Assets\Scripts\Navigation\Path.cs" />
     <Compile Include="Assets\Scripts\View\UIAnimation.cs" />
     <Compile Include="Assets\Scripts\View\UIButton.cs" />
+    <Compile Include="Assets\Scripts\View\UICamara.cs" />
     <Compile Include="Assets\Scripts\View\UIGPS.cs" />
     <Compile Include="Assets\Scripts\View\UIKeyboard.cs" />
     <Compile Include="Assets\Scripts\View\UIModel.cs" />
@@ -116,5 +119,6 @@
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Plugins\Android\build.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

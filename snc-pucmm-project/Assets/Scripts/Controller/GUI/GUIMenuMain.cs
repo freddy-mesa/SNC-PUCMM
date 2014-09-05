@@ -44,9 +44,25 @@ namespace SncPucmm.Controller.GUI
 			ModelController.OnTouchEvent += new OnTouchEventHandler(OnTouchModelController);
 			buttonList.Add(ModelController);
 
-			var MainButton = new Button("ButtonMain");
-			MainButton.OnTouchEvent += new OnTouchEventHandler(OnTouchMainButton);
-			buttonList.Add(MainButton);
+			var ButtonMain = new Button("ButtonMain");
+			ButtonMain.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonMain);
+			buttonList.Add(ButtonMain);
+
+			var ButtonCambioVista = new Button("ButtonCambioVista");
+			ButtonCambioVista.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonCambioVista);
+			buttonList.Add(ButtonCambioVista);
+
+			var ButtonRegistrar = new Button("ButtonRegistrar");
+			ButtonRegistrar.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonRegistrar);
+			buttonList.Add(ButtonRegistrar);
+
+			var ButtonSeguridad = new Button("ButtonSeguridad");
+			ButtonSeguridad.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonSeguridad);
+			buttonList.Add(ButtonSeguridad);
+
+			var ButtonTours = new Button("ButtonTours");
+			ButtonTours.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonTours);
+			buttonList.Add(ButtonTours);
 
 			textBoxList = new List<TextBox>();
 
@@ -58,6 +74,42 @@ namespace SncPucmm.Controller.GUI
 			treeView.OnChangeEvent += new OnChangeEventHandler(OnChangeScrollTreeView);
 			treeView.OnCloseEvent += new OnCloseEventHandler(OnCloseScrollTreeView);
 		}
+
+		#region Sidebar
+
+		private void OnTouchButtonTours(object sender, TouchEventArgs e)
+		{
+			
+		}
+
+		private void OnTouchButtonSeguridad(object sender, TouchEventArgs e)
+		{
+			
+		}
+
+		private void OnTouchButtonRegistrar(object sender, TouchEventArgs e)
+		{
+			
+		}
+
+		private void OnTouchButtonCambioVista(object sender, TouchEventArgs e)
+		{
+			UICamara.Cambiar();
+
+			if (UICamara.Vista_1era_Persona)
+			{
+				UICamara.CambiarCamaraPrimeraPersona();
+			}
+
+			if (UICamara.Vista_3era_Persona)
+			{
+				UICamara.CambiarCamaraTerceraPersona();
+			}
+
+			OpenCloseMainMenu();
+		}
+
+		#endregion
 
 		private void OnTouchModelController(object sender, TouchEventArgs e)
 		{
@@ -74,7 +126,12 @@ namespace SncPucmm.Controller.GUI
 			textBox.label.Text = text;
 		}
 
-		private void OnTouchMainButton(object sender, TouchEventArgs e)
+		private void OnTouchButtonMain(object sender, TouchEventArgs e)
+		{
+			OpenCloseMainMenu();
+		}
+
+		private void OpenCloseMainMenu()
 		{
 			var sidebarGameObject = UIUtils.FindGUI("GUIMenuMain/Sidebar");
 			float position;

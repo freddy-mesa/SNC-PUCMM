@@ -27,7 +27,7 @@ namespace SncPucmm.View
 
         public UIKeyboard()
         {
-            TouchScreenKeyboard.hideInput = true;
+            //TouchScreenKeyboard.hideInput = true;
         }
 
         #endregion
