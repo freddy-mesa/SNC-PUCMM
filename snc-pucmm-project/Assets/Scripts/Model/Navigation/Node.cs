@@ -19,10 +19,14 @@ namespace SncPucmm.Model.Navigation
         public bool Active { get; set; }
 
         public Boolean Visited { get; set; }
-
+        
         public float DijkstraDistance { get; set; }
 
         public DijkstraPath DijkstraPath { get; set; }
+
+        public float Latitude { get; set; }
+
+        public float Longitude { get; set; }
         
         #endregion
 
@@ -30,13 +34,14 @@ namespace SncPucmm.Model.Navigation
 
         public Node() { }
 
-        public Node(Node node) : this(node.Name, node.Neighbors, node.Active) { }
+        public Node(Node node) : this(node.Name, node.Neighbors, node.DijkstraDistance, node.Active) { }
 
-        public Node(string name, List<Neighbor> neighbors, bool active)
+        public Node(string name, List<Neighbor> neighbors, float distance, bool active)
         {
             this.Name = name;
             this.Neighbors = neighbors;
             this.Active = active;
+            this.DijkstraDistance = distance;
         }
         
         #endregion

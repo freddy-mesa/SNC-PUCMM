@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using SncPucmm.View;
 
 namespace SncPucmm.View
 {
@@ -15,11 +16,6 @@ namespace SncPucmm.View
 		public float planeAxeX;
 		
 		public GameObject character;
-		
-		const float ORIGEN_LAT = 19.448918f;
-		const float ORIGEN_LON = -70.687180f;
-		const float totalMetrosAncho = (950/2);
-		const float totalMetrosLargo = (1150/2);
 		
 		const string CAMARA_NAME_1 = "Vista_1er_Persona";
 		const string CAMARA_NAME_2 = "Vista_3er_Persona";
@@ -57,30 +53,9 @@ namespace SncPucmm.View
 			lblAltitude.text = "Altitude: " + altitude.ToString ();
 			lblLongitude.text = "Longitude: " + longitude.ToString ();
 			lblLatitude.text = "Latitude: " + latitude.ToString ();
-			
-			planeAxeX = Mathf.Abs(getDistanciaComponentX());
-			planeAxeZ = Mathf.Abs(getDistanciaComponentZ());
-			
-			lblComponentX.text = planeAxeX.ToString();
-			lblComponentZ.text = planeAxeZ.ToString();
-			
-			if(planeAxeX >= totalMetrosAncho)
-			{
-				planeAxeX -= totalMetrosAncho;
-			} 
-			else
-			{
-				planeAxeX = -(totalMetrosAncho - planeAxeX);
-			}
-			
-			if(planeAxeZ >= totalMetrosLargo)
-			{
-				planeAxeZ = -(planeAxeZ - totalMetrosLargo);
-			}
-			else
-			{
-				planeAxeZ = totalMetrosLargo - planeAxeZ;
-			}
+
+            planeAxeX = Mathf.Abs(UIUtils.getXDistance(longitude));
+            planeAxeZ = Mathf.Abs(UIUtils.getZDistance(latitude));
 			
 			lblComponentX.text = "Pos X: " + planeAxeX.ToString();
 			lblComponentZ.text = "Pos Z: " + planeAxeZ.ToString();
@@ -93,30 +68,6 @@ namespace SncPucmm.View
 					planeAxeX, this.transform.position.y, planeAxeZ
 				);
 			}
-		}
-		
-		private double Distance(float lat1, float lon1, float lat2, float lon2){
-			var R = 6378.137; // Radius of earth in KM
-			var dLat = (lat2 - lat1) * Mathf.PI / 180;
-			var dLon = (lon2 - lon1) * Mathf.PI / 180;
-			var a = Mathf.Sin(dLat/2) * Mathf.Sin(dLat/2) +
-				Mathf.Cos(lat1 * Mathf.PI / 180) * Mathf.Cos(lat2 * Mathf.PI / 180) *
-					Mathf.Sin(dLon/2) * Mathf.Sin(dLon/2);
-			var c = 2 * Mathf.Atan2(Mathf.Sqrt(a), Mathf.Sqrt(1-a));
-			var d = R * c;
-			return d * 1000f; // meters
-		}
-
-        private float getDistanciaComponentX()
-        {
-			var componentAxeX = Distance(ORIGEN_LAT,ORIGEN_LON,ORIGEN_LAT,longitude);
-			return (float)componentAxeX;
-		}
-
-        private float getDistanciaComponentZ()
-        {
-			var componentAxeZ = Distance(ORIGEN_LAT,ORIGEN_LON,latitude,ORIGEN_LON);
-			return (float)componentAxeZ;
 		}
 	}	
 }

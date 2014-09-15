@@ -21,6 +21,12 @@ namespace SncPucmm.Model.Navigation
         #region Constructor
 
         public Neighbor() { }
+        public Neighbor(Neighbor neighbor) : this(neighbor.Node, neighbor.Distance) { }
+        public Neighbor(Node node, float distance) 
+        {
+            this.Node = node;
+            this.Distance = distance;
+        }
         
         #endregion
     }

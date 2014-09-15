@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
+using SncPucmm.View;
 
 namespace SncPucmm.Controller.Navigation
 {
@@ -10,7 +12,7 @@ namespace SncPucmm.Controller.Navigation
     {
         #region Propiedades
 
-        public List<SectionNodes> SectionNodesList { get; set; }
+        public List<Node> Nodes { get; set; }
         
         #endregion
 
@@ -18,14 +20,14 @@ namespace SncPucmm.Controller.Navigation
 
         public Graph()
         {
-            SectionNodesList = new List<SectionNodes>();
+            Nodes = new List<Node>();
         }
 
         #endregion
 
         #region Metodos
 
-        public void AddNeighbor(Node node, Node neighbor, float distance)
+        public void AddNeighbor(Node node, Node neighbor)
         {
             if (node.Neighbors == null)
                 node.Neighbors = new List<Neighbor>();
@@ -33,31 +35,28 @@ namespace SncPucmm.Controller.Navigation
             if (neighbor.Neighbors == null)
                 neighbor.Neighbors = new List<Neighbor>();
 
+            float distance = UIUtils.getDirectDistance(UIUtils.getXDistance(node.Longitude), UIUtils.getZDistance(node.Latitude), UIUtils.getXDistance(neighbor.Longitude), UIUtils.getZDistance(neighbor.Latitude));
             node.Neighbors.Add(new Neighbor() { Node = neighbor, Distance = distance });
             neighbor.Neighbors.Add(new Neighbor() { Node = node, Distance = distance });
         }
 
-        public void AddNeighbor(String node, String neighbor, float distance)
+        public void AddNeighbor(String node, String neighbor)
         {
             bool nodeFound = false, neighborFound = false;
             Node A = new Node(), B = new Node();
 
-            foreach (SectionNodes section in SectionNodesList)
+            foreach (Node nodeInList in Nodes)
             {
-                foreach (var nodeInList in section.NodeList)
+                if (!nodeFound && nodeInList.Name.Equals(node))
                 {
-                    if (!nodeFound && nodeInList.Name.Equals(node))
-                    {
-                        A = nodeInList;
-                        nodeFound = !nodeFound;
-                    }
-                    if (!neighborFound && nodeInList.Name.Equals(neighbor))
-                    {
-                        B = nodeInList;
-                        neighborFound = !neighborFound;
-                    }
+                    A = nodeInList;
+                    nodeFound = !nodeFound;
                 }
-
+                if (!neighborFound && nodeInList.Name.Equals(neighbor))
+                {
+                    B = nodeInList;
+                    neighborFound = !neighborFound;
+                }
                 if (nodeFound && neighborFound)
                 {
                     break;
@@ -70,6 +69,7 @@ namespace SncPucmm.Controller.Navigation
             if (B.Neighbors == null)
                 B.Neighbors = new List<Neighbor>();
 
+            float distance = UIUtils.getDirectDistance(UIUtils.getXDistance(A.Longitude), UIUtils.getZDistance(A.Latitude), UIUtils.getXDistance(B.Longitude), UIUtils.getZDistance(B.Latitude));
             A.Neighbors.Add(new Neighbor() { Node = B, Distance = distance });
             B.Neighbors.Add(new Neighbor() { Node = A, Distance = distance });
         }
@@ -77,45 +77,56 @@ namespace SncPucmm.Controller.Navigation
         public List<PathData> Dijkstra(String startName, String destinationName)
         {
             bool startNodeFound = false, endNodeFound = false;
-            List<Node> Nodes = new List<Node>();
+            List<Node> NodesDijkstra = new List<Node>();
             Node start = new Node(), destination = new Node();
 
-            foreach (SectionNodes section in SectionNodesList)
+            foreach (Node nodeInList in this.Nodes)
             {
-                foreach (var nodeInList in section.NodeList)
+                if (nodeInList.Active)
                 {
                     Node node = new Node(nodeInList);
-
-                    node.DijkstraDistance = Int32.MaxValue;
-                    Nodes.Add(new Node(node));
-
+                
                     if (!startNodeFound && node.Name.Equals(startName))
                     {
+                        node.DijkstraDistance = 0;
                         start = node;
-                        start.DijkstraDistance = 0;
                         startNodeFound = !startNodeFound;
+                    }
+                    else
+                    {
+                        node.DijkstraDistance = Int32.MaxValue;
                     }
                     if (!endNodeFound && node.Name.Equals(destinationName))
                     {
                         destination = node;
                         endNodeFound = !endNodeFound;
                     }
+                    NodesDijkstra.Add(node);
                 }
             }
 
+            foreach (Node node in NodesDijkstra)
+                foreach (Neighbor neighbor in node.Neighbors)
+                    foreach (Node nodeToFind in NodesDijkstra)
+                        if (neighbor.Node.Name == nodeToFind.Name) 
+                        { 
+                            neighbor.Node = nodeToFind;
+                            break;
+                        }
+            
             float distancePathed;
             start.DijkstraPath = new DijkstraPath(start.Name);
 
-            while (Nodes.Count > 0)
+            while (NodesDijkstra.Count > 0)
             {
-                Node minNode = (from node in Nodes orderby node.DijkstraDistance select node).First();
+                Node minNode = (from node in NodesDijkstra orderby node.DijkstraDistance select node).First();
 
-                Nodes.Remove(minNode);
+                NodesDijkstra.Remove(minNode);
                 minNode.Visited = true;
 
                 foreach (Neighbor neighbor in minNode.Neighbors)
                 {
-                    if (!neighbor.Node.Visited)
+                    if (!neighbor.Node.Visited && neighbor.Node.Active)
                     {
                         distancePathed = minNode.DijkstraDistance + neighbor.Distance;
                         if (distancePathed < neighbor.Node.DijkstraDistance)
@@ -129,10 +140,10 @@ namespace SncPucmm.Controller.Navigation
                 }
             }
             
-            return PathToNodeList(destination.DijkstraPath, Nodes);
+            return PathToNodeList(destination.DijkstraPath);
         }
 
-        public List<PathData> PathToNodeList(DijkstraPath destinationPath, List<Node> Nodes)
+        public List<PathData> PathToNodeList(DijkstraPath destinationPath)
         {
             List<PathData> nodeList = new List<PathData>();
 
@@ -148,7 +159,7 @@ namespace SncPucmm.Controller.Navigation
                     StartNode = Nodes.Find(x => x.Name == nodeInPath[0]),
                     DistanceToNeighbor = Convert.ToSingle(nodeInPath[1]),
                     DistancePathed = Convert.ToSingle(nodeInPath[2]),
-                    EndNode = Nodes.Find(x => x.Name == nodosPath[i + 1])
+                    EndNode = Nodes.Find(x => x.Name == nodosPath[i+1].Split('|')[0])
                 });
             }
 
