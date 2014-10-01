@@ -63,7 +63,9 @@ namespace Assets.Scripts.View
             graph.Nodes.Add(new Node() { Name = "Node 22", Latitude = 19.441873f, Longitude = -70.683387f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 23", Latitude = 19.441900f, Longitude = -70.683140f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 24", Latitude = 19.441979f, Longitude = -70.683060f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 24.5", Latitude = 19.442012f, Longitude = -70.683066f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 25", Latitude = 19.441850f, Longitude = -70.683060f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 25.5", Latitude = 19.441853f, Longitude = -70.683066f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 26", Latitude = 19.442606f, Longitude = -70.683073f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 27", Latitude = 19.442596f, Longitude = -70.683395f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 28", Latitude = 19.442328f, Longitude = -70.683395f, Active = true });
@@ -106,7 +108,7 @@ namespace Assets.Scripts.View
             graph.AddNeighbor("Node 3.5", "Talleres y Suministro");
             graph.AddNeighbor("Node 4", "4.5");
             graph.AddNeighbor("Node 4", "Node 5");
-            graph.AddNeighbor("Node 4", "Node 11");
+            graph.AddNeighbor("Node 4", "Node 10");
             graph.AddNeighbor("Node 4.5", "Talleres y Suministro");
             graph.AddNeighbor("Node 5", "Node 6.5");
             graph.AddNeighbor("Node 5", "Lab. Generales de Ingeniería");
@@ -124,14 +126,12 @@ namespace Assets.Scripts.View
             graph.AddNeighbor("Node 11", "Node 14");
             graph.AddNeighbor("Node 11", "Node 12");
             graph.AddNeighbor("Node 12", "Node 13");
-            graph.AddNeighbor("Node 12", "Node 15");
             graph.AddNeighbor("Node 12", "Node 16");
+            graph.AddNeighbor("Node 12", "Node 18");
+            graph.AddNeighbor("Node 12", "Node 19");
             graph.AddNeighbor("Node 13", "Aulas 3");
             graph.AddNeighbor("Node 14", "Lab. Generales de Ingeniería");
             graph.AddNeighbor("Node 14", "Node 16");
-            graph.AddNeighbor("Node 15", "Node 16");
-            graph.AddNeighbor("Node 15", "Node 18");
-            graph.AddNeighbor("Node 15", "Node 19");
             graph.AddNeighbor("Node 16", "Node 17");//Revisar estos nodos. Como que hay uno de más.
             graph.AddNeighbor("Node 17", "Node 18");
             graph.AddNeighbor("Node 18", "Node 54");
@@ -149,7 +149,8 @@ namespace Assets.Scripts.View
             graph.AddNeighbor("Node 24", "Node 25");
             graph.AddNeighbor("Node 24", "Node 24.5");
             graph.AddNeighbor("Node 24.5", "Ciencias Basicas II");
-            graph.AddNeighbor("Node 25", "Departamentos de Ingeniería");
+            graph.AddNeighbor("Node 25", "Node 25.5");
+            graph.AddNeighbor("Node 25.5", "Departamentos de Ingeniería");
             graph.AddNeighbor("Node 26", "Ciencias Basicas II");
             graph.AddNeighbor("Node 26", "Aulas 1");
             graph.AddNeighbor("Node 26", "Node 27");
@@ -200,7 +201,7 @@ namespace Assets.Scripts.View
             graph.AddNeighbor("Node 53", "Aulas 4");
 
             //Aqui se pone de donde a donde se desea mostrar el camino. Ej: De Ciencias Basicas I a Aulas 2
-            List<PathData> path = graph.Dijkstra("Ciencias Basicas I", "Lab. Generales de Ingeniería");
+            List<PathData> path = graph.Dijkstra("Aulas 2", "Biblioteca");
             print("Path:\n");
             foreach (var item in path)
                 print(item.StartNode.Name + " -> " + item.EndNode.Name + "  ---  Distance: " + item.DistanceToNeighbor + "  ---  Total Distance: " + item.DistancePathed + "\n");
