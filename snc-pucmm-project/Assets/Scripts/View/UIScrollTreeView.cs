@@ -14,6 +14,7 @@ namespace SncPucmm.View
 
         GameObject itemTreeViewTemplate;
         GUIText textSearch;
+        GameObject guiTreeView;
 
         private ScrollTreeView treeView;
         private string previousText;
@@ -31,16 +32,20 @@ namespace SncPucmm.View
 
         #region Metodos
 
-        void Start() 
+        void Start()
         {
             itemTreeViewTemplate = Resources.Load("GUI/GUITreeViewItem") as GameObject;
             textSearch = UIUtils.FindGUI("GUIMenuMain/HorizontalBar/SearchBox/SearchText").guiText;
+            guiTreeView = UIUtils.FindGUI("GUIMenuMain/TreeView/ScrollTreeView");
+
             previousText = String.Empty;
             Initialize();
         }
 
-        new void Update() 
+        new void Update()
         {
+            base.Update();
+
             if (isScrolling)
             {
                 //Creating vector of new position
@@ -49,13 +54,26 @@ namespace SncPucmm.View
                 //Translating vector in local position
                 this.transform.Translate(newPosition, Space.Self);
 
+                float upperLimit, downerLimit;
+
+                if (guiTreeView.transform.childCount > 7)
+                {
+                    upperLimit = 0.16f;
+                    downerLimit = 0.43f + 0.25f * (guiTreeView.transform.childCount - 7f);
+                }
+                else
+                {
+                    upperLimit = 0.16f;
+                    downerLimit = 0.2f;
+                }
+
                 //Limitings of the local position
                 this.transform.localPosition = new Vector3(
                     this.transform.localPosition.x,
-                    Mathf.Clamp(this.transform.localPosition.y, 0.16f, 3.11f),
+                    Mathf.Clamp(this.transform.localPosition.y, upperLimit, downerLimit),
                     this.transform.localPosition.z
                 );
-                
+
                 isScrolling = false;
             }
 
@@ -73,9 +91,6 @@ namespace SncPucmm.View
                     previousText = textSearch.text;
                 }
             }
-
-            base.Update();
-
         }
 
         private void Initialize()
@@ -87,9 +102,10 @@ namespace SncPucmm.View
         /// Show the Tree View List from 
         /// </summary>
         /// <param name="text">Text to search in Database</param>
-        void ShowTreeViewList(string text) 
+        void ShowTreeViewList(string text)
         {
-            var obj = new { 
+            var obj = new
+            {
                 text = text,
                 parent = this.transform,
                 template = itemTreeViewTemplate
@@ -103,7 +119,7 @@ namespace SncPucmm.View
         /// Verifica si hay algo algo escrito en el Texto del SearchBox
         /// </summary>
         /// <returns>true si hay algo escrito, de lo contrario, falso</returns>
-        bool IsWriting() 
+        bool IsWriting()
         {
             return (this.textSearch.text == String.Empty ? false : true);
         }

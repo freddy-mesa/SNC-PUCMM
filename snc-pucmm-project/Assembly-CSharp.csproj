@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_4;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_3;UNITY_4_5;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -46,6 +46,52 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Runtime\DrawCallMinimizer.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\CommonShaderProperties.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\DrawCallMinimizerInfo.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\MatrixExtension.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\MeshCombineUtility.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\MeshExporter.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\MeshInstance.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\ShaderProperties.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\TextureCombineOutput.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\TextureCombineUtility.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\TexturePosition.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Misc\ShaderProperties.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Misc\TextureAtlasInfo.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Runtime\MeshCombineUtility.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Runtime\OptimizedCombineChildren.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Runtime\TextureCombineUtility.cs" />
+     <Compile Include="Assets\GyroDroid\SampleScripts\LightControl.cs" />
+     <Compile Include="Assets\GyroDroid\SampleScripts\MagneticFieldCamera.cs" />
+     <Compile Include="Assets\GyroDroid\SampleScripts\MinimalSensorCamera.cs" />
+     <Compile Include="Assets\GyroDroid\SampleScripts\MoveByLinearAcc.cs" />
+     <Compile Include="Assets\GyroDroid\SampleScripts\SpaceShipControl.cs" />
+     <Compile Include="Assets\GyroDroid\SampleScripts\SwitchRotationMode.cs" />
+     <Compile Include="Assets\GyroDroid\SampleScripts\TurntableSensorCamera.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Debug\SensorStatisticsGUI.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Devices\SensorDeviceAndroid.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Devices\SensorDeviceIPhone.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Devices\SensorDeviceUnity.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Devices\SensorEditorUnity.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Enums\RotationFallbackType.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Enums\SensorDelay.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Enums\SensorStatus.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Enums\SensorSurfaceRotation.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Enums\Type.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Filters\AngleFilter.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Filters\Filter.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Filters\FloatFilter.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Filters\QuaternionFilter.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Filters\Vector3Filter.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Sensor.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\SensorHelper.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Utils\GravityValue.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Utils\LightValue.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Utils\MagneticFieldValue.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Utils\NonAndroidFallback.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Utils\PressureValue.cs" />
+     <Compile Include="Assets\GyroDroid\Scripts\Utils\Sensor.Information.cs" />
      <Compile Include="Assets\Nodos.cs" />
      <Compile Include="Assets\Pivot.cs" />
      <Compile Include="Assets\Scripts\Controller\Control\Button.cs" />
@@ -63,6 +109,7 @@
      <Compile Include="Assets\Scripts\Controller\MenuManager.cs" />
      <Compile Include="Assets\Scripts\Controller\ModelPoolManager.cs" />
      <Compile Include="Assets\Scripts\Controller\Navigation\Graph.cs" />
+     <Compile Include="Assets\Scripts\Controller\Navigation\NavigationController.cs" />
      <Compile Include="Assets\Scripts\Controller\StartUpManager.cs" />
      <Compile Include="Assets\Scripts\Controller\State.cs" />
      <Compile Include="Assets\Scripts\Database\SQLiteService.cs" />
@@ -89,28 +136,31 @@
      <Compile Include="Assets\Scripts\View\UITouch.cs" />
      <Compile Include="Assets\Scripts\View\UIUtils.cs" />
      <Compile Include="Assets\Scripts\View\UIZoomRotation.cs" />
+     <None Include="Assets\GyroDroid\GyroDroid-minimal-README.txt" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+     <None Include="Assets\Draw Call Minimizer\Example\ReadMe.txt" />
      <None Include="Assets\Plugins\Android\build.xml" />
+     <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
  <Reference Include="Mono.Data">
- <HintPath>Assets\Plugins\Mono.Data.dll</HintPath>
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/Mono.Data.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Data.Sqlite">
- <HintPath>Assets\Plugins\Mono.Data.Sqlite.dll</HintPath>
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/Mono.Data.Sqlite.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Data.SqliteClient">
- <HintPath>Assets\Plugins\Mono.Data.SqliteClient.dll</HintPath>
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/Mono.Data.SqliteClient.dll</HintPath>
  </Reference>
  <Reference Include="System.Configuration">
- <HintPath>Assets\Plugins\System.Configuration.dll</HintPath>
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/System.Configuration.dll</HintPath>
  </Reference>
  <Reference Include="System.Data">
- <HintPath>Assets\Plugins\System.Data.dll</HintPath>
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/System.Data.dll</HintPath>
  </Reference>
  <Reference Include="System.EnterpriseServices">
- <HintPath>Assets\Plugins\System.EnterpriseServices.dll</HintPath>
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/System.EnterpriseServices.dll</HintPath>
  </Reference>
  <Reference Include="System.Security">
- <HintPath>Assets\Plugins\System.Security.dll</HintPath>
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/System.Security.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

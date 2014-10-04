@@ -1,11 +1,12 @@
-﻿using SncPucmm.Controller;
+﻿using SncPucmm.Controller.Navigation;
+using SncPucmm.Controller;
 using SncPucmm.Controller.Control;
 using SncPucmm.Model;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SncPucmm.View;
 
 namespace SncPucmm.Controller.GUI
 {
@@ -14,6 +15,7 @@ namespace SncPucmm.Controller.GUI
         #region Atributos
 
         private string name;
+        private Localizacion location;
 
         public List<Button> buttonList;
 
@@ -21,9 +23,10 @@ namespace SncPucmm.Controller.GUI
 
         #region Constructor
 
-        public GUIMenuBuildingDescriptor(string name) 
+        public GUIMenuBuildingDescriptor(string name, Localizacion location)
         {
             this.name = name;
+            this.location = location;
             Initializer();
         }
 
@@ -31,7 +34,7 @@ namespace SncPucmm.Controller.GUI
 
         #region Metodos
 
-        private void Initializer() 
+        private void Initializer()
         {
             buttonList = new List<Button>();
 
@@ -55,21 +58,17 @@ namespace SncPucmm.Controller.GUI
             AditionalInformationButton.OnTouchEvent += new OnTouchEventHandler(OnTouchAditionalInformationButton);
             buttonList.Add(AditionalInformationButton);
         }
-		
+
         public void OnTouchExitButton(object sender, TouchEventArgs e)
         {
-            var menuManager = MenuManager.GetInstance();
-            menuManager.RemoveCurrentMenu();
-
-            if (MenuManager.GetInstance().NoMenuLeft())
-            {
-                State.ChangeState(eState.Navigation);
-            }
+            Exit();
         }
 
         public void OnTouchNavigationButton(object sender, TouchEventArgs e)
         {
-
+            NavigationController controller = (NavigationController)ModelPoolManager.GetInstance().GetValue("navigation");
+            controller.StartNavigation(this.location.Nombre);
+            Exit();
         }
 
         public void OnTouchPhotosButton(object sender, TouchEventArgs e)
@@ -85,6 +84,19 @@ namespace SncPucmm.Controller.GUI
         public void OnTouchAditionalInformationButton(object sender, TouchEventArgs e)
         {
 
+        }
+
+        private void Exit()
+        {
+            UIUtils.ActivateCameraLabels(true);
+
+            var menuManager = MenuManager.GetInstance();
+            menuManager.RemoveCurrentMenu();
+
+            //if (MenuManager.GetInstance().NoMenuLeft())
+            //{
+            State.ChangeState(eState.Navigation);
+            //}
         }
 
         public string GetMenuName()

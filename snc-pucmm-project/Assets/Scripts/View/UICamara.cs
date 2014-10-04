@@ -26,7 +26,7 @@ namespace SncPucmm.View
             PrimeraPersona = UIUtils.Find("Vista1erPersona").camera;
             TerceraPersona = UIUtils.Find("Vista3erPersona").camera;
 
-            CambiarCamaraPrimeraPersona();
+            CambiarCamaraTerceraPersona();
         }
 
         void Update()

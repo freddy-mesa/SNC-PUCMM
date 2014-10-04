@@ -8,16 +8,20 @@ namespace SncPucmm.Model
     public class Ubicacion
     {
         #region Atributos
-        
+
+        string _nombre;
+        int _idUbicacion;
+        private string _abreviacion;
+
         #endregion
 
         #region Propiedades
 
-        public String Name { get; set; }
+        public String Nombre { get { return _nombre; } }
 
-        public String AbbreviationName { get; set; }
+        public Int32 IdUbicacion { get { return _idUbicacion; } }
 
-        public Int32 IdUbicacion { get; set; }
+        public String Abreviacion { get { return _abreviacion; } }
 
         #endregion
 
@@ -28,11 +32,11 @@ namespace SncPucmm.Model
 
         }
 
-        public Ubicacion(int idUbicacion, string name, string abbreviationName)
+        public Ubicacion(int idUbicacion, string name, string abreviacion)
         {
-            this.Name = name;
-            this.IdUbicacion = idUbicacion;
-            this.AbbreviationName = abbreviationName;
+            this._nombre = name;
+            this._idUbicacion = idUbicacion;
+            this._abreviacion = abreviacion;
         }
 
         #endregion

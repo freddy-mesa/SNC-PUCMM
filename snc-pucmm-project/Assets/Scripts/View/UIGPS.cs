@@ -1,73 +1,102 @@
 using UnityEngine;
 using System.Collections;
-using SncPucmm.View;
 
 namespace SncPucmm.View
 {
-	public class UIGPS : UITouch 
-    {
-		public TextMesh lblAltitude;
-		public TextMesh lblLongitude;
-		public TextMesh lblLatitude;
-		public TextMesh lblComponentX;
-		public TextMesh lblComponentZ;
-		
-		public float planeAxeZ;
-		public float planeAxeX;
-		
+	public class UIGPS : MonoBehaviour
+	{
+		#region Atributos
+		public GUIText lblAltitude;
+		public GUIText lblLongitude;
+		public GUIText lblLatitude;
+		public GUIText lblAccuracy;
+		public GUIText lblComponentX;
+		public GUIText lblComponentZ;
+
 		public GameObject character;
-		
-		const string CAMARA_NAME_1 = "Vista_1er_Persona";
-		const string CAMARA_NAME_2 = "Vista_3er_Persona";
-		
-		float latitude = 0f;
-		float longitude = 0f;
-		float altitude = 0f;
-		
-		//AndroidJavaClass gpsActivityJavaClass;
-		
-		void Start () 
-        {
-			//AndroidJNI.AttachCurrentThread();
-			//gpsActivityJavaClass = new AndroidJavaClass("com.test.app.GPSTest");
-			
+
+		static float latitude;
+		static float longitude;
+		static float altitude;
+		static float accuracy;
+
+		float planeAxeZ;
+		float planeAxeX;
+
+		AndroidJavaClass gpsActivityJavaClass;
+		#endregion
+
+		#region Propiedades
+
+		public static float Latitude { get { return latitude; } }
+		public static float Altitude { get { return altitude; } }
+		public static float Accuracy { get { return accuracy; } }
+		public static float Longitude { get { return longitude; } }
+
+		#endregion
+
+		#region Metodos
+
+		void Start()
+		{
+			if (Application.platform == RuntimePlatform.Android)
+			{
+				AndroidJNI.AttachCurrentThread();
+				gpsActivityJavaClass = new AndroidJavaClass("com.sncpucmm.app.GPSPlugin");
+			}
+
 			lblAltitude.text = "Altitude: 0";
 			lblLongitude.text = "Longitude: 0";
 			lblLatitude.text = "Latitude: 0";
-		}
-		
-		new void Update() 
-        {
-            base.Update();
-			//latitude = gpsActivityJavaClass.CallStatic<float>("GetLatitude");
-			//longitude = gpsActivityJavaClass.CallStatic<float>("GetLongitude");
-			//altitude = gpsActivityJavaClass.CallStatic<float>("GetAltitude");
-			//var accuracy = gpsActivityJavaClass.CallStatic<float>("GetAccuracy");
-			
-			//longitude = -70.684535f;
-			//latitude = 19.443905f;
-			
-			//planeAxeX = ORIGEN_LON + Mathf.Abs (ORIGEN_LON - longitude);
-			//planeAxeY = ORIGEN_LAT + Mathf.Abs (ORIGEN_LAT - latitude);
-			
-			lblAltitude.text = "Altitude: " + altitude.ToString ();
-			lblLongitude.text = "Longitude: " + longitude.ToString ();
-			lblLatitude.text = "Latitude: " + latitude.ToString ();
+			lblAccuracy.text = "Accuracy: 0";
 
-            planeAxeX = Mathf.Abs(UIUtils.getXDistance(longitude));
-            planeAxeZ = Mathf.Abs(UIUtils.getZDistance(latitude));
-			
+			latitude = 0f;
+			longitude = 0f;
+			altitude = 0f;
+			accuracy = 0f;
+			planeAxeZ = 0f;
+			planeAxeX = 0f;
+		}
+
+		void Update()
+		{
+			//yield return new WaitForSeconds(2.5f);
+
+			if (Application.platform == RuntimePlatform.Android)
+			{
+				latitude = gpsActivityJavaClass.CallStatic<float>("GetLatitude");
+				longitude = gpsActivityJavaClass.CallStatic<float>("GetLongitude");
+				altitude = gpsActivityJavaClass.CallStatic<float>("GetAltitude");
+				accuracy = gpsActivityJavaClass.CallStatic<float>("GetAccuracy");
+
+				planeAxeX = Mathf.Abs(UIUtils.getXDistance(longitude));
+				planeAxeZ = Mathf.Abs(UIUtils.getZDistance(latitude));
+
+				character.transform.position = new Vector3(planeAxeX, 0.1f, planeAxeZ);
+
+				//var rangeGameObjectTransform = character.transform.FindChild("Range");
+				//rangeGameObjectTransform.localScale = new Vector3(
+				//    (1 + accuracy) * 2f, 0.1f, (1 + accuracy) * 2f
+				//);
+
+				if (UICamara.Vista_1era_Persona)
+				{
+					this.transform.position = new Vector3(
+						planeAxeX, this.transform.position.y, planeAxeZ
+					);
+				}
+
+			}
+
+			lblAltitude.text = "Altitude: " + altitude.ToString();
+			lblLongitude.text = "Longitude: " + longitude.ToString();
+			lblLatitude.text = "Latitude: " + latitude.ToString();
+			lblAccuracy.text = "Accuracy: " + accuracy.ToString();
+
 			lblComponentX.text = "Pos X: " + planeAxeX.ToString();
 			lblComponentZ.text = "Pos Z: " + planeAxeZ.ToString();
-			
-			character.transform.position = new Vector3(planeAxeX, 0.1f, planeAxeZ);
-			
-			if(this.name.Equals("Vista_1er_Persona"))
-			{
-				this.transform.position = new Vector3(
-					planeAxeX, this.transform.position.y, planeAxeZ
-				);
-			}
 		}
-	}	
+
+		#endregion
+	}
 }

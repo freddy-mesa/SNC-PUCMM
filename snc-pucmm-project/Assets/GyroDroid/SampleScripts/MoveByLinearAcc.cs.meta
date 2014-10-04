@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ed533a31696f7a44499d0772d8f63ec4
+labels:
+- android
+- gyroscope
+- mobile
+- AR
+- sensors
+- orientation
+- gyro
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 

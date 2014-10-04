@@ -21,7 +21,7 @@ namespace SncPucmm.Controller.GUI
 		List<Button> buttonList;
 		List<TextBox> textBoxList;
 		ScrollTreeView treeView;
-		
+
 		#endregion
 
 		#region Constructores
@@ -39,7 +39,7 @@ namespace SncPucmm.Controller.GUI
 		private void Initializer()
 		{
 			buttonList = new List<Button>();
-			
+
 			var ModelController = new Button("ModelController");
 			ModelController.OnTouchEvent += new OnTouchEventHandler(OnTouchModelController);
 			buttonList.Add(ModelController);
@@ -48,13 +48,13 @@ namespace SncPucmm.Controller.GUI
 			ButtonMain.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonMain);
 			buttonList.Add(ButtonMain);
 
-			var ButtonCambioVista = new Button("ButtonCambioVista");
-			ButtonCambioVista.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonCambioVista);
-			buttonList.Add(ButtonCambioVista);
-
 			var ButtonRegistrar = new Button("ButtonRegistrar");
 			ButtonRegistrar.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonRegistrar);
 			buttonList.Add(ButtonRegistrar);
+
+			var ButtonCambioVista = new Button("ButtonCambioVista");
+			ButtonCambioVista.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonCambioVista);
+			buttonList.Add(ButtonCambioVista);
 
 			var ButtonSeguridad = new Button("ButtonSeguridad");
 			ButtonSeguridad.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonSeguridad);
@@ -79,17 +79,17 @@ namespace SncPucmm.Controller.GUI
 
 		private void OnTouchButtonTours(object sender, TouchEventArgs e)
 		{
-			
+
 		}
 
 		private void OnTouchButtonSeguridad(object sender, TouchEventArgs e)
 		{
-			
+
 		}
 
 		private void OnTouchButtonRegistrar(object sender, TouchEventArgs e)
 		{
-			
+
 		}
 
 		private void OnTouchButtonCambioVista(object sender, TouchEventArgs e)
@@ -113,12 +113,12 @@ namespace SncPucmm.Controller.GUI
 
 		private void OnTouchModelController(object sender, TouchEventArgs e)
 		{
-			var location = (Localizacion) e.Mensaje;
+			var location = (Localizacion)e.Mensaje;
 
 			OpenGUIMenuBuildingDescriptor(location);
 		}
 
-		private void OnChangeSearchTextBox(object sender,ChangeEventArgs e)
+		private void OnChangeSearchTextBox(object sender, ChangeEventArgs e)
 		{
 			var text = e.Mensaje as String;
 			var textBox = sender as TextBox;
@@ -155,12 +155,14 @@ namespace SncPucmm.Controller.GUI
 
 		private void OpenGUIMenuBuildingDescriptor(Localizacion location)
 		{
+			UIUtils.ActivateCameraLabels(false);
+
 			var menuManager = MenuManager.GetInstance();
-			menuManager.AddMenu(new GUIMenuBuildingDescriptor("GUIMenuDescriptor"));
+			menuManager.AddMenu(new GUIMenuBuildingDescriptor("GUIMenuDescriptor", location));
 
 			var lblBuildingName = UIUtils.FindGUI(menuManager.GetCurrentMenu().GetMenuName() + "/LabelBuildingName");
 
-			lblBuildingName.guiText.text = UIUtils.FormatStringLabel(location.Name, ' ', 20);
+			lblBuildingName.guiText.text = UIUtils.FormatStringLabel(location.Nombre, ' ', 20);
 
 			State.ChangeState(eState.GUIMenuBuildingDescriptor);
 		}
@@ -177,18 +179,22 @@ namespace SncPucmm.Controller.GUI
 				treeView.OnClose(null);
 
 				var textBox = UIUtils.FindGUI("GUIMenuMain/HorizontalBar/SearchBox").GetComponent<UITextBox>();
-				textBox.GetUIKeyBoard().Close();
+
+				if (textBox.GetUIKeyBoard() != null)
+				{
+					textBox.GetUIKeyBoard().Close();
+				}
 
 				OpenGUIMenuBuildingDescriptor(localizacion);
 			}
 		}
-		
+
 		private void OnChangeScrollTreeView(object sender, ChangeEventArgs e)
 		{
 			var type = e.Mensaje.GetType();
 
 			var text = Convert.ToString(type.GetProperty("text").GetValue(e.Mensaje, null));
-			var parent = (Transform) type.GetProperty("parent").GetValue(e.Mensaje, null);
+			var parent = (Transform)type.GetProperty("parent").GetValue(e.Mensaje, null);
 			var template = (GameObject)type.GetProperty("template").GetValue(e.Mensaje, null);
 
 			this.OpenGUIScrollTreeView(text, parent, template);
@@ -197,7 +203,7 @@ namespace SncPucmm.Controller.GUI
 		private void OnCloseScrollTreeView(object sender, CloseEventArgs e)
 		{
 			UIUtils.DestroyChilds("GUIMenuMain/TreeView/ScrollTreeView", true);
-			
+
 			//Removing all buttons of TreeView in GUIMenuMain
 			var treeViewButtonList = (treeView as IButton).GetButtonList();
 			bool isEliminated;
@@ -207,7 +213,7 @@ namespace SncPucmm.Controller.GUI
 				isEliminated = false;
 				for (int j = 0; j < treeViewButtonList.Count; j++)
 				{
-					if(buttonList[i].Name.Equals(treeViewButtonList[j].Name))
+					if (buttonList[i].Name.Equals(treeViewButtonList[j].Name))
 					{
 						isEliminated = true;
 						break;
@@ -222,10 +228,14 @@ namespace SncPucmm.Controller.GUI
 
 			//Removing all buttons of TreeView
 			treeViewButtonList.Clear();
+
+			UIUtils.ActivateCameraLabels(false);
 		}
 
 		private void OpenGUIScrollTreeView(string searchText, Transform Parent, GameObject Template)
 		{
+			UIUtils.ActivateCameraLabels(false);
+
 			//Obteniendo de la Base de datos
 			var sqliteService = SQLiteService.GetInstance();
 			var reader = sqliteService.Query(
@@ -253,6 +263,32 @@ namespace SncPucmm.Controller.GUI
 
 			//Eliminando los hijos del Tree View List
 			UIUtils.DestroyChilds("GUIMenuMain/TreeView/ScrollTreeView", true);
+
+			//Eliminando botones anteriores
+			int cantidadButtonTreeView = (treeView as IButton).GetButtonList().Count;
+
+			List<Button> buttonForClear = new List<Button>();
+
+			for (int i = 0, k = 0; i < buttonList.Count; ++i)
+			{
+				if (k == cantidadButtonTreeView)
+				{
+					break;
+				}
+
+				if (buttonList[i].Name.Equals("ScrollTreeViewItem" + k))
+				{
+					buttonForClear.Add(buttonList[i]);
+					k++;
+				}
+			}
+
+			foreach (Button button in buttonForClear)
+			{
+				buttonList.Remove(button);
+			}
+
+			(treeView as IButton).GetButtonList().Clear();
 
 			//Agregando los hijos al Tree View List
 			for (int i = 0; i < textList.Count; i++)
@@ -306,7 +342,7 @@ namespace SncPucmm.Controller.GUI
 				var button = new Button(item.name);
 				button.OnTouchEvent += new OnTouchEventHandler(OnTouchScrollTreeViewItem);
 				button.ObjectTag = new Localizacion(localizacion, ubicacion, nombre);
-				
+
 				buttonList.Add(button);
 				(treeView as IButton).GetButtonList().Add(button);
 			}

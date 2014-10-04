@@ -13,7 +13,7 @@ namespace SncPucmm.Controller.Navigation
         #region Propiedades
 
         public List<Node> Nodes { get; set; }
-        
+
         #endregion
 
         #region Constructor
@@ -85,7 +85,7 @@ namespace SncPucmm.Controller.Navigation
                 if (nodeInList.Active)
                 {
                     Node node = new Node(nodeInList);
-                
+
                     if (!startNodeFound && node.Name.Equals(startName))
                     {
                         node.DijkstraDistance = 0;
@@ -106,14 +106,20 @@ namespace SncPucmm.Controller.Navigation
             }
 
             foreach (Node node in NodesDijkstra)
+            {
                 foreach (Neighbor neighbor in node.Neighbors)
+                {
                     foreach (Node nodeToFind in NodesDijkstra)
-                        if (neighbor.Node.Name == nodeToFind.Name) 
-                        { 
+                    {
+                        if (neighbor.Node.Name == nodeToFind.Name)
+                        {
                             neighbor.Node = nodeToFind;
                             break;
                         }
-            
+                    }
+                }
+            }
+
             float distancePathed;
             start.DijkstraPath = new DijkstraPath(start.Name);
 
@@ -139,7 +145,7 @@ namespace SncPucmm.Controller.Navigation
                     }
                 }
             }
-            
+
             return PathToNodeList(destination.DijkstraPath);
         }
 
@@ -155,11 +161,13 @@ namespace SncPucmm.Controller.Navigation
                     continue;
 
                 String[] nodeInPath = nodosPath[i].Split('|');
-                nodeList.Add(new PathData () {
+                String endNodePath = nodosPath[i + 1].Split('|')[0];
+                nodeList.Add(new PathData()
+                {
                     StartNode = Nodes.Find(x => x.Name == nodeInPath[0]),
                     DistanceToNeighbor = Convert.ToSingle(nodeInPath[1]),
                     DistancePathed = Convert.ToSingle(nodeInPath[2]),
-                    EndNode = Nodes.Find(x => x.Name == nodosPath[i+1].Split('|')[0])
+                    EndNode = Nodes.Find(x => x.Name == endNodePath)
                 });
             }
 
