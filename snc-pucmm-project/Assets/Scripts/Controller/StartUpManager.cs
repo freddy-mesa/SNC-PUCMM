@@ -38,12 +38,15 @@ namespace SncPucmm.Controller
         private void BuildingInitializer()
         {
             IDataReader reader;
+
+            //Seleccionando desde la Base de datos los localidades
             reader = SQLiteService.GetInstance().Query(true,
                 "SELECT UBI.abreviacion, LOC.idLocalizacion, UBI.idUbicacion, LOC.nombre FROM Ubicacion UBI, Localizacion LOC " +
                 "WHERE UBI.idUbicacion = LOC.idLocalizacion"
             );
 
             List<object> list = new List<object>();
+
             while (reader.Read())
             {
                 list.Add(new
@@ -55,10 +58,13 @@ namespace SncPucmm.Controller
                 });
             }
 
+            //Encontrando todos los edificios con el Tag Building
             var model = GameObject.FindGameObjectsWithTag("Building");
 
             foreach (GameObject child in model)
             {
+                var textHeader = child.transform.FindChild("Text").GetComponent<TextMesh>();
+
                 foreach (object item in list)
                 {
                     string abreviacion = Convert.ToString(item.GetType().GetProperty("Abreviacion").GetValue(item, null));
@@ -73,6 +79,26 @@ namespace SncPucmm.Controller
 
                         localizacion.ObjectTag = new Localizacion(idLocalizacion, idUbicacion, nombre);
                         localizacion.Id = idLocalizacion;
+
+
+                        if (nombre.Length < 20)
+                        {
+                            if (nombre.Split(' ').Length == 1)
+                            {
+                                textHeader.transform.localScale = new Vector3(1, 3f, 0);
+                            }
+                            else
+                            {
+                                textHeader.transform.localScale = new Vector3(1, 2f, 0);
+                            }
+
+                            textHeader.text = UIUtils.FormatStringLabel(nombre, ' ', 12);
+                        }
+                        else
+                        {
+                            textHeader.transform.localScale = new Vector3(1, 2.15f, 0);
+                            textHeader.text = UIUtils.FormatStringLabel(nombre, ' ', 20);
+                        }
                     }
                 }
             }

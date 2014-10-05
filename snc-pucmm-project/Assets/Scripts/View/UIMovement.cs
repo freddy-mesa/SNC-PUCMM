@@ -9,7 +9,7 @@ namespace SncPucmm.View
 		private Vector2 currentPosition;		//Posicion final del Slice
 		
 		public float movementFactor = 5f;		//Min Limit 
-		public float movementSpeed = 300f;		//Movement Speed
+		public float movementSpeed = 350f;		//Movement Speed
 		
 		private float posX = 0.0f;				//distance in X axe
 		private float posZ = 0.0f;				//distance in Z axe
@@ -81,29 +81,29 @@ namespace SncPucmm.View
 						}
 						
 						//Limitando los Metros/Segundo
-						posX = Mathf.Clamp(posX, -1f, 1f);
-						posZ = Mathf.Clamp(posZ, -1f, 1f);
+						posX = Mathf.Clamp(posX, -1.5f, 1.5f);
+						posZ = Mathf.Clamp(posZ, -1.5f, 1.5f);
 
-						var previosPosition = this.transform.position;
-						
 						//Preparacion para trasladar la camara, se quitan las rotaciones para que se traslade
 						//solo en X y en Z sin las inclinaciones que la camara tenga
 						this.transform.eulerAngles = new Vector3(0f, this.transform.eulerAngles.y, 0f);
+
+						var previosPosition = this.transform.position;
 						
 						//Se Traslada la camara mediante la inversion de la direccion (Modo natural del touch)
 						this.transform.Translate(
 							new Vector3(-posX, 0f, -posZ)
 						);
-						
-						//Se inclina la camara
-						this.transform.eulerAngles = new Vector3(15f, this.transform.eulerAngles.y, 0f);
 
 						if(this.transform.position.x < -420f || this.transform.position.x > 420f ||
-						   this.transform.position.y < 30f || this.transform.position.y > 250f ||
+						   this.transform.position.y < 30f || this.transform.position.y > 75f ||
 						   this.transform.position.z < -650f || this.transform.position.z > 400f)
 						{
 							this.transform.position = previosPosition;
 						}
+
+						//Se inclina la camara
+						this.transform.eulerAngles = new Vector3(45f, this.transform.eulerAngles.y, 0f);
 					} 
 					else 
 					{

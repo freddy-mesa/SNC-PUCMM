@@ -109,6 +109,34 @@ namespace SncPucmm.Controller.GUI
 			OpenCloseMainMenu();
 		}
 
+		private void OnTouchButtonMain(object sender, TouchEventArgs e)
+		{
+			OpenCloseMainMenu();
+		}
+
+		private void OpenCloseMainMenu()
+		{
+			var sidebarGameObject = UIUtils.FindGUI("GUIMenuMain/Sidebar");
+			float position;
+
+			sidebarGameObject.SetActive(true);
+
+			if (sidebarGameObject.transform.localPosition.x > 17.50)
+			{
+				position = -0.75f;
+				State.ChangeState(eState.Navigation);
+			}
+			else
+			{
+				position = 0.75f;
+				State.ChangeState(eState.GUIMenuMain);
+			}
+
+			UIAnimation.MoveBy(sidebarGameObject, new Dictionary<string, object> {
+				{"x", position},{"easeType", iTween.EaseType.easeInOutExpo},{"time", 1}
+			});
+		}
+
 		#endregion
 
 		private void OnTouchModelController(object sender, TouchEventArgs e)
@@ -124,33 +152,6 @@ namespace SncPucmm.Controller.GUI
 			var textBox = sender as TextBox;
 
 			textBox.label.Text = text;
-		}
-
-		private void OnTouchButtonMain(object sender, TouchEventArgs e)
-		{
-			OpenCloseMainMenu();
-		}
-
-		private void OpenCloseMainMenu()
-		{
-			var sidebarGameObject = UIUtils.FindGUI("GUIMenuMain/Sidebar");
-			float position;
-
-			sidebarGameObject.SetActive(true);
-			if (sidebarGameObject.transform.localPosition.x > 17.50)
-			{
-				position = -0.75f;
-				State.ChangeState(eState.Navigation);
-			}
-			else
-			{
-				position = 0.75f;
-				State.ChangeState(eState.GUIMenuMain);
-			}
-
-			UIAnimation.MoveBy(sidebarGameObject, new Dictionary<string, object> {
-				{"x", position},{"easeType", iTween.EaseType.easeInOutExpo},{"time", 1}
-			});
 		}
 
 		private void OpenGUIMenuBuildingDescriptor(Localizacion location)
@@ -204,36 +205,19 @@ namespace SncPucmm.Controller.GUI
 		{
 			UIUtils.DestroyChilds("GUIMenuMain/TreeView/ScrollTreeView", true);
 
-			//Removing all buttons of TreeView in GUIMenuMain
-			var treeViewButtonList = (treeView as IButton).GetButtonList();
-			bool isEliminated;
+			DeleteScrollTreeViewItem();
 
-			for (int i = 0; i < buttonList.Count; i++)
-			{
-				isEliminated = false;
-				for (int j = 0; j < treeViewButtonList.Count; j++)
-				{
-					if (buttonList[i].Name.Equals(treeViewButtonList[j].Name))
-					{
-						isEliminated = true;
-						break;
-					}
-				}
-
-				if (isEliminated)
-				{
-					buttonList.RemoveAt(i);
-				}
-			}
-
-			//Removing all buttons of TreeView
-			treeViewButtonList.Clear();
+			//Activando el ScrollTreeView
+			UIUtils.FindGUI("GUIMenuMain/TreeView/ScrollTreeView").SetActive(false);
 
 			UIUtils.ActivateCameraLabels(false);
 		}
 
 		private void OpenGUIScrollTreeView(string searchText, Transform Parent, GameObject Template)
 		{
+			//Activando el ScrollTreeView
+			UIUtils.FindGUI("GUIMenuMain/TreeView/ScrollTreeView").SetActive(true);
+			
 			UIUtils.ActivateCameraLabels(false);
 
 			//Obteniendo de la Base de datos
@@ -264,31 +248,8 @@ namespace SncPucmm.Controller.GUI
 			//Eliminando los hijos del Tree View List
 			UIUtils.DestroyChilds("GUIMenuMain/TreeView/ScrollTreeView", true);
 
-			//Eliminando botones anteriores
-			int cantidadButtonTreeView = (treeView as IButton).GetButtonList().Count;
-
-			List<Button> buttonForClear = new List<Button>();
-
-			for (int i = 0, k = 0; i < buttonList.Count; ++i)
-			{
-				if (k == cantidadButtonTreeView)
-				{
-					break;
-				}
-
-				if (buttonList[i].Name.Equals("ScrollTreeViewItem" + k))
-				{
-					buttonForClear.Add(buttonList[i]);
-					k++;
-				}
-			}
-
-			foreach (Button button in buttonForClear)
-			{
-				buttonList.Remove(button);
-			}
-
-			(treeView as IButton).GetButtonList().Clear();
+			//Eliminando los item del tree view de la lista de botones de MenuMain
+			DeleteScrollTreeViewItem();
 
 			//Agregando los hijos al Tree View List
 			for (int i = 0; i < textList.Count; i++)
@@ -320,16 +281,25 @@ namespace SncPucmm.Controller.GUI
 				var ubicacion = Convert.ToInt32(textList[i].GetType().GetProperty("ubicacion").GetValue(textList[i], null));
 				var localizacion = Convert.ToInt32(textList[i].GetType().GetProperty("localizacion").GetValue(textList[i], null));
 
+				if (nombre.Length < 30)
+				{
+					itemText.guiText.lineSpacing = 1;
+				}
+				else
+				{
+					itemText.guiText.lineSpacing = 0;
+				}
+
 				//Si son iguales la localizacion es un nombre de un edificio
 				if (ubicacion == localizacion)
 				{
-					itemText.guiText.text = UIUtils.FormatStringLabel(nombre, ' ', 64);
+					itemText.guiText.text = UIUtils.FormatStringLabel(nombre, ' ', 29);
 				}
 				//De lo contrario esta dentro del edificio
 				else
 				{
 					//Se agrega un padding de 5 espacios
-					itemText.guiText.text = UIUtils.FormatStringLabel(nombre.PadLeft(5, ' '), ' ', 64);
+					itemText.guiText.text = UIUtils.FormatStringLabel(nombre.PadLeft(5, ' '), ' ', 29);
 				}
 
 				//Si contiene un '\n'
@@ -344,8 +314,37 @@ namespace SncPucmm.Controller.GUI
 				button.ObjectTag = new Localizacion(localizacion, ubicacion, nombre);
 
 				buttonList.Add(button);
-				(treeView as IButton).GetButtonList().Add(button);
+				treeView.ButtonCount++;
 			}
+		}
+
+		private void DeleteScrollTreeViewItem()
+		{
+			List<Button> buttonForClear = new List<Button>();
+
+			//Buscando las buttones
+			for (int i = 0, k = 0; i < buttonList.Count; ++i)
+			{
+				if (k == treeView.ButtonCount)
+				{
+					break;
+				}
+
+				if (buttonList[i].Name.Equals("ScrollTreeViewItem" + k))
+				{
+					buttonForClear.Add(buttonList[i]);
+					k++;
+				}
+			}
+
+			//Eliminando los botones del Menu Main
+			foreach (Button button in buttonForClear)
+			{
+				buttonList.Remove(button);
+			}
+
+			//Borrando la cantidad botones del tree view
+			treeView.ButtonCount = 0;
 		}
 
 		#endregion

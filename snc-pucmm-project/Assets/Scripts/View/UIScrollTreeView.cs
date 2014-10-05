@@ -25,7 +25,6 @@ namespace SncPucmm.View
 
         public Vector2 ScrollPosition { get; set; }
         public static bool isScrolling { get; set; }
-
         public bool IsEqualToPreviousText { get { return previousText == textSearch.text; } }
 
         #endregion

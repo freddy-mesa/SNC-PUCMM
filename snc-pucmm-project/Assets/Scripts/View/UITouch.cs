@@ -160,30 +160,33 @@ namespace SncPucmm.View
                     {
                         if (this is UIScrollTreeView)
                         {
-                            //Touch for Scrolling in the TreeViewList
-                            var UItreeView = this.transform.parent;
-                            if (UItreeView.guiTexture != null && UItreeView.guiTexture.HitTest(objectPosition))
+                            if (this.gameObject.activeInHierarchy)
                             {
-                                if (Input.GetTouch(i).phase == TouchPhase.Moved)
+                                //Touch for Scrolling in the TreeViewList
+                                var UItreeView = this.transform.parent;
+                                if (UItreeView.guiTexture != null && UItreeView.guiTexture.HitTest(objectPosition))
                                 {
-                                    var component = GetComponent<UIScrollTreeView>();
-                                    component.ScrollPosition = new Vector2(
-                                        component.ScrollPosition.x,
-                                        Input.GetTouch(i).deltaPosition.y * 0.0064f
-                                    );
+                                    if (Input.GetTouch(i).phase == TouchPhase.Moved)
+                                    {
+                                        var component = GetComponent<UIScrollTreeView>();
+                                        component.ScrollPosition = new Vector2(
+                                            component.ScrollPosition.x,
+                                            Input.GetTouch(i).deltaPosition.y * 0.0064f
+                                        );
 
-                                    UIScrollTreeView.isScrolling = true;
+                                        UIScrollTreeView.isScrolling = true;
+                                    }
                                 }
-                            }
-                            //Isn't touching the TreeViewList
-                            else
-                            {
-                                //If isn't the Touch Keyboard Open
-                                if (!UIKeyboard.IsTouchKeyboardOpen && !UIScrollTreeView.isScrolling)
+                                //Isn't touching the TreeViewList
+                                else
                                 {
-                                    var treeView = (MenuManager.GetInstance().GetCurrentMenu() as IScrollTreeView).GetScrollTreeView();
-                                    treeView.OnClose(null);
-                                    State.ChangeState(eState.Navigation);
+                                    //If isn't the Touch Keyboard Open
+                                    if (!UIKeyboard.IsTouchKeyboardOpen && !UIScrollTreeView.isScrolling)
+                                    {
+                                        var treeView = (MenuManager.GetInstance().GetCurrentMenu() as IScrollTreeView).GetScrollTreeView();
+                                        treeView.OnClose(null);
+                                        State.ChangeState(eState.Navigation);
+                                    }
                                 }
                             }
                         }

@@ -399,6 +399,36 @@ namespace SncPucmm.Database
 			InsertQuery("Ubicacion", new Dictionary<string, object> {
 				{"idUbicacion",19},{"nombre","Kiosko Universitario"},{"abreviacion","KIOSKO"}
 			});
+			InsertQuery("Ubicacion", new Dictionary<string, object> {
+				{"idUbicacion",20},{"nombre","Arquitectura"},{"abreviacion","ARQUITECTURA"}
+			});
+			InsertQuery("Ubicacion", new Dictionary<string, object> {
+				{"idUbicacion",21},{"nombre","Departamento de Tecnología de la Información"},{"abreviacion","DEPIT"}
+			});
+			InsertQuery("Ubicacion", new Dictionary<string, object> {
+				{"idUbicacion",22},{"nombre","Capilla"},{"abreviacion","CAPILLA"}
+			});
+			InsertQuery("Ubicacion", new Dictionary<string, object> {
+				{"idUbicacion",23},{"nombre","Colegio"},{"abreviacion","COLEGIO"}
+			});
+			InsertQuery("Ubicacion", new Dictionary<string, object> {
+				{"idUbicacion",24},{"nombre","Profesores I"},{"abreviacion","PROFEI"}
+			});
+			InsertQuery("Ubicacion", new Dictionary<string, object> {
+				{"idUbicacion",25},{"nombre","Profesores II"},{"abreviacion","PROFEII"}
+			});
+			InsertQuery("Ubicacion", new Dictionary<string, object> {
+				{"idUbicacion",26},{"nombre","Teatro"},{"abreviacion","TEATRO"}
+			});
+			InsertQuery("Ubicacion", new Dictionary<string, object> {
+				{"idUbicacion",27},{"nombre","Postgrado"},{"abreviacion","POSTGRADO"}
+			});
+			InsertQuery("Ubicacion", new Dictionary<string, object> {
+				{"idUbicacion",28},{"nombre","Piscina"},{"abreviacion","PISCINA"}
+			});
+			InsertQuery("Ubicacion", new Dictionary<string, object> {
+				{"idUbicacion",29},{"nombre","Gimnasio"},{"abreviacion","GIMNASIO"}
+			});
 			#endregion
 
 			#region Localizacion
@@ -457,9 +487,38 @@ namespace SncPucmm.Database
 				{"idLocalizacion",18},{"idUbicacion",18},{"nombre","Centro de Tecnología y Educación Permanente"}
 			});
 			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",19},{"idUbicacion",19},{"nombre","Kiosko Universitario"}
+				{"idLocalizacion",19},{"idUbicacion",19},{"nombre","Kiosko"}
 			});
-
+			InsertQuery("Localizacion", new Dictionary<string, object> {
+				{"idLocalizacion",20},{"idUbicacion",20},{"nombre","Arquitectura"}
+			});
+			InsertQuery("Localizacion", new Dictionary<string, object> {
+				{"idLocalizacion",21},{"idUbicacion",21},{"nombre","Tecnología de la Información"}
+			});
+			InsertQuery("Localizacion", new Dictionary<string, object> {
+				{"idLocalizacion",22},{"idUbicacion",22},{"nombre","Capilla"}
+			});
+			InsertQuery("Localizacion", new Dictionary<string, object> {
+				{"idLocalizacion",23},{"idUbicacion",23},{"nombre","Colegio Juan XVIII"}
+			});
+			InsertQuery("Localizacion", new Dictionary<string, object> {
+				{"idLocalizacion",24},{"idUbicacion",24},{"nombre","Profesores I"}
+			});
+			InsertQuery("Localizacion", new Dictionary<string, object> {
+				{"idLocalizacion",25},{"idUbicacion",25},{"nombre","Profesores II"}
+			});
+			InsertQuery("Localizacion", new Dictionary<string, object> {
+				{"idLocalizacion",26},{"idUbicacion",26},{"nombre","Teatro Universitario"}
+			});
+			InsertQuery("Localizacion", new Dictionary<string, object> {
+				{"idLocalizacion",27},{"idUbicacion",27},{"nombre","Postgrado"}
+			});
+			InsertQuery("Localizacion", new Dictionary<string, object> {
+				{"idLocalizacion",28},{"idUbicacion",28},{"nombre","Piscina Universitaria"}
+			});
+			InsertQuery("Localizacion", new Dictionary<string, object> {
+				{"idLocalizacion",29},{"idUbicacion",29},{"nombre","Gimnasio Universitario"}
+			});
 			#endregion
 
 			#region CoordenadaLocalizacion

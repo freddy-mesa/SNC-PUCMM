@@ -1,4 +1,4 @@
-package com.test.app;
+package com.sncpucmm.app;
 import com.unity3d.player.UnityPlayerActivity;
 import android.content.Context;
 import android.location.Location;
@@ -7,7 +7,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
-public class GPSTest extends UnityPlayerActivity {
+public class GPSPlugin extends UnityPlayerActivity {
     private static final String TAG = "GPS_Unity";
     
     /** Stores the current location */
@@ -89,23 +89,19 @@ public class GPSTest extends UnityPlayerActivity {
         super.onStop();
     }
     
-    static public float GetLatitude()
-    {
+    static public float GetLatitude() {
         return currentLocation != null  ? (float)currentLocation.getLatitude() : 0.0f;
     }
    
-    static public float GetLongitude()
-    {
+    static public float GetLongitude(){
         return currentLocation != null  ? (float)currentLocation.getLongitude() : 0.0f;
     }
     
-    static public float GetAltitude()
-    {
+    static public float GetAltitude() {
         return currentLocation != null  ? (float)currentLocation.getAltitude() : 0.0f;
     }
     
-    static public float GetAccuracy()
-    {
+    static public float GetAccuracy()  {
         return currentLocation != null  ? (float)currentLocation.getAccuracy() : 0.0f;
-    }
+    } 
 }

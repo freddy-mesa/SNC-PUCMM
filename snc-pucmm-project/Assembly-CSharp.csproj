@@ -122,6 +122,7 @@
      <Compile Include="Assets\Scripts\Model\Navigation\SectionNodes.cs" />
      <Compile Include="Assets\Scripts\Model\Ubicacion.cs" />
      <Compile Include="Assets\Scripts\View\UIAnimation.cs" />
+     <Compile Include="Assets\Scripts\View\UIBuilding.cs" />
      <Compile Include="Assets\Scripts\View\UIButton.cs" />
      <Compile Include="Assets\Scripts\View\UICamara.cs" />
      <Compile Include="Assets\Scripts\View\UIDirections.cs" />

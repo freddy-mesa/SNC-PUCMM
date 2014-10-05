@@ -65,6 +65,9 @@ namespace SncPucmm.View
             //Initializando el Keyboard
             InitializeKeyboard();
 
+            //Activando el ScrollTreeView
+            UIUtils.FindGUI("GUIMenuMain/TreeView/ScrollTreeView").SetActive(true);
+
             //Quitando los labels de la camara
             UIUtils.ActivateCameraLabels(false);
         }

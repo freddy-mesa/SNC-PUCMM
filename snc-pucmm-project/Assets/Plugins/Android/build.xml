@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="CompileGPSAndroidJava">
+<project name="SNC-PUCMM-GPS">
 
 	<!-- Change this in order to match your configuration -->
 	<property name="sdk.dir" value="C:\Program Files\ADT-Bundle-Eclipse\sdk"/>
@@ -12,7 +12,7 @@
 	<property name="output.dir" value="./classes"/>
 	<!-- Name of the jar to be created. Please note that the name should match the name of the class and the name 
 	placed in the AndroidManifest.xml-->
-	<property name="output.jarfile" value="GPSTest.jar"/>
+	<property name="output.jarfile" value="SNC-PUCMM-GPS.jar"/>
 
  	 <!-- Creates the output directories if they don't exist yet. -->
     <target name="-dirs"  depends="message">
