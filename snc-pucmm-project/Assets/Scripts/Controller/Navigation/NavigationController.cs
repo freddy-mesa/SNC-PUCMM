@@ -83,10 +83,43 @@ namespace SncPucmm.Controller.Navigation
             //    }
             //}
 
+            UIUtils.DestroyChilds("/PUCMM/Directions", false);
+
             List<PathData> bestPath = graph.Dijkstra("Aulas 3", destinationName);
 
             var directions = (UIDirections)(GameObject.Find("/GUI")).GetComponent("UIDirections");
             directions.PrintDirections(bestPath);
+
+
+            //var directions = (UIDirections)(GameObject.Find("/GUI")).GetComponent("UIDirections");
+
+            //List<PathData> bestPath = graph.Dijkstra("Aulas 3", "Aulas 1");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Aulas 3", "Aulas 2");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Aulas 3", "Aulas 4");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Aulas 3", "Suministro");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Aulas 3", "Talleres de Ingeniería Eléctrica y Electromecánica");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Aulas 3", "Departamento de Ingenierías Electrónica y Electromecánica");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Aulas 3", "Departamentos de Ingeniería");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Aulas 3", "Ciencias Básicas II");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Aulas 1", "Talleres de Ingeniería Eléctrica y Electromecánica");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Aulas 1", "Laboratorios de Ingeniería");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Laboratorios de Ingeniería", "Talleres de Ingeniería Eléctrica y Electromecánica");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Aulas 1", "Aulas 4");
+            //directions.PrintDirections(bestPath);
+            //bestPath = graph.Dijkstra("Aulas 1", "Aulas 2");
+            //directions.PrintDirections(bestPath);
+
 
         }
 
@@ -96,61 +129,61 @@ namespace SncPucmm.Controller.Navigation
 
         private void InitGraph()
         {
-            graph.Nodes.Add(new Node() { Name = "Aulas 1", Latitude = 19.442731f, Longitude = -70.683083f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Aulas 1", Latitude = 19.442731f, Longitude = -70.683049f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Aulas 2", Latitude = 19.443009f, Longitude = -70.681736f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Aulas 3", Latitude = 19.441522f, Longitude = -70.683402f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Aulas 4", Latitude = 19.443083f, Longitude = -70.683407f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Centro de Estudiantes", Latitude = 19.443879f, Longitude = -70.682780f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Ciencias de la Salud", Latitude = 19.443699f, Longitude = -70.681666f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Ciencias Básicas I", Latitude = 19.442237f, Longitude = -70.683398f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Ciencias Básicas II", Latitude = 19.442070f, Longitude = -70.683066f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Ciencias Básicas II", Latitude = 19.442070f, Longitude = -70.683046f, Active = true });
             //graph.Nodes.Add(new Node() { Name = "Padre Arroyo", Latitude = 19.442303f, Longitude = -70.684772f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Departamentos de Ingeniería", Latitude = 19.441756f, Longitude = -70.683061f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Laboratorios de Ingeniería", Latitude = 19.441074f, Longitude = -70.682704f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Departamentos de Ingeniería", Latitude = 19.441756f, Longitude = -70.683045f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Laboratorios de Ingeniería", Latitude = 19.441074f, Longitude = -70.682723f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Departamento de Ingenierías Electrónica y Electromecánica", Latitude = 19.440198f, Longitude = -70.683129f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Suministro", Latitude = 19.440616f, Longitude = -70.683350f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Suministro", Latitude = 19.440648f, Longitude = -70.683352f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Biblioteca", Latitude = 19.443727f, Longitude = -70.684183f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Talleres de Ingeniería Eléctrica y Electromecánica", Latitude = 19.440273f, Longitude = -70.682706f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Talleres de Ingeniería Eléctrica y Electromecánica", Latitude = 19.440310f, Longitude = -70.682706f, Active = true });
 
             //Intersecciones
             //for (int i = 1; i <= 54; i++)
-            graph.Nodes.Add(new Node() { Name = "Node 1", Latitude = 19.440276f, Longitude = -70.683129f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 2", Latitude = 19.440373f, Longitude = -70.683127f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 3", Latitude = 19.440550f, Longitude = -70.683125f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 1", Latitude = 19.440313f, Longitude = -70.683129f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 2", Latitude = 19.440400f, Longitude = -70.683125f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 3", Latitude = 19.440573f, Longitude = -70.683132f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 3.5", Latitude = 19.440544f, Longitude = -70.683199f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 4", Latitude = 19.440660f, Longitude = -70.683130f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 4", Latitude = 19.440697f, Longitude = -70.683132f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 4.5", Latitude = 19.440652f, Longitude = -70.683205f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 5", Latitude = 19.440738f, Longitude = -70.682727f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 6", Latitude = 19.440268f, Longitude = -70.682711f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 5", Latitude = 19.440788f, Longitude = -70.682727f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 6", Latitude = 19.440315f, Longitude = -70.682848f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 6.5", Latitude = 19.440409f, Longitude = -70.682754f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 7", Latitude = 19.440293f, Longitude = -70.683218f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 8", Latitude = 19.440270f, Longitude = -70.683475f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 8.5", Latitude = 19.440301f, Longitude = -70.683658f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 9", Latitude = 19.440657f, Longitude = -70.683642f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 9", Latitude = 19.440711f, Longitude = -70.683580f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 9.5", Latitude = 19.440665f, Longitude = -70.683498f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 10", Latitude = 19.441075f, Longitude = -70.683132f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 11", Latitude = 19.441135f, Longitude = -70.683132f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 12", Latitude = 19.441414f, Longitude = -70.683127f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 13", Latitude = 19.441419f, Longitude = -70.683330f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 14", Latitude = 19.441140f, Longitude = -70.682703f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 12", Latitude = 19.441468f, Longitude = -70.683127f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 13", Latitude = 19.441459f, Longitude = -70.683335f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 14", Latitude = 19.441140f, Longitude = -70.682723f, Active = true });
             //graph.Nodes.Add(new Node() { Name = "Node 15", Latitude = f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 16", Latitude = 19.441441f, Longitude = -70.682719f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 16", Latitude = 19.441480f, Longitude = -70.682723f, Active = true });
             //graph.Nodes.Add(new Node() { Name = "Node 17", Latitude = f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 18", Latitude = 19.441639f, Longitude = -70.682722f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 19", Latitude = 19.441644f, Longitude = -70.683057f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 20", Latitude = 19.441656f, Longitude = -70.683379f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 18", Latitude = 19.441679f, Longitude = -70.682722f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 19", Latitude = 19.441684f, Longitude = -70.683045f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 20", Latitude = 19.441683f, Longitude = -70.683398f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 20.5", Latitude = 19.441608f, Longitude = -70.683400f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 21", Latitude = 19.441608f, Longitude = -70.683400f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 21.5", Latitude = 19.441145f, Longitude = -70.683655f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 22", Latitude = 19.441873f, Longitude = -70.683387f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 23", Latitude = 19.441900f, Longitude = -70.683140f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 24", Latitude = 19.441979f, Longitude = -70.683060f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 24.5", Latitude = 19.442012f, Longitude = -70.683066f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 22", Latitude = 19.441930f, Longitude = -70.683395f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 23", Latitude = 19.441930f, Longitude = -70.683140f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 24", Latitude = 19.441979f, Longitude = -70.683082f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 24.5", Latitude = 19.442012f, Longitude = -70.683082f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 25", Latitude = 19.441850f, Longitude = -70.683060f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 25.5", Latitude = 19.441853f, Longitude = -70.683066f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 26", Latitude = 19.442606f, Longitude = -70.683073f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 27", Latitude = 19.442596f, Longitude = -70.683395f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Node 28", Latitude = 19.442328f, Longitude = -70.683395f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 26", Latitude = 19.442589f, Longitude = -70.683049f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 27", Latitude = 19.442570f, Longitude = -70.683402f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Node 28", Latitude = 19.442305f, Longitude = -70.683405f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 29", Latitude = 19.442743f, Longitude = -70.682186f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 30", Latitude = 19.442811f, Longitude = -70.681733f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 31", Latitude = 19.443074f, Longitude = -70.681760f, Active = true });
@@ -179,6 +212,31 @@ namespace SncPucmm.Controller.Navigation
             graph.Nodes.Add(new Node() { Name = "Node 53", Latitude = 19.443163f, Longitude = -70.683390f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 54", Latitude = 19.442731f, Longitude = -70.682021f, Active = true });
 
+
+
+
+            //New Nodes
+            graph.Nodes.Add(new Node() { Name = "N1", Latitude = 19.440695f, Longitude = -70.683214f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "N2", Latitude = 19.440589f, Longitude = -70.683217f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "N3", Latitude = 19.440715f, Longitude = -70.683501f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "N4", Latitude = 19.440581f, Longitude = -70.683506f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "N5", Latitude = 19.440582f, Longitude = -70.683577f, Active = true });
+
+            //New Neighbors
+            graph.AddNeighbor("N1", "Node 4");
+            graph.AddNeighbor("N1", "Suministro");
+            graph.AddNeighbor("N2", "Node 3");
+            graph.AddNeighbor("N2", "Suministro");
+            graph.AddNeighbor("N3", "Node 9");
+            graph.AddNeighbor("N3", "Suministro");
+            graph.AddNeighbor("N4", "N5");
+            graph.AddNeighbor("N4", "Suministro");
+            graph.AddNeighbor("N5", "Node 8.5");
+            graph.AddNeighbor("N5", "Node 9");
+
+
+
+
             graph.AddNeighbor("Node 1", "Departamento de Ingenierías Electrónica y Electromecánica");
             graph.AddNeighbor("Node 1", "Node 2");
             graph.AddNeighbor("Node 1", "Node 7");
@@ -187,6 +245,7 @@ namespace SncPucmm.Controller.Navigation
             graph.AddNeighbor("Node 2", "Node 7");
             graph.AddNeighbor("Node 3", "Node 4");
             graph.AddNeighbor("Node 3", "Node 3.5");
+            graph.AddNeighbor("Node 3", "Node 6");
             graph.AddNeighbor("Node 3.5", "Suministro");
             graph.AddNeighbor("Node 4", "4.5");
             graph.AddNeighbor("Node 4", "Node 5");
@@ -199,7 +258,6 @@ namespace SncPucmm.Controller.Navigation
             graph.AddNeighbor("Node 6.5", "Talleres de Ingeniería Eléctrica y Electromecánica");
             graph.AddNeighbor("Node 7", "Node 8");
             graph.AddNeighbor("Node 8", "Node 8.5");
-            graph.AddNeighbor("Node 8.5", "Node 9");
             graph.AddNeighbor("Node 9", "Node 21");
             graph.AddNeighbor("Node 9", "9.5");
             graph.AddNeighbor("Node 9.5", "Suministro");

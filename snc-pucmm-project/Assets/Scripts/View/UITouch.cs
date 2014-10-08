@@ -176,6 +176,11 @@ namespace SncPucmm.View
 
                                         UIScrollTreeView.isScrolling = true;
                                     }
+
+                                    if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                                    {
+                                        UIScrollTreeView.isScrolling = false;
+                                    }
                                 }
                                 //Isn't touching the TreeViewList
                                 else

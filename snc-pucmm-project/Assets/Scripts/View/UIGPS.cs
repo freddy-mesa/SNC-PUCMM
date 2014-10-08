@@ -69,22 +69,14 @@ namespace SncPucmm.View
 				altitude = gpsActivityJavaClass.CallStatic<float>("GetAltitude");
 				accuracy = gpsActivityJavaClass.CallStatic<float>("GetAccuracy");
 
-				planeAxeX = Mathf.Abs(UIUtils.getXDistance(longitude));
-				planeAxeZ = Mathf.Abs(UIUtils.getZDistance(latitude));
+				planeAxeX = UIUtils.getXDistance(longitude);
+				planeAxeZ = UIUtils.getZDistance(latitude);
 
 				character.transform.position = new Vector3(planeAxeX, 0.1f, planeAxeZ);
 
-				//var rangeGameObjectTransform = character.transform.FindChild("Range");
-				//rangeGameObjectTransform.localScale = new Vector3(
-				//    (1 + accuracy) * 2f, 0.1f, (1 + accuracy) * 2f
-				//);
-
-				if (UICamara.Vista_1era_Persona)
-				{
-					this.transform.position = new Vector3(
-						planeAxeX, this.transform.position.y, planeAxeZ
-					);
-				}
+				character.transform.FindChild("Range").localScale = new Vector3(
+				    (float)(accuracy / 2), 0.1f, (float)(accuracy / 2)
+				);
 
 			}
 

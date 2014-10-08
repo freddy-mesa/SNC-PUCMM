@@ -130,7 +130,6 @@
      <Compile Include="Assets\Scripts\View\UIKeyboard.cs" />
      <Compile Include="Assets\Scripts\View\UIModel.cs" />
      <Compile Include="Assets\Scripts\View\UIMovement.cs" />
-     <Compile Include="Assets\Scripts\View\UINavigation.cs" />
      <Compile Include="Assets\Scripts\View\UIResolution.cs" />
      <Compile Include="Assets\Scripts\View\UIScrollTreeView.cs" />
      <Compile Include="Assets\Scripts\View\UITextBox.cs" />

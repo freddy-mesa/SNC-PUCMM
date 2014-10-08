@@ -58,7 +58,7 @@ namespace SncPucmm.View
                 if (guiTreeView.transform.childCount > 7)
                 {
                     upperLimit = 0.16f;
-                    downerLimit = 0.43f + 0.25f * (guiTreeView.transform.childCount - 7f);
+                    downerLimit = 0.43f + 0.15f * (guiTreeView.transform.childCount - 8f);
                 }
                 else
                 {
@@ -72,8 +72,6 @@ namespace SncPucmm.View
                     Mathf.Clamp(this.transform.localPosition.y, upperLimit, downerLimit),
                     this.transform.localPosition.z
                 );
-
-                isScrolling = false;
             }
 
             if (IsWriting())

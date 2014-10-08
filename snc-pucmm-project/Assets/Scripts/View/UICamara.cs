@@ -7,65 +7,76 @@ using UnityEngine;
 
 namespace SncPucmm.View
 {
-    public class UICamara : MonoBehaviour
-    {
-        #region Atributos
+	public class UICamara : MonoBehaviour
+	{
+		#region Atributos
 
-        static Camera PrimeraPersona;
-        static Camera TerceraPersona;
+		static Camera PrimeraPersona;
+		static Camera TerceraPersona;
 
-        public static bool Vista_1era_Persona;
-        public static bool Vista_3era_Persona;
-        
-        #endregion
+		public static bool Vista_1era_Persona;
+		public static bool Vista_3era_Persona;
+		
+		#endregion
 
-        #region Metodos
+		#region Metodos
 
-        void Start()
-        {
-            PrimeraPersona = UIUtils.Find("Vista1erPersona").camera;
-            TerceraPersona = UIUtils.Find("Vista3erPersona").camera;
+		void Start()
+		{
+			SensorHelper.ActivateRotation();
 
-            CambiarCamaraTerceraPersona();
-        }
+			PrimeraPersona = UIUtils.Find("Vista1erPersona").camera;
+			TerceraPersona = UIUtils.Find("Vista3erPersona").camera;
 
-        void Update()
-        {
-            if (Vista_1era_Persona)
-            {
+			CambiarCamaraTerceraPersona();
+		}
 
-            }
+		void Update()
+		{
+			if (Vista_1era_Persona)
+			{
+				var rotation = SensorHelper.rotation;
+				PrimeraPersona.transform.eulerAngles = new Vector3(rotation.x, 0f, rotation.z);
 
-            if (Vista_3era_Persona)
-            {
+				float planePosX = UIUtils.getXDistance(UIGPS.Longitude); 
+				float planePosY = UIUtils.getZDistance(UIGPS.Latitude);
 
-            }
-        }
+				PrimeraPersona.transform.position = new Vector3(
+					planePosX, this.transform.position.y, planePosY
+				);
+				
+			}
 
-        public static void CambiarCamaraPrimeraPersona()
-        {
-            Vista_1era_Persona = true;
-            PrimeraPersona.enabled = true;
+			if (Vista_3era_Persona)
+			{
 
-            Vista_3era_Persona = false;
-            TerceraPersona.enabled = false;
-        }
+			}
+		}
 
-        public static void CambiarCamaraTerceraPersona()
-        {
-            Vista_1era_Persona = false;
-            PrimeraPersona.enabled = false;
-            
-            Vista_3era_Persona = true;
-            TerceraPersona.enabled = true;
-        }
+		public static void CambiarCamaraPrimeraPersona()
+		{
+			Vista_1era_Persona = true;
+			PrimeraPersona.enabled = true;
 
-        public static void Cambiar()
-        {
-            Vista_1era_Persona = !Vista_1era_Persona;
-            Vista_3era_Persona = !Vista_3era_Persona;
-        }
-        
-        #endregion
-    }
+			Vista_3era_Persona = false;
+			TerceraPersona.enabled = false;
+		}
+
+		public static void CambiarCamaraTerceraPersona()
+		{
+			Vista_1era_Persona = false;
+			PrimeraPersona.enabled = false;
+			
+			Vista_3era_Persona = true;
+			TerceraPersona.enabled = true;
+		}
+
+		public static void Cambiar()
+		{
+			Vista_1era_Persona = !Vista_1era_Persona;
+			Vista_3era_Persona = !Vista_3era_Persona;
+		}
+		
+		#endregion
+	}
 }

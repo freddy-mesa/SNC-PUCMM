@@ -267,7 +267,7 @@ namespace SncPucmm.Controller.GUI
 				//Agregando la posicion relativa del hijo con relacion al padre
 				item.transform.localPosition = new Vector3(
 					Template.transform.localPosition.x,
-					Template.transform.localPosition.y - 0.275f * i,
+					Template.transform.localPosition.y - 0.125f * i,
 					Template.transform.localPosition.z
 				);
 
