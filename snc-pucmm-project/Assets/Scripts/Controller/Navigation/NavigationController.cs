@@ -35,56 +35,11 @@ namespace SncPucmm.Controller.Navigation
             InitGraph();
         }
 
-        private List<Node> findClosestNodes()
-        {
-            float accuracy = UIGPS.Accuracy;
-            float altitude = UIGPS.Altitude;
-
-            float currentUserPosX = UIUtils.getXDistance(UIGPS.Longitude);
-            float currentUserPosZ = UIUtils.getZDistance(UIGPS.Latitude);
-
-            //Los nodos mas cercanos en un area de 20 metros
-            List<Node> nodeList = graph.Nodes.FindAll(node =>
-            {
-                bool isNear = false;
-
-                float nodePosX = UIUtils.getXDistance(node.Longitude);
-                float nodePosY = UIUtils.getZDistance(node.Latitude);
-
-                float resultant = UIUtils.getDirectDistance(currentUserPosX, currentUserPosZ, nodePosX, nodePosY);
-
-                if (resultant <= 20f)
-                {
-                    isNear = true;
-                }
-
-                return isNear;
-            });
-
-            return nodeList;
-        }
-
-
         public void StartNavigation(String destinationName)
         {
-            //List<Node> startNodeList = findClosestNodes();
-
-            //List<PathData> bestPath = null;
-            //float minDistance = float.MaxValue;
-
-            //foreach (Node startNode in startNodeList)
-            //{
-            //    var dataPath = graph.Dijkstra(startNode.Name, destinationName);
-
-            //    if (dataPath[dataPath.Count - 1].DistancePathed < minDistance)
-            //    {
-            //        bestPath = dataPath;
-            //        minDistance = dataPath[dataPath.Count - 1].DistancePathed;
-            //    }
-            //}
-
             UIUtils.DestroyChilds("/PUCMM/Directions", false);
 
+            //List<PathData> bestPath = GetBestPathData(destinationName);
             List<PathData> bestPath = graph.Dijkstra("Aulas 3", destinationName);
 
             var directions = (UIDirections)(GameObject.Find("/GUI")).GetComponent("UIDirections");
@@ -92,7 +47,6 @@ namespace SncPucmm.Controller.Navigation
 
 
             //var directions = (UIDirections)(GameObject.Find("/GUI")).GetComponent("UIDirections");
-
             //List<PathData> bestPath = graph.Dijkstra("Aulas 3", "Aulas 1");
             //directions.PrintDirections(bestPath);
             //bestPath = graph.Dijkstra("Aulas 3", "Aulas 2");
@@ -121,6 +75,56 @@ namespace SncPucmm.Controller.Navigation
             //directions.PrintDirections(bestPath);
 
 
+        }
+
+        private List<PathData> GetBestPathData(String destinationName)
+        {
+            List<Node> startNodeList = findClosestNodes();
+
+            List<PathData> bestPath = null;
+            float minDistance = float.MaxValue;
+
+            foreach (Node startNode in startNodeList)
+            {
+                var dataPath = graph.Dijkstra(startNode.Name, destinationName);
+
+                if (dataPath[dataPath.Count - 1].DistancePathed < minDistance)
+                {
+                    bestPath = dataPath;
+                    minDistance = dataPath[dataPath.Count - 1].DistancePathed;
+                }
+            }
+
+            return bestPath;
+        }
+
+        private List<Node> findClosestNodes()
+        {
+            //float accuracy = UIGPS.Accuracy;
+            //float altitude = UIGPS.Altitude;
+
+            float currentUserPosX = UIUtils.getXDistance(UIGPS.Longitude);
+            float currentUserPosZ = UIUtils.getZDistance(UIGPS.Latitude);
+
+            //Los nodos mas cercanos en un area de 20 metros
+            List<Node> nodeList = graph.Nodes.FindAll(node =>
+            {
+                bool isNear = false;
+
+                float nodePosX = UIUtils.getXDistance(node.Longitude);
+                float nodePosY = UIUtils.getZDistance(node.Latitude);
+
+                float resultant = UIUtils.getDirectDistance(currentUserPosX, currentUserPosZ, nodePosX, nodePosY);
+
+                if (resultant <= 20f)
+                {
+                    isNear = true;
+                }
+
+                return isNear;
+            });
+
+            return nodeList;
         }
 
         #endregion

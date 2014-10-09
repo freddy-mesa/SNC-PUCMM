@@ -92,8 +92,6 @@
      <Compile Include="Assets\GyroDroid\Scripts\Utils\NonAndroidFallback.cs" />
      <Compile Include="Assets\GyroDroid\Scripts\Utils\PressureValue.cs" />
      <Compile Include="Assets\GyroDroid\Scripts\Utils\Sensor.Information.cs" />
-     <Compile Include="Assets\Nodos.cs" />
-     <Compile Include="Assets\Pivot.cs" />
      <Compile Include="Assets\Scripts\Controller\Control\Button.cs" />
      <Compile Include="Assets\Scripts\Controller\Control\Control.cs" />
      <Compile Include="Assets\Scripts\Controller\Control\IButton.cs" />
@@ -103,6 +101,7 @@
      <Compile Include="Assets\Scripts\Controller\Control\Label.cs" />
      <Compile Include="Assets\Scripts\Controller\Control\ScrollTreeView.cs" />
      <Compile Include="Assets\Scripts\Controller\Control\TextBox.cs" />
+     <Compile Include="Assets\Scripts\Controller\Direction\DirectionController.cs" />
      <Compile Include="Assets\Scripts\Controller\EventHandler.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuBuildingDescriptor.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuMain.cs" />
@@ -121,6 +120,7 @@
      <Compile Include="Assets\Scripts\Model\Navigation\PathData.cs" />
      <Compile Include="Assets\Scripts\Model\Navigation\SectionNodes.cs" />
      <Compile Include="Assets\Scripts\Model\Ubicacion.cs" />
+     <Compile Include="Assets\Scripts\View\Pivot.cs" />
      <Compile Include="Assets\Scripts\View\UIAnimation.cs" />
      <Compile Include="Assets\Scripts\View\UIBuilding.cs" />
      <Compile Include="Assets\Scripts\View\UIButton.cs" />

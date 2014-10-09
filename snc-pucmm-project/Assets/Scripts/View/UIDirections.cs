@@ -12,6 +12,7 @@ namespace Assets.Scripts.View
     {
         public Transform Prefab;
         public Transform Parent;
+
         public void PrintDirections(List<PathData> pathList)
         {
             foreach (PathData path in pathList)
@@ -21,8 +22,11 @@ namespace Assets.Scripts.View
                 
                 float hypotenuse = Mathf.Sqrt(Mathf.Pow(adjacent, 2) + Mathf.Pow(opposite, 2));
                 float degrees = Mathf.Asin(opposite / hypotenuse) * 180 / Mathf.PI;
-                
+
+                if (adjacent >= 0)
+                {
                     degrees = 180 - degrees;
+                }
 
                 Quaternion rotation = Quaternion.AngleAxis(degrees, Vector3.up);
                 Vector3 position = new Vector3(UIUtils.getXDistance(path.StartNode.Longitude), 0.7f, UIUtils.getZDistance(path.StartNode.Latitude));
@@ -31,11 +35,6 @@ namespace Assets.Scripts.View
                 prefab.transform.parent = Parent.transform;
                 prefab.transform.localScale = new Vector3(hypotenuse / 10, 1, 0.2f);
             }
-        }
-
-        public void UpdateColor()
-        {
-            //GameObject allDirections = (GameObject.Find("Directions")).GetComponents();
         }
     }
 }

@@ -16,7 +16,16 @@ namespace SncPucmm.Model.Navigation
         public float DistanceToNeighbor { get; set; }
 
         public float DistancePathed { get; set; }
+
+        public eDirection Direction { get; set; }
         
         #endregion
+    }
+
+    public enum eDirection
+    {
+        Right,
+        Left,
+        Straight
     }
 }
