@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.View;
+﻿using SncPucmm.Controller.Direction;
 using SncPucmm.Controller.Navigation;
 using SncPucmm.Model;
 using SncPucmm.Model.Navigation;
@@ -41,39 +41,7 @@ namespace SncPucmm.Controller.Navigation
 
             //List<PathData> bestPath = GetBestPathData(destinationName);
             List<PathData> bestPath = graph.Dijkstra("Aulas 3", destinationName);
-
-            var directions = (UIDirections)(GameObject.Find("/GUI")).GetComponent("UIDirections");
-            directions.PrintDirections(bestPath);
-
-
-            //var directions = (UIDirections)(GameObject.Find("/GUI")).GetComponent("UIDirections");
-            //List<PathData> bestPath = graph.Dijkstra("Aulas 3", "Aulas 1");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Aulas 3", "Aulas 2");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Aulas 3", "Aulas 4");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Aulas 3", "Suministro");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Aulas 3", "Talleres de Ingeniería Eléctrica y Electromecánica");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Aulas 3", "Departamento de Ingenierías Electrónica y Electromecánica");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Aulas 3", "Departamentos de Ingeniería");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Aulas 3", "Ciencias Básicas II");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Aulas 1", "Talleres de Ingeniería Eléctrica y Electromecánica");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Aulas 1", "Laboratorios de Ingeniería");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Laboratorios de Ingeniería", "Talleres de Ingeniería Eléctrica y Electromecánica");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Aulas 1", "Aulas 4");
-            //directions.PrintDirections(bestPath);
-            //bestPath = graph.Dijkstra("Aulas 1", "Aulas 2");
-            //directions.PrintDirections(bestPath);
-
+            DirectionController.StartDirection(bestPath);
 
         }
 
@@ -100,9 +68,6 @@ namespace SncPucmm.Controller.Navigation
 
         private List<Node> findClosestNodes()
         {
-            //float accuracy = UIGPS.Accuracy;
-            //float altitude = UIGPS.Altitude;
-
             float currentUserPosX = UIUtils.getXDistance(UIGPS.Longitude);
             float currentUserPosZ = UIUtils.getZDistance(UIGPS.Latitude);
 
@@ -145,12 +110,10 @@ namespace SncPucmm.Controller.Navigation
             graph.Nodes.Add(new Node() { Name = "Departamentos de Ingeniería", Latitude = 19.441756f, Longitude = -70.683045f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Laboratorios de Ingeniería", Latitude = 19.441074f, Longitude = -70.682723f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Departamento de Ingenierías Electrónica y Electromecánica", Latitude = 19.440198f, Longitude = -70.683129f, Active = true });
-            graph.Nodes.Add(new Node() { Name = "Suministro", Latitude = 19.440648f, Longitude = -70.683352f, Active = true });
+            graph.Nodes.Add(new Node() { Name = "Suministro y Talleres", Latitude = 19.440648f, Longitude = -70.683352f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Biblioteca", Latitude = 19.443727f, Longitude = -70.684183f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Talleres de Ingeniería Eléctrica y Electromecánica", Latitude = 19.440310f, Longitude = -70.682706f, Active = true });
 
-            //Intersecciones
-            //for (int i = 1; i <= 54; i++)
             graph.Nodes.Add(new Node() { Name = "Node 1", Latitude = 19.440313f, Longitude = -70.683129f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 2", Latitude = 19.440400f, Longitude = -70.683125f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 3", Latitude = 19.440573f, Longitude = -70.683132f, Active = true });
@@ -216,9 +179,6 @@ namespace SncPucmm.Controller.Navigation
             graph.Nodes.Add(new Node() { Name = "Node 53", Latitude = 19.443163f, Longitude = -70.683390f, Active = true });
             graph.Nodes.Add(new Node() { Name = "Node 54", Latitude = 19.442731f, Longitude = -70.682021f, Active = true });
 
-
-
-
             //New Nodes
             graph.Nodes.Add(new Node() { Name = "N1", Latitude = 19.440695f, Longitude = -70.683214f, Active = true });
             graph.Nodes.Add(new Node() { Name = "N2", Latitude = 19.440589f, Longitude = -70.683217f, Active = true });
@@ -228,19 +188,16 @@ namespace SncPucmm.Controller.Navigation
 
             //New Neighbors
             graph.AddNeighbor("N1", "Node 4");
-            graph.AddNeighbor("N1", "Suministro");
+            graph.AddNeighbor("N1", "Suministro y Talleres");
             graph.AddNeighbor("N2", "Node 3");
-            graph.AddNeighbor("N2", "Suministro");
+            graph.AddNeighbor("N2", "Suministro y Talleres");
             graph.AddNeighbor("N3", "Node 9");
-            graph.AddNeighbor("N3", "Suministro");
+            graph.AddNeighbor("N3", "Suministro y Talleres");
             graph.AddNeighbor("N4", "N5");
-            graph.AddNeighbor("N4", "Suministro");
+            graph.AddNeighbor("N4", "Suministro y Talleres");
             graph.AddNeighbor("N5", "Node 8.5");
             graph.AddNeighbor("N5", "Node 9");
-
-
-
-
+            
             graph.AddNeighbor("Node 1", "Departamento de Ingenierías Electrónica y Electromecánica");
             graph.AddNeighbor("Node 1", "Node 2");
             graph.AddNeighbor("Node 1", "Node 7");
@@ -250,11 +207,11 @@ namespace SncPucmm.Controller.Navigation
             graph.AddNeighbor("Node 3", "Node 4");
             graph.AddNeighbor("Node 3", "Node 3.5");
             graph.AddNeighbor("Node 3", "Node 6");
-            graph.AddNeighbor("Node 3.5", "Suministro");
+            graph.AddNeighbor("Node 3.5", "Suministro y Talleres");
             graph.AddNeighbor("Node 4", "4.5");
             graph.AddNeighbor("Node 4", "Node 5");
             graph.AddNeighbor("Node 4", "Node 10");
-            graph.AddNeighbor("Node 4.5", "Suministro");
+            graph.AddNeighbor("Node 4.5", "Suministro y Talleres");
             graph.AddNeighbor("Node 5", "Node 6.5");
             graph.AddNeighbor("Node 5", "Laboratorios de Ingeniería");
             graph.AddNeighbor("Node 6", "6.5");
@@ -264,7 +221,7 @@ namespace SncPucmm.Controller.Navigation
             graph.AddNeighbor("Node 8", "Node 8.5");
             graph.AddNeighbor("Node 9", "Node 21");
             graph.AddNeighbor("Node 9", "9.5");
-            graph.AddNeighbor("Node 9.5", "Suministro");
+            graph.AddNeighbor("Node 9.5", "Suministro y Talleres");
             graph.AddNeighbor("Node 10", "Node 11");
             graph.AddNeighbor("Node 10", "Node 13");
             graph.AddNeighbor("Node 11", "Node 14");

@@ -27,6 +27,8 @@ namespace SncPucmm.Model.Navigation
         public float Latitude { get; set; }
 
         public float Longitude { get; set; }
+
+        List<Point> puntosGeograficosList { get; set; }
         
         #endregion
 
@@ -42,8 +44,23 @@ namespace SncPucmm.Model.Navigation
             this.Neighbors = neighbors;
             this.Active = active;
             this.DijkstraDistance = distance;
+            puntosGeograficosList = new List<Point>();
         }
         
+        #endregion
+
+        #region Metodos
+
+        public void AddPuntosGeograficos(float latitude, float longitude)
+        {
+            puntosGeograficosList.Add(new Point() { Latitude = latitude, Longitude = longitude });
+        }
+
+        public override String ToString()
+        {
+            return Name;
+        }
+
         #endregion
     }
 }

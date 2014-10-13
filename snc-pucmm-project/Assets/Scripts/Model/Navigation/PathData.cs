@@ -24,8 +24,10 @@ namespace SncPucmm.Model.Navigation
 
     public enum eDirection
     {
+        Straight,
         Right,
         Left,
-        Straight
+        SlightRight,
+        SlightLeft
     }
 }

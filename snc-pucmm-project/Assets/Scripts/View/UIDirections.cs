@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using SncPucmm.View;
 
-namespace Assets.Scripts.View
+namespace SncPucmm.View
 {
     public class UIDirections : MonoBehaviour
     {
@@ -32,6 +31,8 @@ namespace Assets.Scripts.View
                 Vector3 position = new Vector3(UIUtils.getXDistance(path.StartNode.Longitude), 0.7f, UIUtils.getZDistance(path.StartNode.Latitude));
 
                 Transform prefab = (Transform)Instantiate(Prefab, position, rotation);
+                var camino = prefab.gameObject.AddComponent<UICamino>();
+                camino.Name = path.StartNode.Name + " - " + path.EndNode.Name;
                 prefab.transform.parent = Parent.transform;
                 prefab.transform.localScale = new Vector3(hypotenuse / 10, 1, 0.2f);
             }

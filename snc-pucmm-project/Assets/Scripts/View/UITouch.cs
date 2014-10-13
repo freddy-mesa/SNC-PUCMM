@@ -111,7 +111,7 @@ namespace SncPucmm.View
                         {
                             if (!UITouch.isMoving && !UITouch.isRotating && !UITouch.isZooming)
                             {
-                                if (Input.GetTouch(i).phase == TouchPhase.Began)
+                                if (Input.GetTouch(i).phase == TouchPhase.Stationary)
                                 {
                                     ray = Camera.main.ScreenPointToRay(objectPosition);
                                     if (Physics.Raycast(ray, out rayHitInfo))

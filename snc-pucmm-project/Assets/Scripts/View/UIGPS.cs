@@ -75,7 +75,7 @@ namespace SncPucmm.View
 				character.transform.position = new Vector3(planeAxeX, 0.1f, planeAxeZ);
 
 				character.transform.FindChild("Range").localScale = new Vector3(
-				    (float)(accuracy / 2), 0.1f, (float)(accuracy / 2)
+				    (accuracy / 2), 0.1f, (accuracy / 2)
 				);
 
 			}

@@ -118,6 +118,7 @@
      <Compile Include="Assets\Scripts\Model\Navigation\Neighbor.cs" />
      <Compile Include="Assets\Scripts\Model\Navigation\Node.cs" />
      <Compile Include="Assets\Scripts\Model\Navigation\PathData.cs" />
+     <Compile Include="Assets\Scripts\Model\Navigation\Point.cs" />
      <Compile Include="Assets\Scripts\Model\Navigation\SectionNodes.cs" />
      <Compile Include="Assets\Scripts\Model\Ubicacion.cs" />
      <Compile Include="Assets\Scripts\View\Pivot.cs" />
@@ -125,6 +126,7 @@
      <Compile Include="Assets\Scripts\View\UIBuilding.cs" />
      <Compile Include="Assets\Scripts\View\UIButton.cs" />
      <Compile Include="Assets\Scripts\View\UICamara.cs" />
+     <Compile Include="Assets\Scripts\View\UICamino.cs" />
      <Compile Include="Assets\Scripts\View\UIDirections.cs" />
      <Compile Include="Assets\Scripts\View\UIGPS.cs" />
      <Compile Include="Assets\Scripts\View\UIKeyboard.cs" />

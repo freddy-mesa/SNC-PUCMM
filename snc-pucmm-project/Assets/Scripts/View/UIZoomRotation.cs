@@ -47,7 +47,8 @@ namespace SncPucmm.View
 			{
 				//Rotating, los touch se esta moviendo
 				if(
-					(Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(1).phase == TouchPhase.Moved) && !UITouch.isMoving
+					(Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(1).phase == TouchPhase.Moved) 
+					&& !UITouch.isMoving
 				)
 				{
 					Vector2 currentDistance = currentTouch2 - currentTouch1;
@@ -82,12 +83,7 @@ namespace SncPucmm.View
 				}
 
 				//Zooming Condition
-				if (
-					((Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(1).phase == TouchPhase.Moved) ||
-					(Input.GetTouch(0).phase == TouchPhase.Stationary && Input.GetTouch(1).phase == TouchPhase.Moved) ||
-					(Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(1).phase == TouchPhase.Stationary))
-					&& (!UITouch.isRotating || !UITouch.isMoving) && angleOffSet < 1f 
-				)
+				if ((!UITouch.isRotating || !UITouch.isMoving) && angleOffSet < 1.5f)
 				{
 					UITouch.isZooming = true;
 
