@@ -66,11 +66,10 @@ namespace SncPucmm.Controller.GUI
 
         public void OnTouchNavigationButton(object sender, TouchEventArgs e)
         {
-            UIUtils.DestroyChilds("/PUCMM/Directions",false);
+            Exit();
 
             NavigationController controller = (NavigationController)ModelPoolManager.GetInstance().GetValue("navigation");
             controller.StartNavigation(this.location.Nombre);
-            Exit();
         }
 
         public void OnTouchPhotosButton(object sender, TouchEventArgs e)

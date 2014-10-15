@@ -37,12 +37,9 @@ namespace SncPucmm.Controller.Navigation
 
         public void StartNavigation(String destinationName)
         {
-            UIUtils.DestroyChilds("/PUCMM/Directions", false);
-
             //List<PathData> bestPath = GetBestPathData(destinationName);
             List<PathData> bestPath = graph.Dijkstra("Aulas 3", destinationName);
             DirectionController.StartDirection(bestPath);
-
         }
 
         private List<PathData> GetBestPathData(String destinationName)

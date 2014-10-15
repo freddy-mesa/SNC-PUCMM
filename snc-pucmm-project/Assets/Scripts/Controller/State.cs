@@ -9,6 +9,7 @@ namespace SncPucmm.Controller
 		Tour,
 		GUIMenuMain,
 		GUIMenuBuildingDescriptor,
+		Direction,
 		Exit
 	}
 

@@ -1,4 +1,5 @@
-﻿using SncPucmm.Model.Navigation;
+﻿using SncPucmm.Controller.GUI;
+using SncPucmm.Model.Navigation;
 using SncPucmm.View;
 using System;
 using System.Collections.Generic;
@@ -12,125 +13,145 @@ namespace SncPucmm.Controller.Direction
     {
         public static void StartDirection(List<PathData> Nodes)
         {
-            findNodeDirectionByOrientation(ref Nodes);
-            var directions = (UIDirections)(GameObject.Find("/GUI")).GetComponent<UIDirections>();
-            directions.PrintDirections(Nodes);
+            //Buscar las direcciones
+            findDirections(ref Nodes);
+
+            //Mostrar el menu de direciones
+            GUIMenuDirection menuDirection = new GUIMenuDirection("GUIMenuDirection", Nodes);
+            MenuManager.GetInstance().AddMenu(menuDirection);
         }
 
-        private static void findNodeDirectionByOrientation(ref List<PathData> Nodes)
+        private static void findDirections(ref List<PathData> Nodes)
         {
             for (int i = 0; i < Nodes.Count; ++i)
             {
-                float nodeA_PosX = UIUtils.getXDistance(Nodes[i].StartNode.Longitude);
-                float nodeA_PosZ = UIUtils.getZDistance(Nodes[i].StartNode.Latitude);
+                if (i + 1 != Nodes.Count)
+                {
+                    float adjacentA = UIUtils.getXDistance(Nodes[i].StartNode.Longitude) - UIUtils.getXDistance(Nodes[i].EndNode.Longitude);
+                    float oppositeA = UIUtils.getZDistance(Nodes[i].StartNode.Latitude) - UIUtils.getZDistance(Nodes[i].EndNode.Latitude);
+                    float distanceA = Mathf.Sqrt(Mathf.Pow(adjacentA, 2) + Mathf.Pow(oppositeA, 2));
 
-                float nodeB_PosX = UIUtils.getXDistance(Nodes[i].EndNode.Longitude);
-                float nodeB_PosZ = UIUtils.getZDistance(Nodes[i].EndNode.Latitude);
+                    float adjacentB = UIUtils.getXDistance(Nodes[i + 1].StartNode.Longitude) - UIUtils.getXDistance(Nodes[i + 1].EndNode.Longitude);
+                    float oppositeB = UIUtils.getZDistance(Nodes[i + 1].StartNode.Latitude) - UIUtils.getZDistance(Nodes[i + 1].EndNode.Latitude);
+                    float distanceB = Mathf.Sqrt(Mathf.Pow(adjacentB, 2) + Mathf.Pow(oppositeB, 2));
 
-                float adjacent = nodeA_PosX - nodeB_PosX;
-                float opposite = nodeA_PosZ - nodeB_PosZ;
-                
+                    float adjacentC = UIUtils.getXDistance(Nodes[i + 1].EndNode.Longitude) - UIUtils.getXDistance(Nodes[i].StartNode.Longitude);
+                    float oppositeC = UIUtils.getZDistance(Nodes[i + 1].EndNode.Latitude) - UIUtils.getZDistance(Nodes[i].StartNode.Latitude);
+                    float distanceC = Mathf.Sqrt(Mathf.Pow(adjacentC, 2) + Mathf.Pow(oppositeC, 2));
 
-                float hypotenuse = Mathf.Sqrt(Mathf.Pow(adjacent, 2) + Mathf.Pow(opposite, 2));
-                float nodesDegree = Mathf.Asin(opposite / hypotenuse) * 180 / Mathf.PI;
+                    //Teorema del Coseno
+                    float operation;
 
-                if (adjacent >= 0)
-                {
-                    nodesDegree = 180 - nodesDegree;
-                }
+                    operation = (Mathf.Pow(distanceA, 2) + Mathf.Pow(distanceB, 2) - Mathf.Pow(distanceC, 2)) / (2 * distanceA * distanceB);
+                    float degreeAB = Mathf.Acos(operation) * 180 / Mathf.PI;
 
-                if (nodesDegree >= 0 && nodesDegree < 50 || nodesDegree >= 345 && nodesDegree <= 360)
-                {
-                    Nodes[i].Direction = eDirection.Right;
-                }
-                else if (nodesDegree >= 50 && nodesDegree < 75)
-                {
-                    Nodes[i].Direction = eDirection.SlightRight;
-                }
-                else if (nodesDegree >= 105 && nodesDegree < 130)
-                {
-                    Nodes[i].Direction = eDirection.SlightLeft;
-                }
-                else if (nodesDegree >= 130 && nodesDegree < 235)
-                {
-                    Nodes[i].Direction = eDirection.Left;
-                }
-                else
-                {
-                    //(degrees >= 75 && degrees < 105) -> Straight
-                    Nodes[i].Direction = eDirection.Straight;
+                    //operation = (Mathf.Pow(distanceB, 2) + Mathf.Pow(distanceC, 2) - Mathf.Pow(distanceA, 2)) / (2 * distanceB * distanceC);
+                    //float degreeBC = Mathf.Acos(operation) * 180 / Mathf.PI;
+
+                    //operation = (Mathf.Pow(distanceC, 2) + Mathf.Pow(distanceA, 2) - Mathf.Pow(distanceB, 2)) / (2 * distanceC * distanceA);
+                    //float degreeCA = Mathf.Acos(operation) * 180 / Mathf.PI;
+
+                    bool isStraight = true;
+
+                    if (degreeAB >= 0f && degreeAB < 140f)
+                    {
+                        //hacia el sur
+                        if (oppositeA > 0)
+                        {
+                            //hacia el oeste
+                            if (adjacentC > 0)
+                            {
+                                Nodes[i + 1].Direction = eDirection.Left;
+                            }
+                            //hacia el este
+                            else if(adjacentC < 0)
+                            {
+                                Nodes[i + 1].Direction = eDirection.Right;
+                            }
+                        }
+                        //hacia el norte
+                        else if (oppositeA < 0)
+                        {
+                            //hacia el oeste
+                            if (adjacentC >= 0)
+                            {
+                                Nodes[i + 1].Direction = eDirection.Right;
+                            }
+                            //hacia el este
+                            else
+                            {
+                                Nodes[i + 1].Direction = eDirection.Left;
+                            }
+                        }
+
+                        isStraight = false;
+                    }
+                    else if (degreeAB >= 140f && degreeAB < 165f)
+                    {
+                        //hacia el sur
+                        if (oppositeA >= 0)
+                        {
+                            //hacia el oeste
+                            if (adjacentC >= 0)
+                            {
+                                Nodes[i + 1].Direction = eDirection.SlightRight;
+                            }
+                            //hacia el este
+                            else
+                            {
+                                Nodes[i + 1].Direction = eDirection.SlightLeft;
+                            }
+                        }
+                        //hacia el norte
+                        else
+                        {
+                            //hacia el oeste
+                            if (adjacentC >= 0)
+                            {
+                                Nodes[i + 1].Direction = eDirection.SlightLeft;
+                            }
+                            //hacia el este
+                            else
+                            {
+                                Nodes[i + 1].Direction = eDirection.SlightRight;
+                            }
+                        }
+
+                        isStraight = false;
+                    }
+
+                    if(isStraight)
+                    {
+                        Nodes[i + 1].Direction = eDirection.Straight;
+                    }
                 }
             }
-
-            for (int i = 0; i < Nodes.Count; ++i)
-            {
-                Debug.Log("Next " + Nodes[i].Direction.ToString() + " from " + Nodes[i].StartNode.Name + " to " + Nodes[i].EndNode.Name);
-            }
-
-            //for (int i = 0; i < Nodes.Length; ++i)
-            //{
-            //    float nodeA_PosX = UIUtils.getXDistance(Nodes[i].StartNode.Longitude);
-            //    float nodeA_PosZ = UIUtils.getZDistance(Nodes[i].StartNode.Latitude);
-
-            //    float nodeB_PosX = UIUtils.getXDistance(Nodes[i].EndNode.Longitude);
-            //    float nodeB_PosZ = UIUtils.getZDistance(Nodes[i].EndNode.Latitude);
-
-            //    float adjacent = nodeA_PosX - nodeB_PosX;
-            //    float opposite = nodeA_PosZ - nodeB_PosZ;
-
-
-            //    float hypotenuse = Mathf.Sqrt(Mathf.Pow(adjacent, 2) + Mathf.Pow(opposite, 2));
-            //    float degrees = Mathf.Asin(opposite / hypotenuse) * 180 / Mathf.PI;
-            //    if (adjacent >= 0)
-            //    {
-            //        degrees = 180 - degrees;
-            //    }
-
-
-            //    if (degrees >= 0 && degrees < 50 || degrees >= 345 && degrees <= 360)
-            //    {
-            //        Nodes[i].Direction = eDirection.Right;
-            //    }
-            //    else if (degrees >= 50 && degrees < 75)
-            //    {
-            //        Nodes[i].Direction = eDirection.SlightRight;
-            //    }
-            //    else if (degrees >= 105 && degrees < 130)
-            //    {
-            //        Nodes[i].Direction = eDirection.SlightLeft;
-            //    }
-            //    else if (degrees >= 130 && degrees < 235)
-            //    {
-            //        Nodes[i].Direction = eDirection.Left;
-            //    }
-            //    else
-            //    {
-            //        //(degrees >= 75 && degrees < 105) -> Straight
-            //        Nodes[i].Direction = eDirection.Straight;
-            //    }
-            //}
         }
 
-        private static float GetPreviousDegreeFromCurrentPosition(PathData node)
+        private static float GetPreviousDegreeFromUserCurrentPosition(Node node)
         {
-            float currentUserPosX = UIUtils.getXDistance(UIGPS.Longitude);
-            float currentUserPosZ = UIUtils.getZDistance(UIGPS.Latitude);
-
-            float node_PosX = UIUtils.getXDistance(node.StartNode.Longitude);
-            float node_PosZ = UIUtils.getZDistance(node.StartNode.Latitude);
-
-            float adjacent = currentUserPosX - node_PosX;
-            float opposite = currentUserPosZ - node_PosZ;
+            float adjacent = UIUtils.getXDistance(UIGPS.Longitude) - UIUtils.getXDistance(node.Longitude); //x1 - x2
+            float opposite = UIUtils.getZDistance(UIGPS.Latitude) - UIUtils.getZDistance(node.Latitude);   //y1 - y2
 
             float hypotenuse = Mathf.Sqrt(Mathf.Pow(adjacent, 2) + Mathf.Pow(opposite, 2));
 
-            float alfaDegree = Mathf.Acos(adjacent / hypotenuse) * 180 / Mathf.PI;
-            if (opposite >= 0)
+            float degree = Mathf.Asin(opposite / hypotenuse) * 180 / Mathf.PI;
+
+            return GetSinDegree(degree, adjacent);
+        }
+
+        private static float GetSinDegree(float degree, float adjacent)
+        {
+            if (adjacent >= 0)
             {
-                alfaDegree = 180 - alfaDegree;
+                degree = Mathf.Abs(90 - degree);
+            }
+            else
+            {
+                degree = Mathf.Abs(degree - 90);
             }
 
-            return alfaDegree;
+            return degree;
         }
     }
 }

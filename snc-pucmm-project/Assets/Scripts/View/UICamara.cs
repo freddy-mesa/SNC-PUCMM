@@ -44,7 +44,6 @@ namespace SncPucmm.View
 				PrimeraPersona.transform.position = new Vector3(
 					planePosX, this.transform.position.y, planePosY
 				);
-				
 			}
 
 			if (Vista_3era_Persona)
@@ -71,7 +70,7 @@ namespace SncPucmm.View
 			TerceraPersona.enabled = true;
 		}
 
-		public static void Cambiar()
+		public static void CambiarVistas()
 		{
 			Vista_1era_Persona = !Vista_1era_Persona;
 			Vista_3era_Persona = !Vista_3era_Persona;

@@ -94,7 +94,7 @@ namespace SncPucmm.Controller.GUI
 
 		private void OnTouchButtonCambioVista(object sender, TouchEventArgs e)
 		{
-			UICamara.Cambiar();
+			UICamara.CambiarVistas();
 
 			if (UICamara.Vista_1era_Persona)
 			{

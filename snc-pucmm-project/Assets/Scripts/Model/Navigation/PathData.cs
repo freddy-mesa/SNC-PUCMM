@@ -20,6 +20,22 @@ namespace SncPucmm.Model.Navigation
         public eDirection Direction { get; set; }
         
         #endregion
+
+        #region Metodos
+
+        public override bool Equals(object obj)
+        {
+            PathData path = (PathData) obj;
+
+            if (path.StartNode.Name == this.StartNode.Name && path.EndNode.Name == this.EndNode.Name)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        #endregion
     }
 
     public enum eDirection

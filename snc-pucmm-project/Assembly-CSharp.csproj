@@ -104,6 +104,7 @@
      <Compile Include="Assets\Scripts\Controller\Direction\DirectionController.cs" />
      <Compile Include="Assets\Scripts\Controller\EventHandler.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuBuildingDescriptor.cs" />
+     <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuDirection.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuMain.cs" />
      <Compile Include="Assets\Scripts\Controller\MenuManager.cs" />
      <Compile Include="Assets\Scripts\Controller\ModelPoolManager.cs" />

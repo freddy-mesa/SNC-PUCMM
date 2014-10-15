@@ -135,6 +135,7 @@
     <Compile Include="Assets\Scripts\Controller\Direction\DirectionController.cs" />
     <Compile Include="Assets\Scripts\Controller\EventHandler.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuBuildingDescriptor.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuDirection.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuMain.cs" />
     <Compile Include="Assets\Scripts\Controller\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Controller\ModelPoolManager.cs" />
@@ -158,11 +159,11 @@
     <Compile Include="Assets\Scripts\View\UIButton.cs" />
     <Compile Include="Assets\Scripts\View\UICamara.cs" />
     <Compile Include="Assets\Scripts\View\UICamino.cs" />
-    <Compile Include="Assets\Scripts\View\UIDirections.cs" />
     <Compile Include="Assets\Scripts\View\UIGPS.cs" />
     <Compile Include="Assets\Scripts\View\UIKeyboard.cs" />
     <Compile Include="Assets\Scripts\View\UIModel.cs" />
     <Compile Include="Assets\Scripts\View\UIMovement.cs" />
+    <Compile Include="Assets\Scripts\View\UIDirections.cs" />
     <Compile Include="Assets\Scripts\View\UIResolution.cs" />
     <Compile Include="Assets\Scripts\View\UIScrollTreeView.cs" />
     <Compile Include="Assets\Scripts\View\UITextBox.cs" />

@@ -9,11 +9,13 @@ namespace SncPucmm.View
 {
     public class UIDirections : MonoBehaviour
     {
-        public Transform Prefab;
-        public Transform Parent;
+        public Transform PrefabCamino;
+        public Transform PrefabCaminoSelected;
 
-        public void PrintDirections(List<PathData> pathList)
+        public void PrintDirections(List<PathData> pathList, PathData selected)
         {
+            UIUtils.DestroyChilds("/PUCMM/Directions", false);
+
             foreach (PathData path in pathList)
             {
                 float adjacent = UIUtils.getXDistance(path.StartNode.Longitude) - UIUtils.getXDistance(path.EndNode.Longitude);
@@ -30,10 +32,19 @@ namespace SncPucmm.View
                 Quaternion rotation = Quaternion.AngleAxis(degrees, Vector3.up);
                 Vector3 position = new Vector3(UIUtils.getXDistance(path.StartNode.Longitude), 0.7f, UIUtils.getZDistance(path.StartNode.Latitude));
 
-                Transform prefab = (Transform)Instantiate(Prefab, position, rotation);
+                Transform prefab = null;
+                if (path.Equals(selected))
+                {
+                    prefab = (Transform)Instantiate(PrefabCaminoSelected, position, rotation);
+                }
+                else
+                {
+                    prefab = (Transform)Instantiate(PrefabCamino, position, rotation);
+                }
+
                 var camino = prefab.gameObject.AddComponent<UICamino>();
                 camino.Name = path.StartNode.Name + " - " + path.EndNode.Name;
-                prefab.transform.parent = Parent.transform;
+                prefab.transform.parent = this.transform;
                 prefab.transform.localScale = new Vector3(hypotenuse / 10, 1, 0.2f);
             }
         }
