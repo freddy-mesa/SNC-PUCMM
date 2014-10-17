@@ -129,7 +129,7 @@ namespace SncPucmm.Controller.GUI
 			else
 			{
 				position = 0.75f;
-				State.ChangeState(eState.GUIMenuMain);
+				State.ChangeState(eState.MenuMain);
 			}
 
 			UIAnimation.MoveBy(sidebarGameObject, new Dictionary<string, object> {
@@ -165,7 +165,7 @@ namespace SncPucmm.Controller.GUI
 
 			lblBuildingName.guiText.text = UIUtils.FormatStringLabel(location.Nombre, ' ', 20);
 
-			State.ChangeState(eState.GUIMenuBuildingDescriptor);
+			State.ChangeState(eState.MenuBuildingDescriptor);
 		}
 
 		#region ScrollTreeView

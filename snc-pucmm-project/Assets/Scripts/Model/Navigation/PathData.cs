@@ -23,7 +23,7 @@ namespace SncPucmm.Model.Navigation
 
         #region Metodos
 
-        public override bool Equals(object obj)
+        public new bool Equals(object obj)
         {
             PathData path = (PathData) obj;
 
@@ -33,6 +33,11 @@ namespace SncPucmm.Model.Navigation
             }
 
             return false;
+        }
+
+        public override string ToString()
+        {
+            return StartNode.Name + " to " + EndNode.Name; 
         }
 
         #endregion

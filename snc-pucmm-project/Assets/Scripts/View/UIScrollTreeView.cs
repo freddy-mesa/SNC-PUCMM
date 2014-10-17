@@ -78,7 +78,7 @@ namespace SncPucmm.View
             {
                 if (State.GetCurrentState().Equals(eState.Navigation))
                 {
-                    State.ChangeState(eState.GUIMenuMain);
+                    State.ChangeState(eState.MenuMain);
                 }
 
                 if (!IsEqualToPreviousText)

@@ -61,14 +61,13 @@ namespace SncPucmm.Controller.GUI
 
         public void OnTouchExitButton(object sender, TouchEventArgs e)
         {
+            UIUtils.ActivateCameraLabels(true);
             Exit();
         }
 
         public void OnTouchNavigationButton(object sender, TouchEventArgs e)
         {
-            Exit();
-
-            NavigationController controller = (NavigationController)ModelPoolManager.GetInstance().GetValue("navigation");
+            NavigationController controller = (NavigationController) ModelPoolManager.GetInstance().GetValue("navigation");
             controller.StartNavigation(this.location.Nombre);
         }
 
@@ -89,15 +88,8 @@ namespace SncPucmm.Controller.GUI
 
         private void Exit()
         {
-            UIUtils.ActivateCameraLabels(true);
-
-            var menuManager = MenuManager.GetInstance();
-            menuManager.RemoveCurrentMenu();
-
-            //if (MenuManager.GetInstance().NoMenuLeft())
-            //{
+            MenuManager.GetInstance().RemoveCurrentMenu();
             State.ChangeState(eState.Navigation);
-            //}
         }
 
         public string GetMenuName()

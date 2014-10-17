@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace SncPucmm.Controller.GUI
 {
@@ -53,6 +54,14 @@ namespace SncPucmm.Controller.GUI
 			buttonNext.OnTouchEvent += new OnTouchEventHandler(OnTouchDirectionNext);
 			buttonList.Add(buttonNext);
 
+			Button buttonResume = new Button("ButtonResume");
+			buttonResume.OnTouchEvent += new OnTouchEventHandler(OnTouchResume);
+			buttonList.Add(buttonResume);
+
+			Button buttonExit = new Button("ButtonExit");
+			buttonExit.OnTouchEvent += new OnTouchEventHandler(OnTouchExit);
+			buttonList.Add(buttonExit);
+
 			UIUtils.FindGUI("GUIMenuDirection/" + buttonList[0].Name).SetActive(false);
 			UIUtils.FindGUI("GUIMenuDirection/" + buttonList[1].Name).SetActive(true);
 
@@ -100,6 +109,24 @@ namespace SncPucmm.Controller.GUI
 
 			ShowDirectionMenu(directionPath[currentDirectionPath]);
 			ShowNavigationDirection(directionPath[currentDirectionPath]);
+		}
+
+		public void OnTouchResume(object sender, TouchEventArgs e) 
+		{
+			PathData path = directionPath[currentDirectionPath];
+			float posX = UIUtils.getXDistance(path.StartNode.Longitude) - 50f;
+			float posZ = UIUtils.getZDistance(path.StartNode.Latitude);
+
+			Transform camera = UIUtils.Find("/Vista3erPersona").camera.transform;
+			camera.eulerAngles = new Vector3(camera.eulerAngles.x, 90, 0f);
+			camera.position = new Vector3(posX, camera.position.y, posZ);
+		}
+
+		public void OnTouchExit(object sender, TouchEventArgs e) 
+		{
+			UIUtils.DestroyChilds("/PUCMM/Directions", false);
+			MenuManager.GetInstance().RemoveCurrentMenu();
+			State.ChangeState(eState.MenuBuildingDescriptor);
 		}
 
 		private void ShowDirectionMenu(PathData path)

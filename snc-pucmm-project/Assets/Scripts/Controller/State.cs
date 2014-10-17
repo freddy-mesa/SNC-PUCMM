@@ -7,9 +7,9 @@ namespace SncPucmm.Controller
 		Navigation,
 		Security,
 		Tour,
-		GUIMenuMain,
-		GUIMenuBuildingDescriptor,
-		Direction,
+		MenuMain,
+		MenuBuildingDescriptor,
+		MenuDirection,
 		Exit
 	}
 

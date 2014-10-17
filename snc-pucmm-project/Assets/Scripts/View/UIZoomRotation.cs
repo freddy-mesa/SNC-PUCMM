@@ -16,7 +16,7 @@ namespace SncPucmm.View
 		private float angleOffSet = 0.0f;
 		
 		//Rotation
-		public float rotationSpeed = 2f;		//Rotation Speed Factor
+		public float rotationSpeed = 2f;
 		
 		void OnTouchMovedAnywhere()
 		{

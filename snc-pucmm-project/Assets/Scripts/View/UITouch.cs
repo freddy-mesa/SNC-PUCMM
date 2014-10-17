@@ -28,6 +28,7 @@ namespace SncPucmm.View
         /// </summary>
         private int locationTapped;
 
+        private bool isButtonTapped;
         /// <summary>
         /// Tapped Button 
         /// </summary>
@@ -60,13 +61,9 @@ namespace SncPucmm.View
 
                             if (this.guiTexture != null && this.guiTexture.HitTest(objectPosition))
                             {
-                                if (Input.GetTouch(i).phase == TouchPhase.Began)
-                                {
-                                    this.SendMessage("OnTouchHoverButton");
-                                    isHover = true;
-                                    buttonTapped = this.name;
-                                }
-                                else if (Input.GetTouch(i).phase == TouchPhase.Stationary)
+                                isButtonTapped = true;
+
+                                if (Input.GetTouch(i).phase == TouchPhase.Stationary)
                                 {
                                     this.SendMessage("OnTouchHoverButton");
                                     isHover = true;
@@ -105,9 +102,9 @@ namespace SncPucmm.View
                         }
                     }
 
-                    if (State.GetCurrentState().Equals(eState.Navigation))
+                    if (State.GetCurrentState().Equals(eState.Navigation) || State.GetCurrentState().Equals(eState.MenuDirection))
                     {
-                        if (this is UIModel)
+                        if (this is UIModel && !State.GetCurrentState().Equals(eState.MenuDirection) && !isButtonTapped)
                         {
                             if (!UITouch.isMoving && !UITouch.isRotating && !UITouch.isZooming)
                             {
@@ -156,7 +153,7 @@ namespace SncPucmm.View
                             }
                         }
                     }
-                    else if (State.GetCurrentState().Equals(eState.GUIMenuMain))
+                    else if (State.GetCurrentState().Equals(eState.MenuMain))
                     {
                         if (this is UIScrollTreeView)
                         {
@@ -200,7 +197,7 @@ namespace SncPucmm.View
             }
             else
             {
-                UITouch.isMoving = UITouch.isRotating = UITouch.isZooming = false;
+                UITouch.isMoving = UITouch.isRotating = UITouch.isZooming = isButtonTapped = false;
             }
         }
     }

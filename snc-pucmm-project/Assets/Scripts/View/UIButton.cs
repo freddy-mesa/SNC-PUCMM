@@ -32,6 +32,8 @@ namespace SncPucmm.View
 		/// </summary>
 		public void OnTouchButton(String buttonName)
 		{
+			OnTouchNormalButton();
+
 			var menu = MenuManager.GetInstance().GetCurrentMenu() as IButton;
 
 			menu.GetButtonList().ForEach(x => {

@@ -16,6 +16,8 @@ namespace SncPucmm.Controller.Direction
             //Buscar las direcciones
             findDirections(ref Nodes);
 
+            State.ChangeState(eState.MenuDirection);
+
             //Mostrar el menu de direciones
             GUIMenuDirection menuDirection = new GUIMenuDirection("GUIMenuDirection", Nodes);
             MenuManager.GetInstance().AddMenu(menuDirection);
@@ -35,8 +37,8 @@ namespace SncPucmm.Controller.Direction
                     float oppositeB = UIUtils.getZDistance(Nodes[i + 1].StartNode.Latitude) - UIUtils.getZDistance(Nodes[i + 1].EndNode.Latitude);
                     float distanceB = Mathf.Sqrt(Mathf.Pow(adjacentB, 2) + Mathf.Pow(oppositeB, 2));
 
-                    float adjacentC = UIUtils.getXDistance(Nodes[i + 1].EndNode.Longitude) - UIUtils.getXDistance(Nodes[i].StartNode.Longitude);
-                    float oppositeC = UIUtils.getZDistance(Nodes[i + 1].EndNode.Latitude) - UIUtils.getZDistance(Nodes[i].StartNode.Latitude);
+                    float adjacentC = UIUtils.getXDistance(Nodes[i].StartNode.Longitude) - UIUtils.getXDistance(Nodes[i + 1].EndNode.Longitude);
+                    float oppositeC = UIUtils.getZDistance(Nodes[i].StartNode.Latitude) - UIUtils.getZDistance(Nodes[i + 1].EndNode.Latitude);
                     float distanceC = Mathf.Sqrt(Mathf.Pow(adjacentC, 2) + Mathf.Pow(oppositeC, 2));
 
                     //Teorema del Coseno
@@ -55,32 +57,124 @@ namespace SncPucmm.Controller.Direction
 
                     if (degreeAB >= 0f && degreeAB < 140f)
                     {
+                        //Verticalmente Recto
+                        if (adjacentA >= -0.5 && adjacentA <= 0.5)
+                        {
+                            //hacia el sur
+                            if (oppositeA > 0)
+                            {
+                                //hacia el oeste
+                                if (adjacentC > 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Right;
+                                }
+                                //hacia el este
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Left;
+                                }
+                            }
+                            //Hacia el norte
+                            else
+                            {
+                                //hacia el oeste
+                                if (adjacentC > 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Left;
+                                }
+                                //hacia el este
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Right;
+                                }
+                            }
+                        }
+                        //Horizontalmente Recto
+                        else if (oppositeA >= -0.5 && oppositeA <= 0.5)
+                        {
+                            //hacia el este
+                            if (adjacentA > 0)
+                            {
+                                //hacia el norte
+                                if (adjacentC > 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Left;
+                                }
+                                //hacia el sur
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Right;
+                                }
+                            }
+                            //hacia el oeste
+                            else
+                            {
+                                //hacia el norte
+                                if (adjacentC > 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Right;
+                                }
+                                //hacia el sur
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Left;
+                                }
+                            }
+                        }
                         //hacia el sur
-                        if (oppositeA > 0)
+                        else if (oppositeA > 0)
                         {
                             //hacia el oeste
-                            if (adjacentC > 0)
+                            if (oppositeB <= 0)
                             {
-                                Nodes[i + 1].Direction = eDirection.Left;
+                                if(adjacentC >= 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Left;
+                                }
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Right;
+                                }
                             }
                             //hacia el este
-                            else if(adjacentC < 0)
+                            else
                             {
-                                Nodes[i + 1].Direction = eDirection.Right;
+                                if (adjacentC > 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Right;
+                                }
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Left;
+                                }
                             }
                         }
                         //hacia el norte
                         else if (oppositeA < 0)
                         {
-                            //hacia el oeste
-                            if (adjacentC >= 0)
+                            //Hacia el arriba y izquierda
+                            if (oppositeB <= 0)
                             {
-                                Nodes[i + 1].Direction = eDirection.Right;
+                                if (adjacentB <= 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Left;
+                                }
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Right;
+                                }
                             }
-                            //hacia el este
+                            //hacia abajo y derecha
                             else
                             {
-                                Nodes[i + 1].Direction = eDirection.Left;
+                                if (adjacentB <= 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Right;
+                                }
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.Left;
+                                }
                             }
                         }
 
@@ -88,32 +182,96 @@ namespace SncPucmm.Controller.Direction
                     }
                     else if (degreeAB >= 140f && degreeAB < 165f)
                     {
+                        //Verticalmente Recto
+                        if (adjacentA >= -0.5 && adjacentA <= 0.5)
+                        {
+                            //hacia el sur
+                            if (oppositeA > 0)
+                            {
+                                //hacia el oeste
+                                if (adjacentC > 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.SlightRight;
+                                }
+                                //hacia el este
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.SlightLeft;
+                                }
+                            }
+                            //Hacia el norte
+                            else
+                            {
+                                //hacia el oeste
+                                if (adjacentC > 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.SlightLeft;
+                                }
+                                //hacia el este
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.SlightRight;
+                                }
+                            }
+                        }
+                        //Horizontalmente Recto
+                        else if (oppositeA >= -0.5 && oppositeA <= 0.5)
+                        {
+                            //hacia el este
+                            if (adjacentA > 0)
+                            {
+                                //hacia el norte
+                                if (adjacentC > 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.SlightLeft;
+                                }
+                                //hacia el sur
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.SlightRight;
+                                }
+                            }
+                            //hacia el oeste
+                            else
+                            {
+                                //hacia el norte
+                                if (adjacentC > 0)
+                                {
+                                    Nodes[i + 1].Direction = eDirection.SlightRight;
+                                }
+                                //hacia el sur
+                                else
+                                {
+                                    Nodes[i + 1].Direction = eDirection.SlightLeft;
+                                }
+                            }
+                        }
                         //hacia el sur
-                        if (oppositeA >= 0)
+                        if (oppositeA > 0)
                         {
                             //hacia el oeste
-                            if (adjacentC >= 0)
+                            if (adjacentC > 0)
                             {
-                                Nodes[i + 1].Direction = eDirection.SlightRight;
+                                Nodes[i + 1].Direction = eDirection.SlightLeft;
                             }
                             //hacia el este
                             else
                             {
-                                Nodes[i + 1].Direction = eDirection.SlightLeft;
+                                Nodes[i + 1].Direction = eDirection.SlightRight;
                             }
                         }
                         //hacia el norte
                         else
                         {
                             //hacia el oeste
-                            if (adjacentC >= 0)
+                            if (adjacentC > 0)
                             {
-                                Nodes[i + 1].Direction = eDirection.SlightLeft;
+                                Nodes[i + 1].Direction = eDirection.SlightRight;
                             }
                             //hacia el este
                             else
                             {
-                                Nodes[i + 1].Direction = eDirection.SlightRight;
+                                Nodes[i + 1].Direction = eDirection.SlightLeft;
                             }
                         }
 
@@ -128,30 +286,12 @@ namespace SncPucmm.Controller.Direction
             }
         }
 
-        private static float GetPreviousDegreeFromUserCurrentPosition(Node node)
+        private static float GetDistanceFromUserCurrentPosition(Node node)
         {
             float adjacent = UIUtils.getXDistance(UIGPS.Longitude) - UIUtils.getXDistance(node.Longitude); //x1 - x2
             float opposite = UIUtils.getZDistance(UIGPS.Latitude) - UIUtils.getZDistance(node.Latitude);   //y1 - y2
 
-            float hypotenuse = Mathf.Sqrt(Mathf.Pow(adjacent, 2) + Mathf.Pow(opposite, 2));
-
-            float degree = Mathf.Asin(opposite / hypotenuse) * 180 / Mathf.PI;
-
-            return GetSinDegree(degree, adjacent);
-        }
-
-        private static float GetSinDegree(float degree, float adjacent)
-        {
-            if (adjacent >= 0)
-            {
-                degree = Mathf.Abs(90 - degree);
-            }
-            else
-            {
-                degree = Mathf.Abs(degree - 90);
-            }
-
-            return degree;
+            return Mathf.Sqrt(Mathf.Pow(adjacent, 2) + Mathf.Pow(opposite, 2));
         }
     }
 }
