@@ -47,8 +47,13 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Plugins\Pixelplacement\iTween\iTween.cs" />
+     <None Include="Assets\UniWeb\FAQ.txt" />
      <None Include="Assets\GyroDroid\GyroDroid-minimal-README.txt" />
+     <None Include="Assets\JSON\readme.txt" />
+     <None Include="Assets\UniWeb\CHANGES.txt" />
+     <None Include="Assets\UniWeb\TODO.txt" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+     <None Include="Assets\UniWeb\README.txt" />
      <None Include="Assets\Draw Call Minimizer\Example\ReadMe.txt" />
      <None Include="Assets\Plugins\Android\build.xml" />
      <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
@@ -72,6 +77,15 @@
  </Reference>
  <Reference Include="System.Security">
  <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/System.Security.dll</HintPath>
+ </Reference>
+ <Reference Include="UniExtensions">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UniWeb/DLL/UniExtensions.dll</HintPath>
+ </Reference>
+ <Reference Include="Ionic.Zlib">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UniWeb/DLL/ionic/Ionic.Zlib.dll</HintPath>
+ </Reference>
+ <Reference Include="bouncywp71">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UniWeb/DLL/socketex/bouncywp71.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

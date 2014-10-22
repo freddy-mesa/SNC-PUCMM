@@ -92,6 +92,10 @@
      <Compile Include="Assets\GyroDroid\Scripts\Utils\NonAndroidFallback.cs" />
      <Compile Include="Assets\GyroDroid\Scripts\Utils\PressureValue.cs" />
      <Compile Include="Assets\GyroDroid\Scripts\Utils\Sensor.Information.cs" />
+     <Compile Include="Assets\JSON\JSONObject.cs" />
+     <Compile Include="Assets\JSON\JSONTemplates.cs" />
+     <Compile Include="Assets\JSON\VectorTemplates.cs" />
+     <Compile Include="Assets\Scripts\Controller\ConnectionChecker.cs" />
      <Compile Include="Assets\Scripts\Controller\Control\Button.cs" />
      <Compile Include="Assets\Scripts\Controller\Control\Control.cs" />
      <Compile Include="Assets\Scripts\Controller\Control\IButton.cs" />
@@ -106,14 +110,28 @@
      <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuBuildingDescriptor.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuDirection.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuMain.cs" />
+     <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuTour.cs" />
      <Compile Include="Assets\Scripts\Controller\MenuManager.cs" />
      <Compile Include="Assets\Scripts\Controller\ModelPoolManager.cs" />
      <Compile Include="Assets\Scripts\Controller\Navigation\Graph.cs" />
      <Compile Include="Assets\Scripts\Controller\Navigation\NavigationController.cs" />
      <Compile Include="Assets\Scripts\Controller\StartUpManager.cs" />
      <Compile Include="Assets\Scripts\Controller\State.cs" />
+     <Compile Include="Assets\Scripts\Controller\Tours\TourController.cs" />
+     <Compile Include="Assets\Scripts\Controller\WebService.cs" />
      <Compile Include="Assets\Scripts\Database\SQLiteService.cs" />
-     <Compile Include="Assets\Scripts\Model\Localizacion.cs" />
+     <Compile Include="Assets\Scripts\Model\Domain\Cuentafacebook.cs" />
+     <Compile Include="Assets\Scripts\Model\Domain\DetalleUsuarioTour.cs" />
+     <Compile Include="Assets\Scripts\Model\Domain\FollowUsuario.cs" />
+     <Compile Include="Assets\Scripts\Model\Domain\Localizacion.cs" />
+     <Compile Include="Assets\Scripts\Model\Domain\PuntoReunionTour.cs" />
+     <Compile Include="Assets\Scripts\Model\Domain\Tipousuario.cs" />
+     <Compile Include="Assets\Scripts\Model\Domain\Tour.cs" />
+     <Compile Include="Assets\Scripts\Model\Domain\Ubicacion.cs" />
+     <Compile Include="Assets\Scripts\Model\Domain\Usuario.cs" />
+     <Compile Include="Assets\Scripts\Model\Domain\UsuarioTour.cs" />
+     <Compile Include="Assets\Scripts\Model\Domain\Videollamada.cs" />
+     <Compile Include="Assets\Scripts\Model\ModelLocalizacion.cs" />
      <Compile Include="Assets\Scripts\Model\ModelObject.cs" />
      <Compile Include="Assets\Scripts\Model\Navigation\DijkstraPath.cs" />
      <Compile Include="Assets\Scripts\Model\Navigation\Neighbor.cs" />
@@ -121,7 +139,6 @@
      <Compile Include="Assets\Scripts\Model\Navigation\PathData.cs" />
      <Compile Include="Assets\Scripts\Model\Navigation\Point.cs" />
      <Compile Include="Assets\Scripts\Model\Navigation\SectionNodes.cs" />
-     <Compile Include="Assets\Scripts\Model\Ubicacion.cs" />
      <Compile Include="Assets\Scripts\View\Pivot.cs" />
      <Compile Include="Assets\Scripts\View\UIAnimation.cs" />
      <Compile Include="Assets\Scripts\View\UIBuilding.cs" />
@@ -137,10 +154,44 @@
      <Compile Include="Assets\Scripts\View\UIScrollTreeView.cs" />
      <Compile Include="Assets\Scripts\View\UITextBox.cs" />
      <Compile Include="Assets\Scripts\View\UITouch.cs" />
+     <Compile Include="Assets\Scripts\View\UITour.cs" />
      <Compile Include="Assets\Scripts\View\UIUtils.cs" />
      <Compile Include="Assets\Scripts\View\UIZoomRotation.cs" />
+     <Compile Include="Assets\UniWeb\DLL\socketex\NetworkStream.cs" />
+     <Compile Include="Assets\UniWeb\DLL\socketex\StateObject.cs" />
+     <Compile Include="Assets\UniWeb\DLL\socketex\TcpClient.cs" />
+     <Compile Include="Assets\UniWeb\Examples\ForceProxyExample.cs" />
+     <Compile Include="Assets\UniWeb\Examples\KeepAliveExample.cs" />
+     <Compile Include="Assets\UniWeb\Examples\Server\AnotherHelloWorldHandler.cs" />
+     <Compile Include="Assets\UniWeb\Examples\Server\HelloWorldHandler.cs" />
+     <Compile Include="Assets\UniWeb\Examples\SocketIOClientExample.cs" />
+     <Compile Include="Assets\UniWeb\Examples\UniWebExamples.cs" />
+     <Compile Include="Assets\UniWeb\Examples\WebsocketClientEcho.cs" />
+     <Compile Include="Assets\UniWeb\Examples\WebsocketClientExample.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\Arc4RandomNumberGenerator.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\BaseHTTP.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\HTTPProtocol.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\Headers.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\HttpConnection.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\HttpException.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\JsonSerializer.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\Request.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\Response.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\Server\HttpRequestHandler.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\Server\HttpServer.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\SocketIO\SocketIOConnection.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\SocketIO\SocketIOMessage.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\UniWeb.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\Utility.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\WebCache.cs" />
+     <Compile Include="Assets\UniWeb\Plugins\HTTP\WebSocket.cs" />
+     <None Include="Assets\UniWeb\FAQ.txt" />
      <None Include="Assets\GyroDroid\GyroDroid-minimal-README.txt" />
+     <None Include="Assets\JSON\readme.txt" />
+     <None Include="Assets\UniWeb\CHANGES.txt" />
+     <None Include="Assets\UniWeb\TODO.txt" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+     <None Include="Assets\UniWeb\README.txt" />
      <None Include="Assets\Draw Call Minimizer\Example\ReadMe.txt" />
      <None Include="Assets\Plugins\Android\build.xml" />
      <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
@@ -164,6 +215,15 @@
  </Reference>
  <Reference Include="System.Security">
  <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/System.Security.dll</HintPath>
+ </Reference>
+ <Reference Include="UniExtensions">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UniWeb/DLL/UniExtensions.dll</HintPath>
+ </Reference>
+ <Reference Include="Ionic.Zlib">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UniWeb/DLL/ionic/Ionic.Zlib.dll</HintPath>
+ </Reference>
+ <Reference Include="bouncywp71">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UniWeb/DLL/socketex/bouncywp71.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

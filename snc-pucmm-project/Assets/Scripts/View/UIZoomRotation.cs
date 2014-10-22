@@ -18,17 +18,17 @@ namespace SncPucmm.View
 		//Rotation
 		public float rotationSpeed = 2f;
 		
-		void OnTouchMovedAnywhere()
+		public void OnTouchMovedAnywhere()
 		{
 			TouchHandler();
 		}
 		
-		void OnTouchStayedAnywhere()
+		public void OnTouchStayedAnywhere()
 		{
 			TouchHandler();
 		}
 		
-		void TouchHandler()
+		private void TouchHandler()
 		{
 			switch (UITouch.currentTouch)
 			{

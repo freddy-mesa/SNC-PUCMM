@@ -49,7 +49,7 @@ namespace SncPucmm.View
                 }
                 else
                 {
-                    label.transform.eulerAngles = new Vector3(Mathf.Clamp(120 - distance, 0 , 90), cameraRotation.y, 0);
+                    label.transform.eulerAngles = new Vector3(Mathf.Clamp(120 - distance, 15 , 90), cameraRotation.y, 0);
                 }
             }
         }

@@ -65,7 +65,7 @@ namespace SncPucmm.View
 
                                 if (Input.GetTouch(i).phase == TouchPhase.Stationary)
                                 {
-                                    this.SendMessage("OnTouchHoverButton");
+                                    ((UIButton)this).OnTouchHoverButton();
                                     isHover = true;
                                     buttonTapped = this.name;
                                 }
@@ -73,19 +73,19 @@ namespace SncPucmm.View
                                 {
                                     if (this.buttonTapped.Equals(this.name))
                                     {
-                                        this.SendMessage("OnTouchButton", this.name);
+                                        ((UIButton)this).OnTouchButton(this.name);
                                         isHover = false;
                                     }
                                 }
 
                                 if (this.guiTexture.gameObject.activeInHierarchy && !isHover)
                                 {
-                                    this.SendMessage("OnTouchNormalButton");
+                                    ((UIButton) this).OnTouchNormalButton();
                                 }
                             }
                             else
                             {
-                                this.SendMessage("OnTouchNormalButton");
+                                ((UIButton) this).OnTouchNormalButton();
                             }
                         }
                     }
@@ -97,14 +97,18 @@ namespace SncPucmm.View
                         {
                             if (Input.GetTouch(i).phase == TouchPhase.Began)
                             {
-                                this.SendMessage("OnTouchTextSearchBox", this.name);
+                                ((UITextBox)this).OnTouchTextSearchBox(this.name);
                             }
                         }
                     }
 
-                    if (State.GetCurrentState().Equals(eState.Navigation) || State.GetCurrentState().Equals(eState.MenuDirection))
+                    if (
+                            State.GetCurrentState().Equals(eState.Navigation) || 
+                            State.GetCurrentState().Equals(eState.MenuDirection) || 
+                            State.GetCurrentState().Equals(eState.Tour)
+                        )
                     {
-                        if (this is UIModel && !State.GetCurrentState().Equals(eState.MenuDirection) && !isButtonTapped)
+                        if (this is UIModel && !isButtonTapped && State.GetCurrentState().Equals(eState.Navigation))
                         {
                             if (!UITouch.isMoving && !UITouch.isRotating && !UITouch.isZooming)
                             {
@@ -131,7 +135,7 @@ namespace SncPucmm.View
                                         if (locationObject != null && locationObject.tag.Equals("Building") && locationTapped.Equals(modelObject.Id))
                                         {
                                             var obj = new { location = modelObject.ObjectTag, button = "ModelController" };
-                                            this.SendMessage("OnTouchBuilding", obj);
+                                            ((UIModel)this).OnTouchBuilding(obj);
                                         }
                                     }
                                 }
@@ -141,7 +145,7 @@ namespace SncPucmm.View
                         {
                             if (Input.GetTouch(i).phase == TouchPhase.Began && this is UIMovement)
                             {
-                                this.SendMessage("OnTouchBeganAnyWhere");
+                                ((UIMovement)this).OnTouchBeganAnyWhere();
                             }
                             if (Input.GetTouch(i).phase == TouchPhase.Moved)
                             {
@@ -149,7 +153,7 @@ namespace SncPucmm.View
                             }
                             if (Input.GetTouch(i).phase == TouchPhase.Stationary && this is UIZoomRotation)
                             {
-                                this.SendMessage("OnTouchStayedAnywhere");
+                                ((UIZoomRotation)this).OnTouchStayedAnywhere();
                             }
                         }
                     }
@@ -188,6 +192,41 @@ namespace SncPucmm.View
                                         var treeView = (MenuManager.GetInstance().GetCurrentMenu() as IScrollTreeView).GetScrollTreeView();
                                         treeView.OnClose(null);
                                         State.ChangeState(eState.Navigation);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (State.GetCurrentState().Equals(eState.Tour))
+                    {
+                        if (this is UITour) 
+                        {
+                            if (!UITouch.isMoving && !UITouch.isRotating && !UITouch.isZooming)
+                            {
+                                if (Input.GetTouch(i).phase == TouchPhase.Stationary)
+                                {
+                                    ray = Camera.main.ScreenPointToRay(objectPosition);
+                                    if (Physics.Raycast(ray, out rayHitInfo))
+                                    {
+                                        var locationObject = rayHitInfo.transform.gameObject;
+                                        if (locationObject != null && locationObject.tag.Equals("Building"))
+                                        {
+                                            locationTapped = locationObject.GetComponent<ModelObject>().Id;
+                                        }
+                                    }
+                                }
+                                else if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                                {
+                                    ray = Camera.main.ScreenPointToRay(objectPosition);
+                                    if (Physics.Raycast(ray, out rayHitInfo))
+                                    {
+                                        var locationObject = rayHitInfo.transform.gameObject;
+                                        var modelObject = locationObject.GetComponent<ModelObject>();
+
+                                        if (locationObject != null && locationObject.tag.Equals("Building") && locationTapped.Equals(modelObject.Id))
+                                        {
+                                            //((UITour)this).OnTouchBuilding((ModelLocalizacion) modelObject.ObjectTag);
+                                        }
                                     }
                                 }
                             }

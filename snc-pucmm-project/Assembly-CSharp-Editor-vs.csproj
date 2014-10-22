@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{AFA40D3A-F73C-2747-A2CC-AE98AE23D001}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+	<BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_3;UNITY_4_5;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;ENABLE_DUCK_TYPING</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="System.Xml.Linq" />
+	<Reference Include="UnityEngine">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\DCMEditorWindow.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\DrawCallMinimizerInspector.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\GenericListAdaptor.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\IReorderableListAdaptor.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\Internal\GUIHelper.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\Internal\ReorderableListResources.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\ReorderableListControl.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\ReorderableListFlags.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\ReorderableListGUI.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\SerializedPropertyAdaptor.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Editor\AssetExporter.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Editor\CombineMeshInEditor.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Editor\CombineMeshInEditorWindow.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Editor\RevertFromDevelopmentBake.cs" />
+     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Editor\TextureExporter.cs" />
+     <Compile Include="Assets\JSON\Editor\JSONChecker.cs" />
+     <None Include="Assets\UniWeb\FAQ.txt" />
+     <None Include="Assets\GyroDroid\GyroDroid-minimal-README.txt" />
+     <None Include="Assets\JSON\readme.txt" />
+     <None Include="Assets\UniWeb\CHANGES.txt" />
+     <None Include="Assets\UniWeb\TODO.txt" />
+     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
+     <None Include="Assets\UniWeb\README.txt" />
+     <None Include="Assets\Draw Call Minimizer\Example\ReadMe.txt" />
+     <None Include="Assets\Plugins\Android\build.xml" />
+     <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
+ <Reference Include="Mono.Data">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/Mono.Data.dll</HintPath>
+ </Reference>
+ <Reference Include="Mono.Data.Sqlite">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/Mono.Data.Sqlite.dll</HintPath>
+ </Reference>
+ <Reference Include="Mono.Data.SqliteClient">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/Mono.Data.SqliteClient.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Configuration">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/System.Configuration.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Data">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/System.Data.dll</HintPath>
+ </Reference>
+ <Reference Include="System.EnterpriseServices">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/System.EnterpriseServices.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Security">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/System.Security.dll</HintPath>
+ </Reference>
+ <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+ </Reference>
+ <Reference Include="SyntaxTree.VisualStudio.Unity.Messaging">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Messaging.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityVS.VersionSpecific">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UnityVS/Editor/UnityVS.VersionSpecific.dll</HintPath>
+ </Reference>
+ <Reference Include="UniExtensions">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UniWeb/DLL/UniExtensions.dll</HintPath>
+ </Reference>
+ <Reference Include="Ionic.Zlib">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UniWeb/DLL/ionic/Ionic.Zlib.dll</HintPath>
+ </Reference>
+ <Reference Include="bouncywp71">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/UniWeb/DLL/socketex/bouncywp71.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Graphs">
+ <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
+      <Project>{8E6CEC6E-9A52-E0D1-2B98-6988BB1556CF}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-CSharp-vs.csproj">
+      <Project>{648E857F-FD6D-918C-3E6C-38EE51A40D28}</Project>      <Name>Assembly-CSharp-vs</Name>    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>

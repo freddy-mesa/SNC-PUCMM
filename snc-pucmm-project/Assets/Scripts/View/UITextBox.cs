@@ -56,7 +56,7 @@ namespace SncPucmm.View
             keyboardManager.Open(textSearch.text,"Buscar Edificio",false);
         }
 
-        void OnTouchTextSearchBox(string name) 
+        public void OnTouchTextSearchBox(string name) 
         {
             //Buscando el TextBox
             var menu = MenuManager.GetInstance().GetCurrentMenu() as ITextBox;

@@ -14,7 +14,7 @@ namespace SncPucmm.View
 		private float posX = 0.0f;				//distance in X axe
 		private float posZ = 0.0f;				//distance in Z axe
 		
-		void OnTouchBeganAnyWhere()
+		public void OnTouchBeganAnyWhere()
 		{
 			//Getting the first touch's position
 			if(Input.touchCount == 1)
@@ -24,7 +24,7 @@ namespace SncPucmm.View
 		}
 		
 		//Se hace un Slice por delta de movimiento 
-		void OnTouchMovedAnywhere()
+		public void OnTouchMovedAnywhere()
 		{
 			if (!UITouch.isRotating || !UITouch.isZooming)
 			{

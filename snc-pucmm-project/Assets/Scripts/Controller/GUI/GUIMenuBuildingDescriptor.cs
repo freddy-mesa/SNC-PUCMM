@@ -1,12 +1,12 @@
 ﻿using SncPucmm.Controller.Navigation;
 using SncPucmm.Controller;
 using SncPucmm.Controller.Control;
-using SncPucmm.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SncPucmm.View;
+using SncPucmm.Model;
 
 namespace SncPucmm.Controller.GUI
 {
@@ -15,7 +15,7 @@ namespace SncPucmm.Controller.GUI
         #region Atributos
 
         private string name;
-        private Localizacion location;
+        private ModelLocalizacion location;
 
         public List<Button> buttonList;
 
@@ -23,7 +23,7 @@ namespace SncPucmm.Controller.GUI
 
         #region Constructor
 
-        public GUIMenuBuildingDescriptor(string name, Localizacion location)
+        public GUIMenuBuildingDescriptor(string name, ModelLocalizacion location)
         {
             this.name = name;
             this.location = location;
@@ -67,8 +67,8 @@ namespace SncPucmm.Controller.GUI
 
         public void OnTouchNavigationButton(object sender, TouchEventArgs e)
         {
-            NavigationController controller = (NavigationController) ModelPoolManager.GetInstance().GetValue("navigation");
-            controller.StartNavigation(this.location.Nombre);
+            NavigationController controller = (NavigationController) ModelPoolManager.GetInstance().GetValue("navigationCtrl");
+            controller.StartNavigation(this.location.name);
         }
 
         public void OnTouchPhotosButton(object sender, TouchEventArgs e)

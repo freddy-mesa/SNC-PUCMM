@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using SncPucmm.View;
+using SncPucmm.Controller.Tours;
 
 namespace SncPucmm.Controller
 {
@@ -77,7 +78,7 @@ namespace SncPucmm.Controller
                         int idUbicacion = Convert.ToInt32(item.GetType().GetProperty("Ubicacion").GetValue(item, null));
                         int idLocalizacion = Convert.ToInt32(item.GetType().GetProperty("Localizacion").GetValue(item, null));
 
-                        localizacion.ObjectTag = new Localizacion(idLocalizacion, idUbicacion, nombre);
+                        localizacion.ObjectTag = new ModelLocalizacion() { idLocalizacion = idLocalizacion, name = nombre, idUbicacion = idUbicacion };
                         localizacion.Id = idLocalizacion;
 
 
@@ -107,8 +108,11 @@ namespace SncPucmm.Controller
 
         private void ModelPoolInit()
         {
-            NavigationController navigationCrtl = new NavigationController();
-            ModelPoolManager.GetInstance().Add("navigation", navigationCrtl);
+            NavigationController navigationCtrl = new NavigationController();
+            ModelPoolManager.GetInstance().Add("navigationCtrl", navigationCtrl);
+
+            TourController tourCtrl = new TourController();
+            ModelPoolManager.GetInstance().Add("tourCtrl", tourCtrl);
         }
     }
 }

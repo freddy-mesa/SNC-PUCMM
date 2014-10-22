@@ -7,8 +7,9 @@ using UnityEngine;
 using SncPucmm.Controller.Control;
 using SncPucmm.Controller;
 using SncPucmm.Database;
-using SncPucmm.Model;
 using SncPucmm.View;
+using SncPucmm.Model.Domain;
+using SncPucmm.Model;
 
 namespace SncPucmm.Controller.GUI
 {
@@ -141,7 +142,7 @@ namespace SncPucmm.Controller.GUI
 
 		private void OnTouchModelController(object sender, TouchEventArgs e)
 		{
-			var location = (Localizacion)e.Mensaje;
+			var location = (ModelLocalizacion)e.Mensaje;
 
 			OpenGUIMenuBuildingDescriptor(location);
 		}
@@ -154,7 +155,7 @@ namespace SncPucmm.Controller.GUI
 			textBox.label.Text = text;
 		}
 
-		private void OpenGUIMenuBuildingDescriptor(Localizacion location)
+		private void OpenGUIMenuBuildingDescriptor(ModelLocalizacion location)
 		{
 			UIUtils.ActivateCameraLabels(false);
 
@@ -163,7 +164,7 @@ namespace SncPucmm.Controller.GUI
 
 			var lblBuildingName = UIUtils.FindGUI(menuManager.GetCurrentMenu().GetMenuName() + "/LabelBuildingName");
 
-			lblBuildingName.guiText.text = UIUtils.FormatStringLabel(location.Nombre, ' ', 20);
+			lblBuildingName.guiText.text = UIUtils.FormatStringLabel(location.name, ' ', 20);
 
 			State.ChangeState(eState.MenuBuildingDescriptor);
 		}
@@ -175,7 +176,7 @@ namespace SncPucmm.Controller.GUI
 			if (!UIScrollTreeView.isScrolling)
 			{
 				var button = sender as Button;
-				var localizacion = (Localizacion)button.ObjectTag;
+				var localizacion = (ModelLocalizacion) button.ObjectTag;
 
 				treeView.OnClose(null);
 
@@ -311,7 +312,7 @@ namespace SncPucmm.Controller.GUI
 
 				var button = new Button(item.name);
 				button.OnTouchEvent += new OnTouchEventHandler(OnTouchScrollTreeViewItem);
-				button.ObjectTag = new Localizacion(localizacion, ubicacion, nombre);
+				button.ObjectTag = new ModelLocalizacion() { idLocalizacion = localizacion, idUbicacion = ubicacion, name = nombre };
 
 				buttonList.Add(button);
 				treeView.ButtonCount++;

@@ -67,14 +67,28 @@
     <Reference Include="System.Security">
       <HintPath>Assets\Plugins\System.Security.dll</HintPath>
     </Reference>
+    <Reference Include="Ionic.Zlib">
+      <HintPath>Assets\UniWeb\DLL\ionic\Ionic.Zlib.dll</HintPath>
+    </Reference>
+    <Reference Include="bouncywp71">
+      <HintPath>Assets\UniWeb\DLL\socketex\bouncywp71.dll</HintPath>
+    </Reference>
+    <Reference Include="UniExtensions">
+      <HintPath>Assets\UniWeb\DLL\UniExtensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Plugins\Pixelplacement\iTween\iTween.cs" />
     <None Include="Assets\Draw Call Minimizer\Example\ReadMe.txt" />
     <None Include="Assets\GyroDroid\GyroDroid-minimal-README.txt" />
     <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
+    <None Include="Assets\JSON\readme.txt" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Plugins\Android\build.xml" />
+    <None Include="Assets\UniWeb\CHANGES.txt" />
+    <None Include="Assets\UniWeb\FAQ.txt" />
+    <None Include="Assets\UniWeb\README.txt" />
+    <None Include="Assets\UniWeb\TODO.txt" />
     <None Include="Assets\Plugins\Mono.Data.dll" />
     <None Include="Assets\Plugins\Mono.Data.Sqlite.dll" />
     <None Include="Assets\Plugins\Mono.Data.SqliteClient.dll" />
