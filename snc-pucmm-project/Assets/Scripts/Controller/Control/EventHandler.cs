@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SncPucmm.Controller
+namespace SncPucmm.Controller.Control
 {
     #region Argumentos de Eventos 
     

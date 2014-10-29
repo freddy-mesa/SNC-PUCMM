@@ -16,7 +16,7 @@ namespace SncPucmm.Controller.GUI
 		string name;
 
 		List<Button> buttonList;
-		List<PathData> directionPath;
+		List<PathDataDijkstra> directionPath;
 		int currentDirectionPath;
 
 		bool isBackButtonActive;
@@ -26,7 +26,7 @@ namespace SncPucmm.Controller.GUI
 
 		#region Constructor
 
-		public GUIMenuDirection(string name, List<PathData> nodesDirectionPath)
+		public GUIMenuDirection(string name, List<PathDataDijkstra> nodesDirectionPath)
 		{
 			this.name = name;
 			this.directionPath = nodesDirectionPath;
@@ -113,7 +113,7 @@ namespace SncPucmm.Controller.GUI
 
 		public void OnTouchResume(object sender, TouchEventArgs e) 
 		{
-			PathData path = directionPath[currentDirectionPath];
+			PathDataDijkstra path = directionPath[currentDirectionPath];
 			float posX = UIUtils.getXDistance(path.StartNode.Longitude) - 50f;
 			float posZ = UIUtils.getZDistance(path.StartNode.Latitude);
 
@@ -126,19 +126,20 @@ namespace SncPucmm.Controller.GUI
 		{
 			UIUtils.DestroyChilds("/PUCMM/Directions", false);
 			MenuManager.GetInstance().RemoveCurrentMenu();
+			
 			State.ChangeState(eState.MenuBuildingDescriptor);
 		}
 
-		private void ShowDirectionMenu(PathData path)
+		private void ShowDirectionMenu(PathDataDijkstra path)
 		{
-			String label = "Next " + path.Direction.ToString() + " from " + path.StartNode.Name + " to " + path.EndNode.Name;
+			String label = String.Format("{0} metros desde {1} hacia {2}. Metros Recorridos: {3}", path.DistanceToNeighbor, path.StartNode.Name, path.EndNode.Name, path.DistancePathed);
 			UIUtils.FindGUI("GUIMenuDirection/Text").guiText.text = UIUtils.FormatStringLabel(label, ' ', 20);
 		}
 
-		private void ShowNavigationDirection(PathData path)
+		private void ShowNavigationDirection(PathDataDijkstra path)
 		{
 			var directions = UIUtils.Find("/PUCMM/Directions").GetComponent<UIDirections>();
-			directions.PrintDirections(directionPath, path);
+			directions.PrintPath(directionPath, path);
 		}
 
 		#region Implemented methods

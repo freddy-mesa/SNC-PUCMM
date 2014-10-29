@@ -60,12 +60,12 @@ public class Tour implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechafin;
     @OneToMany(mappedBy = "idtour")
-    private List<Puntoreuniontour> puntoreuniontourList;
-    @OneToMany(mappedBy = "idtour")
     private List<Usuariotour> usuariotourList;
     @JoinColumn(name = "idusuario", referencedColumnName = "idusuario")
     @ManyToOne
     private Usuario idusuario;
+    @OneToMany(mappedBy = "idtour")
+    private List<Puntoreuniontour> puntoreuniontourList;
 
     public Tour() {
     }
@@ -115,15 +115,6 @@ public class Tour implements Serializable {
     }
 
     @XmlTransient
-    public List<Puntoreuniontour> getPuntoreuniontourList() {
-        return puntoreuniontourList;
-    }
-
-    public void setPuntoreuniontourList(List<Puntoreuniontour> puntoreuniontourList) {
-        this.puntoreuniontourList = puntoreuniontourList;
-    }
-
-    @XmlTransient
     public List<Usuariotour> getUsuariotourList() {
         return usuariotourList;
     }
@@ -138,6 +129,15 @@ public class Tour implements Serializable {
 
     public void setIdusuario(Usuario idusuario) {
         this.idusuario = idusuario;
+    }
+
+    @XmlTransient
+    public List<Puntoreuniontour> getPuntoreuniontourList() {
+        return puntoreuniontourList;
+    }
+
+    public void setPuntoreuniontourList(List<Puntoreuniontour> puntoreuniontourList) {
+        this.puntoreuniontourList = puntoreuniontourList;
     }
 
     @Override

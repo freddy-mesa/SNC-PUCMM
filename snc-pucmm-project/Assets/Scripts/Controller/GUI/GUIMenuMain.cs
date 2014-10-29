@@ -67,7 +67,7 @@ namespace SncPucmm.Controller.GUI
 
 			textBoxList = new List<TextBox>();
 
-			var searchTextBox = new TextBox("SearchBox", "SearchText");
+			var searchTextBox = new TextBox("SearchBox");
 			searchTextBox.OnChangeEvent += new OnChangeEventHandler(OnChangeSearchTextBox);
 			textBoxList.Add(searchTextBox);
 
@@ -80,7 +80,11 @@ namespace SncPucmm.Controller.GUI
 
 		private void OnTouchButtonTours(object sender, TouchEventArgs e)
 		{
+			UIUtils.ActivateCameraLabels(false);
 
+			var menuTourCreation = new GUIMenuTourCreation("GUIMenuTourCreation");
+			MenuManager.GetInstance().AddMenu(menuTourCreation);
+			State.ChangeState(eState.TourCreation);
 		}
 
 		private void OnTouchButtonSeguridad(object sender, TouchEventArgs e)
@@ -142,9 +146,9 @@ namespace SncPucmm.Controller.GUI
 
 		private void OnTouchModelController(object sender, TouchEventArgs e)
 		{
-			var location = (ModelLocalizacion)e.Mensaje;
+			var node = (ModelNode)e.Mensaje;
 
-			OpenGUIMenuBuildingDescriptor(location);
+			OpenGUIMenuBuildingDescriptor(node);
 		}
 
 		private void OnChangeSearchTextBox(object sender, ChangeEventArgs e)
@@ -152,19 +156,19 @@ namespace SncPucmm.Controller.GUI
 			var text = e.Mensaje as String;
 			var textBox = sender as TextBox;
 
-			textBox.label.Text = text;
+			textBox.Text = text;
 		}
 
-		private void OpenGUIMenuBuildingDescriptor(ModelLocalizacion location)
+		private void OpenGUIMenuBuildingDescriptor(ModelNode node)
 		{
 			UIUtils.ActivateCameraLabels(false);
 
 			var menuManager = MenuManager.GetInstance();
-			menuManager.AddMenu(new GUIMenuBuildingDescriptor("GUIMenuDescriptor", location));
+			menuManager.AddMenu(new GUIMenuBuildingDescriptor("GUIMenuDescriptor", node));
 
 			var lblBuildingName = UIUtils.FindGUI(menuManager.GetCurrentMenu().GetMenuName() + "/LabelBuildingName");
 
-			lblBuildingName.guiText.text = UIUtils.FormatStringLabel(location.name, ' ', 20);
+			lblBuildingName.guiText.text = UIUtils.FormatStringLabel(node.name, ' ', 20);
 
 			State.ChangeState(eState.MenuBuildingDescriptor);
 		}
@@ -176,7 +180,7 @@ namespace SncPucmm.Controller.GUI
 			if (!UIScrollTreeView.isScrolling)
 			{
 				var button = sender as Button;
-				var localizacion = (ModelLocalizacion) button.ObjectTag;
+				var localizacion = (ModelNode) button.ObjectTag;
 
 				treeView.OnClose(null);
 
@@ -225,10 +229,10 @@ namespace SncPucmm.Controller.GUI
 			var sqliteService = SQLiteService.GetInstance();
 			var reader = sqliteService.Query(
 				true,
-				"SELECT nombre,idUbicacion,idLocalizacion " +
-					"FROM Localizacion " +
-					"WHERE nombre LIKE '%" + searchText + "%' " +
-					"ORDER BY idUbicacion, idLocalizacion"
+				"SELECT nombre,idUbicacion,idNode,idEdificio " +
+					"FROM Node " +
+					"WHERE idUbicacion is not null && nombre LIKE '%" + searchText + "%' " +
+					"ORDER BY idUbicacion, idNode"
 			);
 
 			//Guardando los datos en memoria
@@ -239,7 +243,8 @@ namespace SncPucmm.Controller.GUI
 				{
 					nombre = reader["nombre"],
 					ubicacion = reader["idUbicacion"],
-					localizacion = reader["idLocalizacion"],
+					node = reader["idNode"],
+					edificio = reader["idEdificio"]
 				};
 
 				textList.Add(lugar);
@@ -280,7 +285,8 @@ namespace SncPucmm.Controller.GUI
 
 				var nombre = Convert.ToString(textList[i].GetType().GetProperty("nombre").GetValue(textList[i], null));
 				var ubicacion = Convert.ToInt32(textList[i].GetType().GetProperty("ubicacion").GetValue(textList[i], null));
-				var localizacion = Convert.ToInt32(textList[i].GetType().GetProperty("localizacion").GetValue(textList[i], null));
+				var node = Convert.ToInt32(textList[i].GetType().GetProperty("node").GetValue(textList[i], null));
+				var edificio = Convert.ToInt32(textList[i].GetType().GetProperty("edificio").GetValue(textList[i], null));
 
 				if (nombre.Length < 30)
 				{
@@ -292,7 +298,7 @@ namespace SncPucmm.Controller.GUI
 				}
 
 				//Si son iguales la localizacion es un nombre de un edificio
-				if (ubicacion == localizacion)
+				if (ubicacion == edificio)
 				{
 					itemText.guiText.text = UIUtils.FormatStringLabel(nombre, ' ', 29);
 				}
@@ -312,7 +318,7 @@ namespace SncPucmm.Controller.GUI
 
 				var button = new Button(item.name);
 				button.OnTouchEvent += new OnTouchEventHandler(OnTouchScrollTreeViewItem);
-				button.ObjectTag = new ModelLocalizacion() { idLocalizacion = localizacion, idUbicacion = ubicacion, name = nombre };
+				button.ObjectTag = new ModelNode() { idNodo = node, idUbicacion = ubicacion, name = nombre };
 
 				buttonList.Add(button);
 				treeView.ButtonCount++;

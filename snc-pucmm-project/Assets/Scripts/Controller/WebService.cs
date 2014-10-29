@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SncPucmm.Controller.Navigation;
+using SncPucmm.Database;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,9 @@ namespace SncPucmm.Controller
         #endregion
 
         #region Propiedades
+
+        public static bool IsConnectionAvailable { get; set; }
+        private static bool IsEnter { get; set; }
 
         public static WebService Instance
         {
@@ -103,6 +108,73 @@ namespace SncPucmm.Controller
             }
         }
 
+        
+        void Start()
+        {
+            IsConnectionAvailable = false;
+            IsEnter = false;
+        }
+
+        void Update()
+        {
+            //Mientras no haya conexion a internet
+            //if (!IsConnectionAvailable && !IsEnter)
+            //{
+            //    IsEnter = true;
+            //    StartCoroutine(UpdateService());
+            //}
+        }
+
+        private IEnumerator UpdateService()
+        {
+            yield return new WaitForSeconds(0.1f);
+
+            //Verificar si se puede acceder a google.com
+            yield return WebService.Get("https://www.google.com", (status, response) => IsConnectionAvailable = status);
+
+            //Esperar que se refresque el valor de IsConnectionAvailable
+            yield return new WaitForSeconds(0.1f);
+
+            //Debug.Log(IsConnectionAvailable);
+            //Valor que se obtiene si el fue success el acceder a google.com
+            if (IsConnectionAvailable)
+            {
+                string responseJson = string.Empty;
+
+                //Obtener la ultima actualizacion del servidor
+                yield return WebService.Get(
+                    "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/updates/", 
+                    (status, response) => { if (status) responseJson = response; }
+                );
+
+                //Esperar que se refresque el valor de responseJson
+                yield return new WaitForSeconds(0.1f);
+
+                //Enconding de string a Json
+                //JSONObject json = new JSONObject(responseJson);
+                Debug.Log(responseJson);
+
+                ////Hacer un update a la base de datos
+                //SQLiteService.GetInstance().UpdateDataBase(json);
+
+                ////Esperar si se esta usando la navegacion
+                //while (NavigationController.isUsingNavigation) 
+                //    yield return new WaitForSeconds(1f);
+
+                //var navigation = (NavigationController) ModelPoolManager.GetInstance().GetValue("navigationCtrl");
+                
+                ////Crear el grafo con la base de datos actualizada.
+                //navigation.CreateGraph();
+
+            }
+
+            //Condicion para volver a entrar
+            IsEnter = false;
+
+            //Salir de la corotutina
+            yield return null;
+        }
+        
         #endregion
     }
 }

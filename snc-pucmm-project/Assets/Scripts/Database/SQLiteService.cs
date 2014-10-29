@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using SncPucmm.Model.Domain;
 
 namespace SncPucmm.Database
 {
@@ -94,6 +95,11 @@ namespace SncPucmm.Database
 
 			if (createDataBase)
 			{
+				if (Application.platform == RuntimePlatform.WindowsEditor)
+				{
+					DropAllDataBaseTables();
+				}
+
 				InitializeDataBase();
 			}
 		}
@@ -106,499 +112,423 @@ namespace SncPucmm.Database
 
 		private void InitCreateTables()
 		{
-			//TipoUsuario
-			CreateTableQuery(
-				"TipoUsuario",
-				new Dictionary<string, string>{
-					{"idTipoUsuario","integer"},
-					{"nombre","text"},
-					{"descripcion","text"}
-				},
-				new Dictionary<string, string[]>{
-					{"PK_TipoUsuario", new string[] { "idTipoUsuario" }}
-				},
-				new Dictionary<string, string[]>{}
-			);
-			
-			//CuentaFacebook
-			CreateTableQuery(
-				"CuentaFacebook",
-				new Dictionary<string, string>{
-					{"idCuentaFacebook","integer"},
-					{"usuarioFacebook","text"},
-					{"token","text"}
-				},
-				new Dictionary<string, string[]>{
-					{"PK_CuentaFacebook", new string[] { "idCuentaFacebook" }}
-				},
-				new Dictionary<string, string[]> { }
-			);
-			
-			//Usuario
-			CreateTableQuery(
-				"Usuario",
-				new Dictionary<string, string>{
-					{"idUsuario","integer"},
-					{"idTipoUsuario","integer"},
-					{"idCuentaFacebook","integer"},
-					{"nombre","text"},
-					{"apellido","text"},
-					{"usuario","text"},
-					{"contrasena","text"},
-				},
-				new Dictionary<string, string[]>{
-					{"PK_Usuario", new string[] { "idUsuario" }}
-				},
-				new Dictionary<string, string[]> {
-					{"FK_Usuario_TipoUsuario", new string[] { "idTipoUsuario","TipoUsuario","idTipoUsuario" }},
-					{"FK_Usuario_CuentaFacebook", new string[] { "idCuentaFacebook","CuentaFacebook","idCuentaFacebook" }}
-				}
-			);
-			
-			//Follow
-			CreateTableQuery(
-				"Follow",
-				new Dictionary<string, string>{
-					{"idFollow","integer"},
-					{"idUsuarioFollower","integer"},
-					{"idUsuarioFollowed","integer"},
-					{"estadoSolicitud","text"},
-					{"fechaRegistroSolicitud","text"},
-					{"fechaRespuestaSolicitud","text"},
-				},
-				new Dictionary<string, string[]>{
-					{"PK_Follow", new string[] { "idFollow" }}
-				},
-				new Dictionary<string, string[]> {
-					{"FK_Follow_TipoUsuario", new string[] { "idUsuarioFollower","Usuario","idUsuario" }},
-					{"FK_Follow_CuentaFacebook", new string[] { "idUsuarioFollowed","Usuario","idUsuario" }}
-				}
-			);
-			
-			//VideoLlamada
-			CreateTableQuery(
-				"VideoLlamada",
-				new Dictionary<string, string>{
-					{"idVideoLlamada","integer"},
-					{"idUsuario","integer"},
-					{"fechaInicio","text"},
-					{"fechaFin","text"},
-					{"plataforma","text"},
-					{"longitud","real"},
-					{"latitud","real"},
-				},
-				new Dictionary<string, string[]>{
-					{"PK_VideoLlamada", new string[] { "idVideoLlamada" }}
-				},
-				new Dictionary<string, string[]> {
-					{"FK_VideoLlamada_Usuario", new string[] { "idUsuario","Usuario","idUsuario" }},
-				}
-			);
-			
 			//Ubicacion
 			CreateTableQuery(
 				"Ubicacion",
-				new Dictionary<string, string>{
+				new Dictionary<string, string>
+				{
 					{"idUbicacion","integer"},
 					{"nombre","text"},
-					{"abreviacion","text"}
+					{"abreviacion","text"},
 				},
-				new Dictionary<string, string[]>{
+				new Dictionary<string, string[]>
+				{
 					{"PK_Ubicacion", new string[] { "idUbicacion" }}
 				},
-				new Dictionary<string, string[]> { }
+				new Dictionary<string, string[]>{ }
 			);
 			
-			//Localizacion
+			//Nodo
 			CreateTableQuery(
-				"Localizacion",
-				new Dictionary<string, string>{
-					{"idLocalizacion","integer"},
+				"Nodo",
+				new Dictionary<string, string>
+				{
+					{"idNodo","integer"},
 					{"idUbicacion","integer"},
+					{"edificio","integer"},
 					{"nombre","text"},
+					{"activo","integer"}
 				},
-				new Dictionary<string, string[]>{
-					{"PK_Localizacion", new string[] { "idLocalizacion" }}
+				new Dictionary<string, string[]>
+				{
+					{"PK_Nodo", new string[] { "idNodo" }}
 				},
-				new Dictionary<string, string[]>{
-					{"FK_Localizacion_Ubicacion", new string[] { "idUbicacion","Ubicacion","idUbicacion" }}
+				new Dictionary<string, string[]>
+				{
+					{"FK_Nodo_Ubicacion", new string[] { "idUbicacion","Ubicacion","idUbicacion" }}
 				}
 			);
-			
-			//LocalizacionUsuario
+
+			//Coordena
 			CreateTableQuery(
-				"LocalizacionUsuario",
-				new Dictionary<string, string>{
-					{"idLocalizacionUsuario","integer"},
-					{"idUsuario","integer"},
-					{"idLocalizacion","integer"},
-					{"fechaLocalizacion","text"},
+				"CoordenadaNodo",
+				new Dictionary<string, string>
+				{
+					{"idCoordenadaNodo", "integer"},
+					{"idNodo","integer"},
+					{"latitud","real"},
+					{"longitud","real"},
 				},
-				new Dictionary<string, string[]>{
-					{"PK_LocalizacionUsuario", new string[] { "idLocalizacionUsuario" }}
+				new Dictionary<string, string[]>
+				{
+					{"PK_CoordenadaNodo", new string[] { "idCoordenadaNodo" }}
 				},
-				new Dictionary<string, string[]> {
-					{"FK_LocalizacionUsuario_Usuario", new string[] { "idUsuario","Usuario","idUsuario" }},
-					{"FK_LocalizacionUsuario_Localizacion", new string[] { "idLocalizacion","Localizacion","idLocalizacion" }}
+				new Dictionary<string, string[]>
+				{
+					{"FK_CoordenadaNodo_Ubicacion", new string[] { "idNodo","Nodo","idNodo" }}
 				}
 			);
-			
-			//Tour
+
+			//Neighbor
 			CreateTableQuery(
-				"Tour",
-				new Dictionary<string,string>{
-					{"idTour","integer"},
-					{"idUsuario","integer"},
-					{"nombreTour","text"},
-					{"fechaCreacion","text"},
-					{"fechaInicio","text"},
-					{"fechaFin","text"}
+				"Neighbor",
+				new Dictionary<string, string>
+				{
+					{"idNeighbor","integer"},
+					{"idNodo","integer"},
+					{"NodoName","text"},
+					{"idNodoNeighbor", "integer"},
+					{"NodoNeighborName","text"},
 				},
-				new Dictionary<string,string[]>{
-					{"PK_Tour", new string[] { "idTour" }}
+				new Dictionary<string, string[]>
+				{
+					{"PK_Neighbor", new string[] { "idNeighbor"} }
 				},
-				new Dictionary<string, string[]>{
-					{"FK_Tour_Usuario", new string[] { "idUsuario","Usuario","idUsuario" }}
-				}
+				new Dictionary<string, string[]> { } 
 			);
-			
-			//UsuarioTour
-			CreateTableQuery(
-				"UsuarioTour",
-				new Dictionary<string, string>{
-					{"idUsuarioTour","integer"},
-					{"idUsuario","integer"},
-					{"idTour","integer"},
-					{"estadoUsuarioTour","text"},
-					{"fechaInicio","text"},
-					{"fechaFin","text"},
-				},
-				new Dictionary<string, string[]>{
-					{"PK_UsuarioTour", new string[] { "idUsuarioTour" }}
-				},
-				new Dictionary<string, string[]> {
-					{"FK_UsuarioTour_Usuario", new string[] { "idUsuario","Usuario","idUsuario" }},
-					{"FK_UsuarioTour_Tour", new string[] { "idTour","Tour","idTour" }}
-				}
-			);
-			
-			//PuntoReunionTour
-			CreateTableQuery(
-				"PuntoReunionTour",
-				new Dictionary<string, string>{
-					{"idPuntoReunion","integer"},
-					{"idLocalizacion","integer"},
-					{"idTour","integer"},
-					{"secuenciaPuntoReunion","integer"},
-				},
-				new Dictionary<string, string[]>{
-					{"PK_PuntoReunionTour", new string[] { "idPuntoReunion" }}
-				},
-				new Dictionary<string, string[]> {
-					{"FK_PuntoReunionTour_Localizacion", new string[] { "idLocalizacion","Localizacion","idLocalizacion" }},
-					{"FK_PuntoReunionTour_Tour", new string[] { "idTour","Tour","idTour" }}
-				}
-			);
-			
-			//DetalleUsuarioTour
-			CreateTableQuery(
-				"DetalleUsuarioTour",
-				new Dictionary<string, string>{
-					{"idDetalleUsuarioTour","integer"},
-					{"idUsuarioTour","integer"},
-					{"idPuntoReunion","integer"},
-					{"estado","text"},
-					{"fechaInicio","text"},
-					{"fechaLlegada","text"},
-				},
-				new Dictionary<string, string[]>{
-					{"PK_DetalleUsuarioTour", new string[] { "idDetalleUsuarioTour" }}
-				},
-				new Dictionary<string, string[]> {
-					{"FK_DetalleUsuarioTour_UsuarioTour", new string[] { "idUsuarioTour","UsuarioTour","idUsuarioTour" }},
-					{"FK_DetalleUsuarioTour_PuntoReunionTour", new string[] { "idPuntoReunion","PuntoReunionTour","idPuntoReunion" }}
-				}
-			);
-			
-			//CoordenadaLocalizacion
-			//CreateTableQuery(
-			//    "CoordenadaLocalizacion",
-			//    new Dictionary<string, string>{
-			//        {"idCoordenada","integer"},
-			//        {"idLocalizacion","integer"},
-			//        {"longitud","real"},
-			//        {"latitud","real"},
-			//    },
-			//    new Dictionary<string, string[]>{
-			//        {"PK_CoordenadaLocalizacion", new string[] { "idCoordenada" }}
-			//    },
-			//    new Dictionary<string, string[]>{
-			//        {"FK_CoordenadaLocalizacion_Localizacion", new string[] { "idLocalizacion","Localizacion","idLocalizacion" }}
-			//    }
-			//);
+								
 		}
 
 		private void InitInsertInTables()
 		{
-
 			#region Ubicacion
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",1},{"nombre","Departamento de Ingenierías Electrónica y Electromecánica"},{"abreviacion","MATADERO"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",2},{"nombre","Talleres de Ingeniería Eléctrica y Electromecánica"},{"abreviacion","TALLERIEE"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",3},{"nombre","Suministro"},{"abreviacion","SUMINISTRO"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",4},{"nombre","Laboratorios de Ingeniería"},{"abreviacion","LABING"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",5},{"nombre","Departamentos de Ingeniería"},{"abreviacion","DEPING"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",6},{"nombre","Ciencias Básicas I"},{"abreviacion","CIENBASI"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",7},{"nombre","Ciencias Básicas II"},{"abreviacion","CIENBASII"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",8},{"nombre","Aulas 1"},{"abreviacion","AULAS1"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",9},{"nombre","Aulas 2"},{"abreviacion","AULAS2"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",10},{"nombre","Aulas 3"},{"abreviacion","AULAS3"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",11},{"nombre","Aulas 4"},{"abreviacion","AULAS4"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",12},{"nombre","Centro de Estudiantes"},{"abreviacion","CENTROEST"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",13},{"nombre","Biblioteca"},{"abreviacion","BIBLIOTECA"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",14},{"nombre","Padre Arroyo"},{"abreviacion","PADARROYO"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",15},{"nombre","Edificio Administrativo"},{"abreviacion","ADMINISTRACION"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",16},{"nombre","Ciencias de la Salud"},{"abreviacion","CIENSALUD"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",17},{"nombre","Salón Multiusos"},{"abreviacion","MULTIUSOS"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",18},{"nombre","Centro de Tecnología y Educación Permanente"},{"abreviacion","TEP"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",19},{"nombre","Kiosko Universitario"},{"abreviacion","KIOSKO"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",20},{"nombre","Arquitectura"},{"abreviacion","ARQUITECTURA"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",21},{"nombre","Departamento de Tecnología de la Información"},{"abreviacion","DEPIT"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",22},{"nombre","Capilla"},{"abreviacion","CAPILLA"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",23},{"nombre","Colegio"},{"abreviacion","COLEGIO"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",24},{"nombre","Profesores I"},{"abreviacion","PROFEI"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",25},{"nombre","Profesores II"},{"abreviacion","PROFEII"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",26},{"nombre","Teatro"},{"abreviacion","TEATRO"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",27},{"nombre","Postgrado"},{"abreviacion","POSTGRADO"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",28},{"nombre","Piscina"},{"abreviacion","PISCINA"}
-			});
-			InsertQuery("Ubicacion", new Dictionary<string, object> {
-				{"idUbicacion",29},{"nombre","Gimnasio"},{"abreviacion","GIMNASIO"}
-			});
+			Query(false, "Insert Into Ubicacion values (1,'Laboratorios de Ingeniería Eléctronica','MATADERO')");
+			Query(false, "Insert Into Ubicacion values (2,'Talleres de Ingeniería Eléctronica y Electromecánica','TALLERIEE')");
+			Query(false, "Insert Into Ubicacion values (3,'Suministro y Talleres','SUMINISTRO')");
+			Query(false, "Insert Into Ubicacion values (4,'Laboratorios Generales de Ingeniería','LABING')");
+			Query(false, "Insert Into Ubicacion values (5,'Departamentos de Ingeniería','DEPING')");
+			Query(false, "Insert Into Ubicacion values (6,'Ciencias Básicas I','CIENBASI')");
+			Query(false, "Insert Into Ubicacion values (7,'Ciencias Básicas II','CIENBASII')");
+			Query(false, "Insert Into Ubicacion values (8,'Aulas 1','AULAS1')");
+			Query(false, "Insert Into Ubicacion values (9,'Aulas 2','AULAS2')");
+			Query(false, "Insert Into Ubicacion values (10,'Aulas 3','AULAS3')");
+			Query(false, "Insert Into Ubicacion values (11,'Aulas 4','AULAS4')");
+			Query(false, "Insert Into Ubicacion values (12,'Centro de Estudiantes','CENTROEST')");
+			Query(false, "Insert Into Ubicacion values (13,'Biblioteca','BIBLIOTECA')");
+			Query(false, "Insert Into Ubicacion values (14,'Padre Arroyo','PADARROYO')");
+			Query(false, "Insert Into Ubicacion values (15,'Edificio Administrativo','ADMINISTRACION')");
+			Query(false, "Insert Into Ubicacion values (16,'Ciencias de la Salud','CIENSALUD')");
+			Query(false, "Insert Into Ubicacion values (17,'Salón Multiusos','MULTIUSOS')");
+			Query(false, "Insert Into Ubicacion values (18,'Centro de Tecnología y Educación Permanente','TEP')");
+			Query(false, "Insert Into Ubicacion values (19,'Kiosko Universitario','KIOSKO')");
+			Query(false, "Insert Into Ubicacion values (20,'Arquitectura','ARQUITECTURA')");
+			Query(false, "Insert Into Ubicacion values (21,'Departamento de Tecnología de la Información','DEPIT')");
+			Query(false, "Insert Into Ubicacion values (22,'Capilla','CAPILLA')");
+			Query(false, "Insert Into Ubicacion values (23,'Colegio','COLEGIO')");
+			Query(false, "Insert Into Ubicacion values (24,'Profesores I','PROFEI')");
+			Query(false, "Insert Into Ubicacion values (25,'Profesores II','PROFEII')");
+			Query(false, "Insert Into Ubicacion values (26,'Teatro','TEATRO')");
+			Query(false, "Insert Into Ubicacion values (27,'Postgrado','POSTGRADO')");
+			Query(false, "Insert Into Ubicacion values (28,'Piscina','PISCINA')");
+			Query(false, "Insert Into Ubicacion values (29,'Gimnasio','GIMNASIO')");
 			#endregion
 
-			#region Localizacion
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",1},{"idUbicacion",1},{"nombre","Departamento de Ingenierías Electrónica y Electromecánica"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",2},{"idUbicacion",2},{"nombre","Talleres de Ingeniería Eléctrica y Electromecánica"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",3},{"idUbicacion",3},{"nombre","Suministro"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",4},{"idUbicacion",4},{"nombre","Laboratorios de Ingeniería"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",5},{"idUbicacion",5},{"nombre","Departamentos de Ingeniería"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",6},{"idUbicacion",6},{"nombre","Ciencias Básicas I"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",7},{"idUbicacion",7},{"nombre","Ciencias Básicas II"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",8},{"idUbicacion",8},{"nombre","Aulas 1"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",9},{"idUbicacion",9},{"nombre","Aulas 2"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",10},{"idUbicacion",10},{"nombre","Aulas 3"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",11},{"idUbicacion",11},{"nombre","Aulas 4"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",12},{"idUbicacion",12},{"nombre","Centro de Estudiantes"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",13},{"idUbicacion",13},{"nombre","Biblioteca"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",14},{"idUbicacion",14},{"nombre","Padre Arroyo"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",15},{"idUbicacion",15},{"nombre","Edificio Administrativo"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",16},{"idUbicacion",16},{"nombre","Ciencias de la Salud"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",17},{"idUbicacion",17},{"nombre","Salón Multiusos"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",18},{"idUbicacion",18},{"nombre","Centro de Tecnología y Educación Permanente"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",19},{"idUbicacion",19},{"nombre","Kiosko"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",20},{"idUbicacion",20},{"nombre","Arquitectura"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",21},{"idUbicacion",21},{"nombre","Tecnología de la Información"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",22},{"idUbicacion",22},{"nombre","Capilla"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",23},{"idUbicacion",23},{"nombre","Colegio Juan XVIII"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",24},{"idUbicacion",24},{"nombre","Profesores I"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",25},{"idUbicacion",25},{"nombre","Profesores II"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",26},{"idUbicacion",26},{"nombre","Teatro Universitario"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",27},{"idUbicacion",27},{"nombre","Postgrado"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",28},{"idUbicacion",28},{"nombre","Piscina Universitaria"}
-			});
-			InsertQuery("Localizacion", new Dictionary<string, object> {
-				{"idLocalizacion",29},{"idUbicacion",29},{"nombre","Gimnasio Universitario"}
-			});
+			#region Nodos
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (1,1,1,'Laboratorios de Ingeniería Electrónica',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (2,2,2,'Talleres de Ingeniería Electrónica y Electromecánica',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (3,3,3,'Suministro y Talleres',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (4,4,4,'Laboratorios Generales de Ingeniería',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (5,5,5,'Departamentos de Ingeniería',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (6,6,6,'Ciencias Básicas I',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (7,7,7,'Ciencias Básicas II',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (8,8,8,'Aulas 1',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (9,9,9,'Aulas 2',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (10,10,10,'Aulas 3',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (11,11,11,'Aulas 4',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (12,12,12,'Centro de Estudiantes',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (13,13,13,'Biblioteca',1)");
+			//Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (14,14,14,'Padre Arroyo',0)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (15,15,15,'Edificio Administrativo',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (16,16,16,'Ciencias de la Salud',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (17,17,17,'Salón Multiusos',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (18,18,18,'Centro de Tecnología y Educación Permanente',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (19,19,19,'Kiosko',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (20,20,20,'Arquitectura',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (21,21,21,'Tecnología de la Información',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (22,22,22,'Capilla',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (23,23,23,'Colegio Juan XVIII',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (24,24,24,'Profesores I',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (25,25,25,'Profesores II',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (26,26,26,'Teatro Universitario',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (27,27,27,'Postgrado',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (28,28,28,'Piscina Universitaria',1)");
+			Query(false, "Insert Into Nodo (idNodo, idUbicacion, edificio, nombre, activo) values (29,29,29,'Gimnasio Universitario',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (30,'Node 1',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (31,'Node 2',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (32,'Node 3',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (33,'Node 3.5',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (34,'Node 4',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (35,'Node 4.5',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (36,'Node 5',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (37,'Node 6',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (38,'Node 6.5',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (39,'Node 7',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (40,'Node 8',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (41,'Node 8.5',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (42,'Node 9',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (43,'Node 9.5',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (44,'Node 10',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (45,'Node 11',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (46,'Node 12',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (47,'Node 13',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (48,'Node 14',1)");
+			//Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (49,'Node 15',0)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (50,'Node 16',1)");
+			//Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (51,'Node 17',0)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (52,'Node 18',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (53,'Node 19',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (54,'Node 20',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (55,'Node 20.5',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (56,'Node 21',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (57,'Node 21.5',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (58,'Node 22',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (59,'Node 23',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (60,'Node 24',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (61,'Node 24.5',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (62,'Node 25',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (63,'Node 25.5',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (64,'Node 26',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (65,'Node 27',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (66,'Node 28',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (67,'Node 29',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (68,'Node 30',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (69,'Node 31',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (70,'Node 32',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (71,'Node 33',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (72,'Node 34',1)");
+			//Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (73,'Node 35',0)");
+			//Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (74,'Node 36',0)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (75,'Node 37',1)");
+			//Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (76,'Node 38',0)");
+			//Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (77,'Node 39',0)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (78,'Node 40',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (79,'Node 41',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (80,'Node 42',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (81,'Node 43',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (82,'Node 44',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (83,'Node 45',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (84,'Node 46',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (85,'Node 47',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (86,'Node 48',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (87,'Node 48.5',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (88,'Node 49',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (89,'Node 50',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (90,'Node 51',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (91,'Node 52',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (92,'Node 53',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (93,'Node 54',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (94,'Node 55',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (95,'Node 56',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (96,'Node 57',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (97,'Node 58',1)");
+			Query(false, "Insert Into Nodo (idNodo, nombre, activo) values (98,'Node 59',1)");
+
 			#endregion
 
-			#region CoordenadaLocalizacion
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (1,1,19.44023,-70.683369)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (2,1,19.440237,-70.682902)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (3,1,19.43986,-70.682891)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (4,1,19.43986,-70.682891)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (5,2,19.440434,-70.682709)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (6,2,19.440449,-70.682468)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (7,2,19.440081,-70.682452)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (8,2,19.440079,-70.682698)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (9,3,19.440864,-70.683512)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (10,3,19.440873,-70.683209)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (11,3,19.440375,-70.683204)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (12,3,19.440372,-70.683523)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (13,4,19.441171,-70.683106)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (14,4,19.441159,-70.682481)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (15,4,19.440923,-70.682482)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (16,4,19.440923,-70.683114)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (17,5,19.441853,-70.683339)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (18,5,19.441862,-70.682798)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (19,5,19.441703,-70.682787)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (20,5,19.441691,-70.683342)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (21,6,19.442173,-70.683402)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (22,6,19.442181,-70.68284)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (23,6,19.441992,-70.682836)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (24,6,19.441996,-70.683408)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (25,7,19.442315,-70.683633)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (26,7,19.442322,-70.683079)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (27,7,19.442174,-70.683076)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (28,7,19.442179,-70.683628)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (29,8,19.442786,-70.683318)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (30,8,19.44278,-70.682793)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (31,8,19.442657,-70.682794)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (32,8,19.44266,-70.683309)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (33,9,19.442967,-70.681999)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (34,9,19.442963,-70.681488)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (35,9,19.442834,-70.681482)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (36,9,19.442838,-70.682007)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (37,10,19.441628,-70.683687)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (38,10,19.441628,-70.683141)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (39,10,19.441464,-70.683148)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (40,10,19.441465,-70.683334)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (41,10,19.441197,-70.68334)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (42,10,19.441189,-70.683501)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (43,10,19.44147,-70.683513)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (44,10,19.44148,-70.683687)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (45,11,19.443149,-70.683679)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (46,11,19.443151,-70.683147)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (47,11,19.443008,-70.683151)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (48,11,19.443006,-70.683671)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (49,12,19.444131,-70.682992)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (50,12,19.444139,-70.682603)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (51,12,19.443496,-70.682514)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (52,12,19.443547,-70.682928)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (53,13,19.444037,-70.684592)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (54,13,19.444045,-70.684153)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (55,13,19.443407,-70.684158)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (56,13,19.44341,-70.68455)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (57,14,19.442479,-70.684807)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (58,14,19.442499,-70.684536)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (59,14,19.442059,-70.684525)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (60,14,19.442042,-70.684775)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (61,15,19.446231,-70.68363)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (62,15,19.446256,-70.683263)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (63,15,19.445563,-70.683271)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (64,15,19.445563,-70.683614)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (65,16,19.443999,-70.682048)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (66,16,19.444017,-70.681316)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (67,16,19.443382,-70.681299)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (68,16,19.443349,-70.681943)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (69,17,19.44574,-70.681562)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (70,17,19.445753,-70.680594)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (71,17,19.445262,-70.680578)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (72,17,19.445249,-70.681535)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (73,18,19.444108,-70.68552)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (74,18,19.44429,-70.685207)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (75,18,19.444272,-70.68503)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (76,18,19.44403,-70.685174)");
-			//Query(false, "INSERT INTO CoordenadaLocalizacion VALUES (77,18,19.443969,-70.685542)");
+			#region CoordenadaNodo
+			Query(false,"Insert Into CoordenadaNodo values ( 1, 8, 19.442731,-70.683049)");
+			Query(false,"Insert Into CoordenadaNodo values ( 2, 9, 19.443009,-70.681736)");
+			Query(false,"Insert Into CoordenadaNodo values ( 3, 10, 19.441522,-70.683402)");
+			Query(false,"Insert Into CoordenadaNodo values ( 4, 11, 19.443083, -70.683407)");
+			Query(false,"Insert Into CoordenadaNodo values ( 5, 12, 19.443879, -70.682780)");
+			Query(false,"Insert Into CoordenadaNodo values ( 6, 16, 19.443699, -70.681666)");
+			Query(false,"Insert Into CoordenadaNodo values ( 7, 6, 19.442237, -70.683398)");
+			Query(false,"Insert Into CoordenadaNodo values ( 8, 7, 19.442070, -70.683046)");
+			Query(false,"Insert Into CoordenadaNodo values ( 9, 14, 19.442303, -70.684772)");
+			Query(false,"Insert Into CoordenadaNodo values ( 10, 5, 19.441756, -70.683045)");
+			Query(false,"Insert Into CoordenadaNodo values ( 11, 4, 19.441074, -70.682723)");
+			Query(false,"Insert Into CoordenadaNodo values ( 12, 1, 19.440198, -70.683129)");
+			Query(false,"Insert Into CoordenadaNodo values ( 13, 3, 19.440648, -70.683352)");
+			Query(false,"Insert Into CoordenadaNodo values ( 14, 13, 19.443727, -70.684183)");
+			Query(false,"Insert Into CoordenadaNodo values ( 15, 2, 19.440310, -70.682706)");
+
+			Query(false,"Insert Into CoordenadaNodo values ( 30, 30, 19.440313, -70.683129)");
+			Query(false,"Insert Into CoordenadaNodo values ( 31, 31, 19.440400, -70.683125)");
+			Query(false,"Insert Into CoordenadaNodo values ( 32, 32, 19.440573, -70.683132)");
+			Query(false,"Insert Into CoordenadaNodo values ( 33, 33, 19.440544, -70.683199)");
+			Query(false,"Insert Into CoordenadaNodo values ( 34, 34, 19.440697, -70.683132)");
+			Query(false,"Insert Into CoordenadaNodo values ( 35, 35, 19.440652, -70.683205)");
+			Query(false,"Insert Into CoordenadaNodo values ( 36, 36, 19.440788, -70.682727)");
+			Query(false,"Insert Into CoordenadaNodo values ( 37, 37, 19.440315, -70.682848)");
+			Query(false,"Insert Into CoordenadaNodo values ( 38, 38, 19.440409, -70.682754)");
+			Query(false,"Insert Into CoordenadaNodo values ( 39, 39, 19.440293, -70.683218)");
+			Query(false,"Insert Into CoordenadaNodo values ( 40, 40, 19.440270, -70.683475)");
+			Query(false,"Insert Into CoordenadaNodo values ( 41, 41, 19.440301, -70.683658)");
+			Query(false,"Insert Into CoordenadaNodo values ( 42, 42, 19.440711, -70.683580)");
+			Query(false,"Insert Into CoordenadaNodo values ( 43, 43, 19.440665, -70.683498)");
+			Query(false,"Insert Into CoordenadaNodo values ( 44, 44, 19.441075, -70.683132)");
+			Query(false,"Insert Into CoordenadaNodo values ( 45, 45, 19.441135, -70.683132)");
+			Query(false,"Insert Into CoordenadaNodo values ( 46, 46, 19.441468, -70.683127)");
+			Query(false,"Insert Into CoordenadaNodo values ( 47, 47, 19.441459, -70.683335)");
+			Query(false,"Insert Into CoordenadaNodo values ( 48, 48, 19.441140, -70.682723)");
+			//Query(false,"Insert Into CoordenadaNodo values ( 49, 49, )");
+			Query(false,"Insert Into CoordenadaNodo values ( 50, 50, 19.441480, -70.682723)");
+			//Query(false,"Insert Into CoordenadaNodo values ( 51, 51, )");
+			Query(false,"Insert Into CoordenadaNodo values ( 52, 52, 19.441679, -70.682722)");
+			Query(false,"Insert Into CoordenadaNodo values ( 53, 53, 19.441684, -70.683045)");
+			Query(false,"Insert Into CoordenadaNodo values ( 54, 54, 19.441683, -70.683398)");
+			Query(false,"Insert Into CoordenadaNodo values ( 55, 55, 19.441608, -70.683400)");
+			Query(false,"Insert Into CoordenadaNodo values ( 56, 56, 19.441608, -70.683400)");
+			Query(false,"Insert Into CoordenadaNodo values ( 57, 57, 19.441145, -70.683655)");
+			Query(false,"Insert Into CoordenadaNodo values ( 58, 58, 19.441930, -70.683395)");
+			Query(false,"Insert Into CoordenadaNodo values ( 59, 59, 19.441930, -70.683140)");
+			Query(false,"Insert Into CoordenadaNodo values ( 60, 60, 19.441979, -70.683082)");
+			Query(false,"Insert Into CoordenadaNodo values ( 61, 61, 19.442012, -70.683082)");
+			Query(false,"Insert Into CoordenadaNodo values ( 62, 62, 19.441850, -70.683060)");
+			Query(false,"Insert Into CoordenadaNodo values ( 63, 63, 19.441853, -70.683066)");
+			Query(false,"Insert Into CoordenadaNodo values ( 64, 64, 19.442589, -70.683049)");
+			Query(false,"Insert Into CoordenadaNodo values ( 65, 65, 19.442570, -70.683402)");
+			Query(false,"Insert Into CoordenadaNodo values ( 66, 66, 19.442305, -70.683405)");
+			Query(false,"Insert Into CoordenadaNodo values ( 67, 67, 19.442743, -70.682186)");
+			Query(false,"Insert Into CoordenadaNodo values ( 68, 68, 19.442811, -70.681733)");
+			Query(false,"Insert Into CoordenadaNodo values ( 69, 69, 19.443074, -70.681760)");
+			Query(false,"Insert Into CoordenadaNodo values ( 70, 70, 19.442917, -70.681744)");
+			Query(false,"Insert Into CoordenadaNodo values ( 71, 71, 19.443790, -70.682307)");
+			Query(false,"Insert Into CoordenadaNodo values ( 72, 72, 19.443403, -70.682822)");
+			//Query(false,"Insert Into CoordenadaNodo values ( 73, 73, )");
+			//Query(false,"Insert Into CoordenadaNodo values ( 74, 74, )");
+			Query(false,"Insert Into CoordenadaNodo values ( 75, 75, 19.443418, -70.683270)");
+			//Query(false,"Insert Into CoordenadaNodo values ( 76, 76, )");
+			//Query(false,"Insert Into CoordenadaNodo values ( 77, 77", )");
+			Query(false,"Insert Into CoordenadaNodo values ( 78, 78, 19.443836, -70.683149)");
+			Query(false,"Insert Into CoordenadaNodo values ( 79, 79, 19.443775, -70.683777)");
+			Query(false,"Insert Into CoordenadaNodo values ( 80, 80, 19.443732, -70.683898)");
+			Query(false,"Insert Into CoordenadaNodo values ( 81, 81, 19.443671, -70.684035)");
+			Query(false,"Insert Into CoordenadaNodo values ( 82, 82, 19.443652, -70.684129)");
+			Query(false,"Insert Into CoordenadaNodo values ( 83, 83, 19.443666, -70.684180)");
+			Query(false,"Insert Into CoordenadaNodo values ( 84, 84, 19.443378, -70.684180)");
+			Query(false,"Insert Into CoordenadaNodo values ( 85, 85, 19.443375, -70.684515)");
+			Query(false,"Insert Into CoordenadaNodo values ( 86, 86, 19.443272, -70.684155)");
+			Query(false,"Insert Into CoordenadaNodo values ( 87, 87, 19.442963, -70.683967)");
+			Query(false,"Insert Into CoordenadaNodo values ( 88, 88, 19.443165, -70.683640)");
+			Query(false,"Insert Into CoordenadaNodo values ( 89, 89, 19.443158, -70.683489)");
+			Query(false,"Insert Into CoordenadaNodo values ( 90, 90, 19.443319, -70.683390)");
+			Query(false,"Insert Into CoordenadaNodo values ( 91, 91, 19.443167, -70.683107)");
+			Query(false,"Insert Into CoordenadaNodo values ( 92, 92, 19.443163, -70.683390)");
+			Query(false,"Insert Into CoordenadaNodo values ( 93, 93, 19.442731, -70.682021)");
+
+			//New Nodes
+			Query(false,"Insert Into CoordenadaNodo values ( 94, 94, 19.440695, -70.683214)");
+			Query(false,"Insert Into CoordenadaNodo values ( 95, 95, 19.440589, -70.683217)");
+			Query(false,"Insert Into CoordenadaNodo values ( 96, 96, 19.440715, -70.683501)");
+			Query(false,"Insert Into CoordenadaNodo values ( 97, 97, 19.440581, -70.683506)");
+			Query(false,"Insert Into CoordenadaNodo values ( 98, 98, 19.440582, -70.683577)");
+			#endregion
+
+			#region Neighbor
+			Query(false, "Insert Into Neighbor values (1, 30,'Node 1',      1,'Departamento de Ingenierías Electrónica y Electromecánica')");
+			Query(false, "Insert Into Neighbor values (2, 30,'Node 1',     31,'Node 2')");
+			Query(false, "Insert Into Neighbor values (3, 30,'Node 1',     39,'Node 7')");
+			Query(false, "Insert Into Neighbor values (4, 30,'Node 1',     37,'Node 6')");
+			Query(false, "Insert Into Neighbor values (5, 31,'Node 2',     32,'Node 3')");
+			Query(false, "Insert Into Neighbor values (6, 31,'Node 2',     39,'Node 7')");
+			Query(false, "Insert Into Neighbor values (7, 32,'Node 3',     34,'Node 4')");
+			Query(false, "Insert Into Neighbor values (8, 32,'Node 3',     33,'Node 3.5')");
+			Query(false, "Insert Into Neighbor values (9, 32,'Node 3',     37,'Node 6')");
+			Query(false, "Insert Into Neighbor values (10, 33,'Node 3.5',   3,'Suministro y Talleres')");
+			Query(false, "Insert Into Neighbor values (11, 34,'Node 4',    35,'Node 4.5')");
+			Query(false, "Insert Into Neighbor values (12, 34,'Node 4',    36,'Node 5')");
+			Query(false, "Insert Into Neighbor values (13, 34,'Node 4',    44,'Node 10')");
+			Query(false, "Insert Into Neighbor values (14, 35,'Node 4.5',   3,'Suministro y Talleres')");
+			Query(false, "Insert Into Neighbor values (15, 36,'Node 5',    38,'Node 6.5')");
+			Query(false, "Insert Into Neighbor values (16, 36,'Node 5',     4,'Laboratorios Generales de Ingeniería')");
+			Query(false, "Insert Into Neighbor values (17, 37,'Node 6',    38,'Node 6.5')");
+			Query(false, "Insert Into Neighbor values (18, 37,'Node 6',     2,'Talleres de Ingeniería Electrónica y Electromecánica')");
+			Query(false, "Insert Into Neighbor values (19, 38,'Node 6.5',   2,'Talleres de Ingeniería Electrónica y Electromecánica')");
+			Query(false, "Insert Into Neighbor values (20, 39,'Node 7',    40,'Node 8')");
+			Query(false, "Insert Into Neighbor values (21, 40,'Node 8',    41,'Node 8.5')");
+			Query(false, "Insert Into Neighbor values (22, 42,'Node 9',    56,'Node 21')");
+			Query(false, "Insert Into Neighbor values (23, 42,'Node 9',    43,'Node 9.5')");
+			Query(false, "Insert Into Neighbor values (24, 43,'Node 9.5',   3,'Suministro y Talleres')");
+			Query(false, "Insert Into Neighbor values (25, 44,'Node 10',   45,'Node 11')");
+			Query(false, "Insert Into Neighbor values (26, 44,'Node 10',   47,'Node 13')");
+			Query(false, "Insert Into Neighbor values (27, 45,'Node 11',   48,'Node 14')");
+			Query(false, "Insert Into Neighbor values (28, 45,'Node 11',   46,'Node 12')");
+			Query(false, "Insert Into Neighbor values (29, 46,'Node 12',   47,'Node 13')");
+			Query(false, "Insert Into Neighbor values (30, 46,'Node 12',   50,'Node 16')");
+			Query(false, "Insert Into Neighbor values (31, 46,'Node 12',   52,'Node 18')");
+			Query(false, "Insert Into Neighbor values (32, 46,'Node 12',   53,'Node 19')");
+			Query(false, "Insert Into Neighbor values (33, 47,'Node 13',   10,'Aulas 3')");
+			Query(false, "Insert Into Neighbor values (34, 48,'Node 14',    4,'Laboratorios Generales de Ingeniería')");
+			Query(false, "Insert Into Neighbor values (35, 48,'Node 14',   50,'Node 16')");
+			Query(false, "Insert Into Neighbor values (36, 50,'Node 16',   51,'Node 17')");//Revisar estos nodos. Como que hay uno de m')ás.
+			Query(false, "Insert Into Neighbor values (37, 51,'Node 17',   52,'Node 18')");
+			Query(false, "Insert Into Neighbor values (38, 52,'Node 18',   93,'Node 54')");
+			Query(false, "Insert Into Neighbor values (39, 53,'Node 19',   54,'Node 20')");
+			Query(false, "Insert Into Neighbor values (40, 53,'Node 19',    5,'Departamentos de Ingeniería')");
+			Query(false, "Insert Into Neighbor values (41, 54,'Node 20',   58,'Node 22')");
+			Query(false, "Insert Into Neighbor values (42, 54,'Node 20',   55,'Node 20.5')");
+			Query(false, "Insert Into Neighbor values (43, 55,'Node 20.5', 10,'Aulas 3')");
+			Query(false, "Insert Into Neighbor values (44, 56,'Node 21',   57,'Node 21.5')");
+			Query(false, "Insert Into Neighbor values (45, 56,'Node 21',   10,'Aulas 3')");
+			Query(false, "Insert Into Neighbor values (46, 58,'Node 22',   59,'Node 23')");
+			Query(false, "Insert Into Neighbor values (47, 58,'Node 22',    6,'iencias Básicas I')");
+			Query(false, "Insert Into Neighbor values (48, 59,'Node 23',   60,'Node 24')");
+			Query(false, "Insert Into Neighbor values (49, 59,'Node 23',   62,'Node 25')");
+			Query(false, "Insert Into Neighbor values (50, 60,'Node 24',   62,'Node 25')");
+			Query(false, "Insert Into Neighbor values (51, 60,'Node 24',   61,'Node 24.5')");
+			Query(false, "Insert Into Neighbor values (52, 61,'Node 24.5',  7,'Ciencias Básicas II')");
+			Query(false, "Insert Into Neighbor values (53, 62,'Node 25',   63,'Node 25.5')");
+			Query(false, "Insert Into Neighbor values (54, 63,'Node 25.5',  5,'Departamentos de Ingeniería')");
+			Query(false, "Insert Into Neighbor values (55, 64,'Node 26',    7,'iencias Básicas II')");
+			Query(false, "Insert Into Neighbor values (56, 64,'Node 26',    8,'Aulas 1')");
+			Query(false, "Insert Into Neighbor values (57, 64,'Node 26',   65,'Node 27')");
+			Query(false, "Insert Into Neighbor values (58, 64,'Node 26',   66,'Node 28')");
+			Query(false, "Insert Into Neighbor values (59, 64,'Node 26',   67,'Node 29')");
+			Query(false, "Insert Into Neighbor values (60, 65,'Node 27',   66,'Node 28')");
+			Query(false, "Insert Into Neighbor values (61, 65,'Node 27',   11,'Aulas 4')");
+			Query(false, "Insert Into Neighbor values (62, 66,'Node 28',    6,'Ciencias Básicas I')");
+			Query(false, "Insert Into Neighbor values (63, 67,'Node 29',   93,'Node 54')");
+			Query(false, "Insert Into Neighbor values (64, 67,'Node 29',   72,'Node 34')");
+			Query(false, "Insert Into Neighbor values (65, 68,'Node 30',   93,'Node 54')");
+			Query(false, "Insert Into Neighbor values (66, 68,'Node 30',    9,'Aulas 2')");
+			Query(false, "Insert Into Neighbor values (67, 69,'Node 31',    9,'Aulas 2')");
+			Query(false, "Insert Into Neighbor values (68, 69,'Node 31',   16,'Ciencias de la Salud')");
+			Query(false, "Insert Into Neighbor values (69, 69,'Node 31',   70,'Node 32')");
+			Query(false, "Insert Into Neighbor values (70, 70,'Node 32',   71,'Node 33')");
+			Query(false, "Insert Into Neighbor values (71, 70,'Node 32',   72,'Node 34')");
+			Query(false, "Insert Into Neighbor values (72, 71,'Node 33',   12,'Centro de Estudiantes')");
+			Query(false, "Insert Into Neighbor values (73, 71,'Node 33',   16,'Ciencias de la Salud')");
+			Query(false, "Insert Into Neighbor values (74, 72,'Node 34',   73,'Node 35')");
+			Query(false, "Insert Into Neighbor values (75, 73,'Node 35',   74,'Node 36')");
+			Query(false, "Insert Into Neighbor values (76, 73,'Node 35',   77,'Node 39')");
+			Query(false, "Insert Into Neighbor values (77, 74,'Node 36',   75,'Node 37')");
+			Query(false, "Insert Into Neighbor values (78, 74,'Node 36',   76,'Node 38')");
+			Query(false, "Insert Into Neighbor values (79, 74,'Node 36',   91,'Node 52')");
+			Query(false, "Insert Into Neighbor values (80, 75,'Node 37',   76,'Node 38')");
+			Query(false, "Insert Into Neighbor values (81, 75,'Node 37',   90,'Node 51')");
+			Query(false, "Insert Into Neighbor values (82, 76,'Node 38',   77,'Node 39')");
+			Query(false, "Insert Into Neighbor values (83, 77,'Node 39',   78,'Node 40')");
+			Query(false, "Insert Into Neighbor values (84, 78,'Node 40',   12,'Centro de Estudiantes')");
+			Query(false, "Insert Into Neighbor values (85, 78,'Node 40',   79,'Node 41')");
+			Query(false, "Insert Into Neighbor values (86, 79,'Node 41',   80,'Node 42')");
+			Query(false, "Insert Into Neighbor values (87, 80,'Node 42',   81,'Node 43')");
+			Query(false, "Insert Into Neighbor values (88, 80,'Node 42',   90,'Node 51')");
+			Query(false, "Insert Into Neighbor values (89, 81,'Node 43',   82,'Node 44')");
+			Query(false, "Insert Into Neighbor values (90, 81,'Node 43',   13,'Biblioteca')");
+			Query(false, "Insert Into Neighbor values (91, 82,'Node 44',   83,'Node 45')");
+			Query(false, "Insert Into Neighbor values (92, 82,'Node 44',   86,'Node 48')");
+			Query(false, "Insert Into Neighbor values (93, 83,'Node 45',   84,'Node 46')");
+			Query(false, "Insert Into Neighbor values (94, 84,'Node 46',   85,'Node 47')");
+			Query(false, "Insert Into Neighbor values (95, 86,'Node 48',   87,'Node 48.5')");
+			Query(false, "Insert Into Neighbor values (96, 87,'Node 48.5', 88,'Node 49')");
+			Query(false, "Insert Into Neighbor values (97, 88,'Node 49',   89,'Node 50')");
+			Query(false, "Insert Into Neighbor values (98, 88,'Node 49',   90,'Node 51')");
+			Query(false, "Insert Into Neighbor values (99, 89,'Node 50',   11,'Aulas 4')");
+			Query(false, "Insert Into Neighbor values (100, 90,'Node 51',  92,'Node 53')");
+			Query(false, "Insert Into Neighbor values (101, 91,'Node 52',  92,'Node 53')");
+			Query(false, "Insert Into Neighbor values (102, 92,'Node 53',  11,'Aulas 4')");
+
+			Query(false, "Insert Into Neighbor values (103, 94,'Node 55',    34,'Node 4')");
+			Query(false, "Insert Into Neighbor values (104, 94,'Node 55',     3,'Suministro y Talleres')");
+			Query(false, "Insert Into Neighbor values (105, 95,'Node 56',    32,'Node 3')");
+			Query(false, "Insert Into Neighbor values (106, 95,'Node 56',     3,'Suministro y Talleres')");
+			Query(false, "Insert Into Neighbor values (107, 96,'Node 57',    42,'Node 9')");
+			Query(false, "Insert Into Neighbor values (108, 96,'Node 57',     3,'Suministro y Talleres')");
+			Query(false, "Insert Into Neighbor values (109, 97,'Node 58',    98,'Node 59')");
+			Query(false, "Insert Into Neighbor values (110, 97,'Node 58',     3,'Suministro y Talleres')");
+			Query(false, "Insert Into Neighbor values (111, 98,'Node 59',    41,'Node 8.5')");
+			Query(false, "Insert Into Neighbor values (112, 98,'Node 59',    42,'Node 9')");
 			#endregion
 		}
 
@@ -772,9 +702,7 @@ namespace SncPucmm.Database
 		/// <param name="tableName">Table name.</param>
 		/// <param name="values">Values.</param>
 		/// <param name="constraints">Constraints.</param>
-		public void UpdateQuery(string tableName, 
-								Dictionary<string,object> values, 
-								Dictionary<string,object> constraints)
+		public void UpdateQuery(string tableName, Dictionary<string, object> values, Dictionary<string, object> constraints)
 		{
 			var query = "UPDATE " + tableName + " SET ";
 			
@@ -862,6 +790,68 @@ namespace SncPucmm.Database
 		}
 
 		#endregion
+
+		private void DropAllDataBaseTables()
+		{
+			Query(false, "DROP TABLE Neighbor");
+			Query(false, "DROP TABLE CoordenadaNodo");
+			Query(false, "DROP TABLE Nodo");
+			Query(false, "DROP TABLE Ubicacion");
+		}
+
+		public void UpdateDataBase(JSONObject json)
+		{
+
+			//Drop to Tables
+			DropAllDataBaseTables();
+
+			//Create Tables
+			InitCreateTables();
+
+			if (json.HasField("Ubicacion"))
+			{
+				JSONObject ubicacionJsonList = json.GetField("Ubicacion");
+
+				foreach (var ubicacionJson in ubicacionJsonList.list)
+				{
+					var ubicacion = new Ubicacion(ubicacionJson);
+					Query(false, "Insert Into Ubicacion values (" +ubicacion.idUbicacion + ",\'" + ubicacion.nombre + "\',\'" + ubicacion.abreviacion + "\')");
+				}
+			}
+				
+			if (json.HasField("Nodo"))
+			{
+				JSONObject nodoJsonList = json.GetField("Nodo");
+
+				foreach (var nodoJson in nodoJsonList.list)
+				{
+					var nodo = new Nodo(nodoJson);
+					Query(false, "Insert Into Nodo values (" + nodo.idNodo + "," + nodo.ubicacion + "," + nodo.edificio + ",\'" + nodo.nombre + "\'," + nodo.activo + ")");
+				}
+			}
+			
+			if (json.HasField("CoordenadaNodo"))
+			{
+				JSONObject coordenadaNodoJsonList = json.GetField("CoordenadaNodo");
+
+				foreach (var coordenadaNodoJson in coordenadaNodoJsonList.list)
+				{
+					var coordenadaNodo = new CoordenadaNodo(coordenadaNodoJson);
+					Query(false, "Insert Into CoordenadaNodo values (" + coordenadaNodo.idCoordenadaNodo + "," + coordenadaNodo.nodo + "," + coordenadaNodo.latitud + "," + coordenadaNodo.longitud + ")");
+				}
+			}
+			
+			if (json.HasField("Neighbor"))
+			{
+				JSONObject neighborJsonList = json.GetField("Neighbor");
+
+				foreach (var neighborJson in neighborJsonList.list)
+				{
+					var neighbor = new Neighbor(neighborJson);
+					Query(false, "Insert Into Neighbor values (" + neighbor.idNeighbor + "," + neighbor.nodo.idNodo + ",\'" + neighbor.nodo.nombre + "\'," + neighbor.nodoNeighbor.idNodo + ",\'" + neighbor.nodoNeighbor.nombre + "\')");
+				}
+			}
+		}
 
 		#region Destructor
 		/// <summary>

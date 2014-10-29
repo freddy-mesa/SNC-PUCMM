@@ -12,7 +12,7 @@ namespace SncPucmm.View
     {
         #region Atributos
 
-        GUIText textSearch;
+        GUIText Text;
         UIKeyboard keyboardManager;
         TextBox currentTextBox;
 
@@ -24,7 +24,7 @@ namespace SncPucmm.View
 
         void Start()
         {
-            textSearch = this.transform.FindChild("SearchText").guiText;
+            Text = this.transform.FindChild("Text").guiText;
         }
         
         new void Update()
@@ -33,8 +33,8 @@ namespace SncPucmm.View
             {
                 if (!IsPreviousTextEquals()) 
                 {
-                    textSearch.text = keyboardManager.GetText();
-                    currentTextBox.OnChange(textSearch.text);
+                    Text.text = keyboardManager.GetText();
+                    currentTextBox.OnChange(Text.text);
                 }
 
                 if (keyboardManager.Keyboard.done)
@@ -53,7 +53,7 @@ namespace SncPucmm.View
         void InitializeKeyboard() 
         {
             keyboardManager = new UIKeyboard();
-            keyboardManager.Open(textSearch.text,"Buscar Edificio",false);
+            keyboardManager.Open(Text.text, "", false);
         }
 
         public void OnTouchTextSearchBox(string name) 
@@ -74,7 +74,7 @@ namespace SncPucmm.View
 
         bool IsPreviousTextEquals() 
         {
-            isEqualToPreviousText = textSearch.text.Equals(keyboardManager.GetText());
+            isEqualToPreviousText = Text.text.Equals(keyboardManager.GetText());
             return isEqualToPreviousText;
         }
 

@@ -56,24 +56,24 @@ public class Usuario implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "contrasena")
     private String contrasena;
-    @OneToMany(mappedBy = "idusuario")
-    private List<Localizacionusuario> localizacionusuarioList;
     @OneToMany(mappedBy = "idusuariofollower")
     private List<Followusuario> followusuarioList;
     @OneToMany(mappedBy = "idusuariofollowed")
     private List<Followusuario> followusuarioList1;
     @OneToMany(mappedBy = "idusuario")
     private List<Usuariotour> usuariotourList;
+    @OneToMany(mappedBy = "idusuario")
+    private List<Tour> tourList;
+    @OneToMany(mappedBy = "idusuario")
+    private List<Videollamada> videollamadaList;
+    @OneToMany(mappedBy = "idusuario")
+    private List<Localizacionusuario> localizacionusuarioList;
     @JoinColumn(name = "idcuentafacebook", referencedColumnName = "idcuentafacebook")
     @ManyToOne
     private Cuentafacebook idcuentafacebook;
     @JoinColumn(name = "idtipousuario", referencedColumnName = "idtipousuario")
     @ManyToOne
     private Tipousuario idtipousuario;
-    @OneToMany(mappedBy = "idusuario")
-    private List<Tour> tourList;
-    @OneToMany(mappedBy = "idusuario")
-    private List<Videollamada> videollamadaList;
 
     public Usuario() {
     }
@@ -123,15 +123,6 @@ public class Usuario implements Serializable {
     }
 
     @XmlTransient
-    public List<Localizacionusuario> getLocalizacionusuarioList() {
-        return localizacionusuarioList;
-    }
-
-    public void setLocalizacionusuarioList(List<Localizacionusuario> localizacionusuarioList) {
-        this.localizacionusuarioList = localizacionusuarioList;
-    }
-
-    @XmlTransient
     public List<Followusuario> getFollowusuarioList() {
         return followusuarioList;
     }
@@ -158,22 +149,6 @@ public class Usuario implements Serializable {
         this.usuariotourList = usuariotourList;
     }
 
-    public Cuentafacebook getIdcuentafacebook() {
-        return idcuentafacebook;
-    }
-
-    public void setIdcuentafacebook(Cuentafacebook idcuentafacebook) {
-        this.idcuentafacebook = idcuentafacebook;
-    }
-
-    public Tipousuario getIdtipousuario() {
-        return idtipousuario;
-    }
-
-    public void setIdtipousuario(Tipousuario idtipousuario) {
-        this.idtipousuario = idtipousuario;
-    }
-
     @XmlTransient
     public List<Tour> getTourList() {
         return tourList;
@@ -190,6 +165,31 @@ public class Usuario implements Serializable {
 
     public void setVideollamadaList(List<Videollamada> videollamadaList) {
         this.videollamadaList = videollamadaList;
+    }
+
+    @XmlTransient
+    public List<Localizacionusuario> getLocalizacionusuarioList() {
+        return localizacionusuarioList;
+    }
+
+    public void setLocalizacionusuarioList(List<Localizacionusuario> localizacionusuarioList) {
+        this.localizacionusuarioList = localizacionusuarioList;
+    }
+
+    public Cuentafacebook getIdcuentafacebook() {
+        return idcuentafacebook;
+    }
+
+    public void setIdcuentafacebook(Cuentafacebook idcuentafacebook) {
+        this.idcuentafacebook = idcuentafacebook;
+    }
+
+    public Tipousuario getIdtipousuario() {
+        return idtipousuario;
+    }
+
+    public void setIdtipousuario(Tipousuario idtipousuario) {
+        this.idtipousuario = idtipousuario;
     }
 
     @Override

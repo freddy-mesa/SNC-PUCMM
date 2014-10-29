@@ -5,13 +5,13 @@ using System.Text;
 
 namespace SncPucmm.Model.Domain
 {
-    public class Ubicacion
+    public class Ubicacion : IJson
     {
         #region Atributos
 
-        public int idubicacion;
-        public String nombre;
-        public String abreviacion;
+        public int? idUbicacion;
+        public string nombre;
+        public string abreviacion;
     
         #endregion
 
@@ -35,19 +35,16 @@ namespace SncPucmm.Model.Domain
         {
             for (int i = 0; i < json.list.Count; i++)
             {
-                string key = (string) json.keys[i];
+                if (!json.list[i].IsNull)
+                {
+                    string key = (string)json.keys[i];
 
-                if (key == "idubicacion")
-                {
-                    this.idubicacion = Convert.ToInt32(json.list[i].n);
-                }
-                else if (key == "nombre")
-                {
-                    this.nombre = json.list[i].str;
-                }
-                else
-                {
-                    this.abreviacion = json.list[i].str;
+                    if (key == "idUbicacion")
+                        this.idUbicacion = Convert.ToInt32(json.list[i].n);
+                    else if (key == "nombre")
+                        this.nombre = json.list[i].str;
+                    else
+                        this.abreviacion = json.list[i].str;
                 }
             }
         }
@@ -55,16 +52,20 @@ namespace SncPucmm.Model.Domain
         public JSONObject ToJson()
         {
             JSONObject json = new JSONObject();
-            json.AddField("idubicacion", idubicacion);
-            json.AddField("nombre", nombre);
-            json.AddField("abreviacion", abreviacion);
+
+            if(idUbicacion.HasValue)
+                json.AddField("idUbicacion", idUbicacion.Value);
+            if(nombre != null)
+                json.AddField("nombre", nombre);
+            if(abreviacion != null)
+                json.AddField("abreviacion", abreviacion);
 
             return json;
         }
 
         public override string ToString()
         {
-            return String.Format("Ubicacion [ idubicacion: {0}, nombre: {1} ]",idubicacion,nombre);
+            return String.Format("Ubicacion [idUbicacion: {0}, nombre: {1}]",idUbicacion.HasValue ? idUbicacion.Value.ToString() : string.Empty,nombre);
         }
 
         #endregion

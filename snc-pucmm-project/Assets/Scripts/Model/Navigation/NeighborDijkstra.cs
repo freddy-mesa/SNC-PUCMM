@@ -8,11 +8,11 @@ using System.Xml.Serialization;
 
 namespace SncPucmm.Model.Navigation
 {
-    public class Neighbor
+    public class NeighborDijkstra
     {
         #region Propiedades
 
-        public Node Node { get; set; }
+        public NodeDijkstra Node { get; set; }
 
         public float Distance { get; set; }
 
@@ -20,9 +20,9 @@ namespace SncPucmm.Model.Navigation
 
         #region Constructor
 
-        public Neighbor() { }
-        public Neighbor(Neighbor neighbor) : this(neighbor.Node, neighbor.Distance) { }
-        public Neighbor(Node node, float distance) 
+        public NeighborDijkstra() { }
+        public NeighborDijkstra(NeighborDijkstra neighbor) : this(neighbor.Node, neighbor.Distance) { }
+        public NeighborDijkstra(NodeDijkstra node, float distance) 
         {
             this.Node = node;
             this.Distance = distance;

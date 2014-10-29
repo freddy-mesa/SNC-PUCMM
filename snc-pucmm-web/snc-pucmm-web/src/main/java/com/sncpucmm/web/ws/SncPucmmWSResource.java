@@ -7,6 +7,7 @@ package com.sncpucmm.web.ws;
 
 import com.sncpucmm.web.domain.Tour;
 import com.sncpucmm.web.domain.Usuario;
+import com.sncpucmm.web.ejb.ApplicationManager;
 import com.sncpucmm.web.ejb.JsonWrapperService;
 import com.sncpucmm.web.ejb.SncPucmmService;
 import javax.ejb.EJB;
@@ -14,12 +15,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 
 import org.json.JSONObject;
 
@@ -36,6 +35,7 @@ public class SncPucmmWSResource {
     
     @EJB SncPucmmService service;
     @EJB JsonWrapperService jsonService;
+    @EJB ApplicationManager manager;
 
     /**
      * Creates a new instance of SncPucmmWSResource
@@ -88,10 +88,10 @@ public class SncPucmmWSResource {
         return jsonToResponse;
     }
     
-    @Path("/localizacion/list/")
+    @Path("/updates/")
     @GET
     @Produces("text/plain")
-    public String listLocalizacion(){
-        return "";
+    public String getUpdates(){
+        return manager.databaseClientUpdateToJson();
     }
 }

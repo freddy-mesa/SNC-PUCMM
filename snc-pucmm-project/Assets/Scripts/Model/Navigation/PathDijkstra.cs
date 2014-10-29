@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SncPucmm.Model.Navigation
 {
-    public class DijkstraPath
+    public class PathDijkstra
     {
         #region Propiedades
 
@@ -15,9 +15,9 @@ namespace SncPucmm.Model.Navigation
 
         #region Constructores
 
-        public DijkstraPath() { }
+        public PathDijkstra() { }
 
-        public DijkstraPath(String nodes)
+        public PathDijkstra(String nodes)
         {
             this.Nodes = nodes;
         }

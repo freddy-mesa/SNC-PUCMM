@@ -8,36 +8,36 @@ namespace SncPucmm.Controller
 	public class ModelPoolManager
 	{
 		#region Atributos
-        /// <summary>
-        /// Dictionario de Objectos del Modelo
-        /// </summary>
+		/// <summary>
+		/// Dictionario de Objectos del Modelo
+		/// </summary>
 		private Dictionary<String,object> _listModelObject;
 
-        /// <summary>
-        /// Instancia del Controlador del Pool del Modelo
-        /// </summary>
+		/// <summary>
+		/// Instancia del Controlador del Pool del Modelo
+		/// </summary>
 		private static ModelPoolManager _modelManager;
 
 		#endregion
 
 		#region Constructor
-        
-        public ModelPoolManager()
+		
+		public ModelPoolManager()
 		{
 			_listModelObject = new Dictionary<String,object>();
 		}
 		#endregion
 
 		#region Metodos
-        
-        /// <summary>
-        /// Patrón Singlenton
-        /// </summary>
-        /// <returns></returns>
-        public static ModelPoolManager GetInstance()
-        {
+		
+		/// <summary>
+		/// Patrón Singlenton
+		/// </summary>
+		/// <returns></returns>
+		public static ModelPoolManager GetInstance()
+		{
 			if(_modelManager == null)
-                _modelManager = new ModelPoolManager();
+				_modelManager = new ModelPoolManager();
 			return _modelManager;
 		}
 

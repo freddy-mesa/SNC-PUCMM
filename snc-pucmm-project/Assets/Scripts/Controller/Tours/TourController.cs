@@ -9,113 +9,270 @@ using UnityEngine;
 
 namespace SncPucmm.Controller.Tours
 {
-    class TourController : MonoBehaviour
+    class TourController
     {
         #region Atributos
 
-        Tour currentTour;
-        string url;
+        private static TourController instance;
 
-        #endregion
-
-        #region Propiedades
-
-        public string CreateTourResult { get; set; }
-        public string SelectTourResult { get; set; }
         #endregion
 
         #region Constructor
 
-        public TourController()
+        private TourController()
         {
-            url = "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/tour/";
+            
         }
 
         #endregion
 
         #region Metodos
 
-        public IEnumerator CreateTour(Tour tour, List<ModelLocalizacion> modelLocalizacionList)
+        public static TourController GetInstance()
+        {
+            if (instance == null)
+            {
+                instance = new TourController();
+            }
+
+            return instance;
+        }
+
+        public IEnumerator SelectTours()
+        {
+            bool isConnectionAvailable = false;
+
+            //Revision si hay conexion a internet
+            yield return WebService.Get("https://www.google.com", (status, response) => isConnectionAvailable = status);
+
+            //Wait for refresh isConnectionAvailable
+            yield return new WaitForSeconds(0.1f);
+
+            if (isConnectionAvailable)
+            {
+                string url = "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/Tour/list/";
+
+                string result = string.Empty;
+
+                yield return WebService.Get(url, (success, response) =>
+                {
+                    if (success)
+                    {
+                        //Retrieving created tour from server
+                        result = response;
+                    }
+                });
+
+                yield return new WaitForSeconds(0.1f);
+
+                JSONObject json = new JSONObject(result);
+
+                ModelPoolManager.GetInstance().Add("TourList", Tour.ToTourList(json.GetField("Tour")));
+
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            yield return null;
+        }
+
+        public IEnumerator SelectUsuarioTour(Tour tour, Usuario usuario) 
+        {
+            bool isConnectionAvailable = false;
+
+            //Revision si hay conexion a internet
+            yield return WebService.Get("https://www.google.com", (status, response) => isConnectionAvailable = status);
+
+            //Wait for refresh isConnectionAvailable
+            yield return new WaitForSeconds(0.1f);
+
+            if (isConnectionAvailable)
+            {
+                string url = "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/Tour/select/";
+
+                string result = string.Empty;
+
+                JSONObject json = new JSONObject();
+                json.AddField("Tour", tour.idTour.Value);
+                json.AddField("Usuario", usuario.usuario);
+
+                yield return WebService.Post(url, json.ToString(), (success, response) =>
+                {
+                    if (success)
+                    {
+                        //Retrieving created tour from server
+                        result = response;
+                    }
+                });
+
+                yield return new WaitForSeconds(0.1f);
+
+                json = new JSONObject(result);
+
+                ModelPoolManager.GetInstance().Add(
+                    "PuntoReunionTourList", PuntoReunionTour.ToPuntoReunionTourList(json.GetField("PuntoReunionTourList"))
+                );
+
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            yield return null;
+        }
+
+        public IEnumerator CreateTourRoleCreator(Tour tour, List<ModelNode> modelNodeList)
         {
             bool isConnectionAvailable = false;
             
             //Revision si hay conexion a internet
-            yield return ConnectionChecker.Get("https://www.google.com", (status) => isConnectionAvailable = status );
+            yield return WebService.Get("https://www.google.com", (status,response) => isConnectionAvailable = status);
 
             //Wait for refresh isConnectionAvailable
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
+
+            Debug.Log(isConnectionAvailable);
 
             if (isConnectionAvailable)
             {
-                //Invocando el WebService para crear un tour pasandole el tour encode en JSON
-                yield return WebService.Post(url + "create/", tour.ToJson().ToString(), 
+                string url = "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/Tour/create/";
+
+                JSONObject json = new JSONObject(JSONObject.Type.OBJECT);
+                json.AddField("Tour", tour.ToJson());
+
+                var puntosReunion = GetPuntosReunionTour(tour, modelNodeList);
+                json.AddField("PuntoReunionTourList", PuntoReunionTour.ToJsonArray(puntosReunion));
+
+                //string result = string.Empty;
+
+                yield return WebService.Post(url, json.ToString(),
                     (success, response) =>
                     {
                         if (success)
                         {
                             //Retrieving created tour from server
-                            CreateTourResult = response;
+                            Debug.Log("Usuario Tour Updated!");
                         }
                     }
                 );
 
-                //Wait for refresh
-                yield return new WaitForSeconds(0.5f);
+                //yield return new WaitForSeconds(0.1f);
 
-                Debug.Log("WebService Response: " + this.CreateTourResult);
+                //json = new JSONObject(result);
 
-                //Obtain JSON
-                JSONObject jsonReceived = new JSONObject(this.CreateTourResult);
+                //ModelPoolManager.GetInstance().Add("Tour", new Tour(json.GetField("Tour")));
+                //ModelPoolManager.GetInstance().Add(
+                //    "PuntoReunionTourList", PuntoReunionTour.ToPuntoReunionTourList(json.GetField("PuntoReunionTourList"))
+                //);
 
-                //Created tour from server
-                currentTour = new Tour(jsonReceived);
+                yield return new WaitForSeconds(0.1f);
+            }
+       
+            yield return null;
+        }
 
-                //Converting ModelLocalizacion to Punto Reunion Tour
-                var puntoReunionTourList = GetPuntoReunionTour(currentTour, modelLocalizacionList);
+        public IEnumerator CreateTourRoleSuscriber(UsuarioTour usuario, List<DetalleUsuarioTour> detalleList)
+        {
+            bool isConnectionAvailable = false;
+            
+            //Revision si hay conexion a internet
+            yield return WebService.Get("https://www.google.com", (status,response) => isConnectionAvailable = status);
 
-                //Convirtiendo a Lista de JSON
-                var json = Puntoreuniontour.ToJsonArray(puntoReunionTourList).ToString();
-                yield return WebService.Post(url + "create/", json, (success, response) =>
-                {
-                    if (success)
+            //Wait for refresh isConnectionAvailable
+            yield return new WaitForSeconds(0.1f);
+
+            if (isConnectionAvailable)
+            {
+                string url = "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/Tour/create/suscriber";
+
+                JSONObject json = new JSONObject();
+                json.AddField("UsuarioTour", usuario.ToJson());
+                json.AddField("DetalleUsuarioTourList", DetalleUsuarioTour.ToJsonArray(detalleList));
+
+                string result = string.Empty;
+
+                yield return WebService.Post(url, json.ToString(),
+                    (success, response) =>
                     {
-                        CreateTourResult = response;
+                        if (success)
+                        {
+                            //Retrieving created tour from server
+                            result = response;
+                        }
                     }
-                });
+                );
+
+                yield return new WaitForSeconds(0.1f);
+
+                json = new JSONObject(result);
+
+                ModelPoolManager.GetInstance().Add("UsuarioTour", new UsuarioTour(json.GetField("UsuarioTour")));
+                ModelPoolManager.GetInstance().Add(
+                    "DetalleUsuarioTourList", DetalleUsuarioTour.ToDetalleUsuarioTourList(json.GetField("DetalleUsuarioTourList"))
+                );
+
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            yield return null;
+        }
+
+        public IEnumerator UpdateTourSuscriber(UsuarioTour usuario, List<DetalleUsuarioTour> detalleList)
+        {
+            bool isConnectionAvailable = false;
+
+            //Revision si hay conexion a internet
+            yield return WebService.Get("https://www.google.com", (status, response) => isConnectionAvailable = status);
+
+            //Wait for refresh isConnectionAvailable
+            yield return new WaitForSeconds(0.1f);
+
+            if (isConnectionAvailable)
+            {
+                string url = "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/Tour/update/suscriber";
+
+                JSONObject json = new JSONObject();
+                json.AddField("UsuarioTour", usuario.ToJson());
+                json.AddField("DetalleUsuarioTourList", DetalleUsuarioTour.ToJsonArray(detalleList));
+
+                string result = string.Empty;
+
+                yield return WebService.Post(url, json.ToString(),
+                    (success, response) =>
+                    {
+                        if (success)
+                        {
+                            //Retrieving created tour from server
+                            result = response;
+                        }
+                    }
+                );
+
+                yield return new WaitForSeconds(0.1f);
+
+                json = new JSONObject(result);
+
+                ModelPoolManager.GetInstance().Add("UsuarioTour", new UsuarioTour(json.GetField("UsuarioTour")));
+                ModelPoolManager.GetInstance().Add(
+                    "DetalleUsuarioTourList", DetalleUsuarioTour.ToDetalleUsuarioTourList(json.GetField("DetalleUsuarioTourList"))
+                );
+
+                yield return new WaitForSeconds(0.1f);
             }
         }
 
-        public IEnumerator UpdateTour(Tour tour)
+        private List<PuntoReunionTour> GetPuntosReunionTour(Tour tour, List<ModelNode> modelNodeList)
         {
-            yield return new WaitForSeconds(1f);
+            List<PuntoReunionTour> PuntoReunionTourList = new List<PuntoReunionTour>();
 
-            string json = tour.ToJson().ToString();
-
-            yield return WebService.Post(url + "update/", json, (success, response) =>
+            for (int i = 0; i < modelNodeList.Count; ++i)
             {
-                if (success)
+                PuntoReunionTourList.Add(new PuntoReunionTour() 
                 {
-                    Debug.Log(tour.ToString() + " Updated");
-                }
-            });
-
-        }
-
-        public List<Puntoreuniontour> GetPuntoReunionTour(Tour tour, List<ModelLocalizacion> modelLocalizacionList)
-        {
-            List<Puntoreuniontour> puntoReunionTourList = new List<Puntoreuniontour>();
-
-            for (int i = 0; i < modelLocalizacionList.Count; ++i)
-            {
-                puntoReunionTourList.Add(new Puntoreuniontour() 
-                {
-                    idlocalizacion = new Localizacion() { idlocalizacion = modelLocalizacionList[i].idLocalizacion},
-                    secuenciapuntoreunion = i+1,
-                    idtour = new Tour() { idtour = tour.idtour }
+                    nodo = new Nodo() { idNodo = modelNodeList[i].idNodo },
+                    secuenciaPuntoReunion = i+1,
+                    tour = tour
                 });
             }
 
-            return puntoReunionTourList;
+            return PuntoReunionTourList;
         }
 
         #endregion

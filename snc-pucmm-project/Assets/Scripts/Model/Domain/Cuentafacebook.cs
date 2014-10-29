@@ -5,25 +5,25 @@ using System.Text;
 
 namespace SncPucmm.Model.Domain
 {
-    public class Cuentafacebook
+    public class CuentaFacebook : IJson
     {
         #region Atributos
 
-        public int idcuentafacebook;
-        public String usuariofacebook;
-        public String token;
+        public int? idCuentaFacebook;
+        public string usuarioFacebook;
+        public string token;
     
         
         #endregion
 
         #region Constructores
 
-        public Cuentafacebook()
+        public CuentaFacebook()
         {
 
         }
 
-        public Cuentafacebook(JSONObject json)
+        public CuentaFacebook(JSONObject json)
         {
             Decoding(json);
         }
@@ -36,19 +36,16 @@ namespace SncPucmm.Model.Domain
         {
             for (int i = 0; i < json.list.Count; i++)
             {
-                string key = (string)json.keys[i];
+                if (!json.list[i].IsNull)
+                {
+                    string key = (string)json.keys[i];
 
-                if (key == "idcuentafacebook")
-                {
-                    this.idcuentafacebook = (int)json.list[i].n;
-                }
-                else if (key == "usuariofacebook")
-                {
-                    this.usuariofacebook = json.list[i].str;
-                }
-                else
-                {
-                    this.token = json.list[i].str;
+                    if (key == "idCuentaFacebook")
+                        this.idCuentaFacebook = (int)json.list[i].n;
+                    else if (key == "usuariofacebook")
+                        this.usuarioFacebook = json.list[i].str;
+                    else
+                        this.token = json.list[i].str;
                 }
             }
         }
@@ -57,16 +54,20 @@ namespace SncPucmm.Model.Domain
         {
             JSONObject json = new JSONObject();
 
-            json.AddField("idcuentafacebook", idcuentafacebook);
-            json.AddField("usuariofacebook", usuariofacebook);
-            json.AddField("token", token);
+            if (idCuentaFacebook.HasValue)
+                json.AddField("idCuentaFacebook", idCuentaFacebook.Value);
+            if (usuarioFacebook != null)
+                json.AddField("usuarioFacebook", usuarioFacebook);
+            if (token != null)
+                json.AddField("token", token);
 
             return json;
         }
 
         public override string ToString()
         {
-            return String.Format("Cuentafacebook [ idCuentaFacebook: {0}, usuarioFacebook: {1} ]", idcuentafacebook, usuariofacebook);
+            return String.Format("Cuentafacebook [ idCuentaFacebook: {0}, usuarioFacebook: {1} ]", 
+                idCuentaFacebook.HasValue ? idCuentaFacebook.Value.ToString() : string.Empty, usuarioFacebook);
         }
 
         #endregion

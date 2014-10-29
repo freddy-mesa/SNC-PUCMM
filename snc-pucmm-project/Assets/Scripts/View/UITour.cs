@@ -1,8 +1,11 @@
-﻿using SncPucmm.Model;
-using System;
+﻿using SncPucmm.Controller;
+using SncPucmm.Controller.GUI;
+using SncPucmm.Controller.Tours;
+using SncPucmm.Model;
+using SncPucmm.Model.Domain;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using UnityEngine;
 
 namespace SncPucmm.View
 {
@@ -10,11 +13,12 @@ namespace SncPucmm.View
     {
         #region Metodos
 
-        public void CreateTour()
+        public IEnumerator CreateTourRoleCreator(Tour tour, List<ModelNode> modelNodeList)
         {
-            
+            yield return StartCoroutine(TourController.GetInstance().CreateTourRoleCreator(tour, modelNodeList));
         }
 
         #endregion
+
     }
 }

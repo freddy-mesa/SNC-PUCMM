@@ -42,14 +42,14 @@ public class Puntoreuniontour implements Serializable {
     private Integer idpuntoreunion;
     @Column(name = "secuenciapuntoreunion")
     private Integer secuenciapuntoreunion;
-    @JoinColumn(name = "idlocalizacion", referencedColumnName = "idlocalizacion")
+    @OneToMany(mappedBy = "idpuntoreunion")
+    private List<Detalleusuariotour> detalleusuariotourList;
+    @JoinColumn(name = "idnodo", referencedColumnName = "idnodo")
     @ManyToOne
-    private Localizacion idlocalizacion;
+    private Nodo idnodo;
     @JoinColumn(name = "idtour", referencedColumnName = "idtour")
     @ManyToOne
     private Tour idtour;
-    @OneToMany(mappedBy = "idpuntoreunion")
-    private List<Detalleusuariotour> detalleusuariotourList;
 
     public Puntoreuniontour() {
     }
@@ -74,12 +74,21 @@ public class Puntoreuniontour implements Serializable {
         this.secuenciapuntoreunion = secuenciapuntoreunion;
     }
 
-    public Localizacion getIdlocalizacion() {
-        return idlocalizacion;
+    @XmlTransient
+    public List<Detalleusuariotour> getDetalleusuariotourList() {
+        return detalleusuariotourList;
     }
 
-    public void setIdlocalizacion(Localizacion idlocalizacion) {
-        this.idlocalizacion = idlocalizacion;
+    public void setDetalleusuariotourList(List<Detalleusuariotour> detalleusuariotourList) {
+        this.detalleusuariotourList = detalleusuariotourList;
+    }
+
+    public Nodo getIdnodo() {
+        return idnodo;
+    }
+
+    public void setIdnodo(Nodo idnodo) {
+        this.idnodo = idnodo;
     }
 
     public Tour getIdtour() {
@@ -88,15 +97,6 @@ public class Puntoreuniontour implements Serializable {
 
     public void setIdtour(Tour idtour) {
         this.idtour = idtour;
-    }
-
-    @XmlTransient
-    public List<Detalleusuariotour> getDetalleusuariotourList() {
-        return detalleusuariotourList;
-    }
-
-    public void setDetalleusuariotourList(List<Detalleusuariotour> detalleusuariotourList) {
-        this.detalleusuariotourList = detalleusuariotourList;
     }
 
     @Override

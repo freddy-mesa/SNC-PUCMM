@@ -43,9 +43,9 @@ public class Localizacionusuario implements Serializable {
     @Column(name = "fechalocalizacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechalocalizacion;
-    @JoinColumn(name = "idlocalizacion", referencedColumnName = "idlocalizacion")
+    @JoinColumn(name = "idnodo", referencedColumnName = "idnodo")
     @ManyToOne
-    private Localizacion idlocalizacion;
+    private Nodo idnodo;
     @JoinColumn(name = "idusuario", referencedColumnName = "idusuario")
     @ManyToOne
     private Usuario idusuario;
@@ -73,12 +73,12 @@ public class Localizacionusuario implements Serializable {
         this.fechalocalizacion = fechalocalizacion;
     }
 
-    public Localizacion getIdlocalizacion() {
-        return idlocalizacion;
+    public Nodo getIdnodo() {
+        return idnodo;
     }
 
-    public void setIdlocalizacion(Localizacion idlocalizacion) {
-        this.idlocalizacion = idlocalizacion;
+    public void setIdnodo(Nodo idnodo) {
+        this.idnodo = idnodo;
     }
 
     public Usuario getIdusuario() {

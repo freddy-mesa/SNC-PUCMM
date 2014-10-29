@@ -14,7 +14,7 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
     <CompilerResponseFile>
     </CompilerResponseFile>
   </PropertyGroup>
@@ -135,9 +135,9 @@
     <Compile Include="Assets\JSON\JSONObject.cs" />
     <Compile Include="Assets\JSON\JSONTemplates.cs" />
     <Compile Include="Assets\JSON\VectorTemplates.cs" />
-    <Compile Include="Assets\Scripts\Controller\ConnectionChecker.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\Button.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\Control.cs" />
+    <Compile Include="Assets\Scripts\Controller\Control\EventHandler.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\IButton.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\IMenu.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\IScrollTreeView.cs" />
@@ -145,11 +145,11 @@
     <Compile Include="Assets\Scripts\Controller\Control\Label.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\ScrollTreeView.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\TextBox.cs" />
-    <Compile Include="Assets\Scripts\Controller\Direction\DirectionController.cs" />
-    <Compile Include="Assets\Scripts\Controller\EventHandler.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuBuildingDescriptor.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuDirection.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuMain.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuTourCreation.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuTourCreationForm.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\GUIMenuTour.cs" />
     <Compile Include="Assets\Scripts\Controller\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Controller\ModelPoolManager.cs" />
@@ -160,25 +160,26 @@
     <Compile Include="Assets\Scripts\Controller\Tours\TourController.cs" />
     <Compile Include="Assets\Scripts\Controller\WebService.cs" />
     <Compile Include="Assets\Scripts\Database\SQLiteService.cs" />
-    <Compile Include="Assets\Scripts\Model\Domain\Cuentafacebook.cs" />
+    <Compile Include="Assets\Scripts\Model\Domain\CoordenadaNodo.cs" />
+    <Compile Include="Assets\Scripts\Model\Domain\CuentaFacebook.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\DetalleUsuarioTour.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\FollowUsuario.cs" />
-    <Compile Include="Assets\Scripts\Model\Domain\Localizacion.cs" />
+    <Compile Include="Assets\Scripts\Model\Domain\Neighbor.cs" />
+    <Compile Include="Assets\Scripts\Model\Domain\Nodo.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\PuntoReunionTour.cs" />
-    <Compile Include="Assets\Scripts\Model\Domain\Tipousuario.cs" />
+    <Compile Include="Assets\Scripts\Model\Domain\TipoUsuario.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\Tour.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\Ubicacion.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\Usuario.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\UsuarioTour.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\Videollamada.cs" />
-    <Compile Include="Assets\Scripts\Model\ModelLocalizacion.cs" />
+    <Compile Include="Assets\Scripts\Model\IJson.cs" />
+    <Compile Include="Assets\Scripts\Model\ModelNode.cs" />
     <Compile Include="Assets\Scripts\Model\ModelObject.cs" />
-    <Compile Include="Assets\Scripts\Model\Navigation\DijkstraPath.cs" />
-    <Compile Include="Assets\Scripts\Model\Navigation\Neighbor.cs" />
-    <Compile Include="Assets\Scripts\Model\Navigation\Node.cs" />
-    <Compile Include="Assets\Scripts\Model\Navigation\PathData.cs" />
-    <Compile Include="Assets\Scripts\Model\Navigation\Point.cs" />
-    <Compile Include="Assets\Scripts\Model\Navigation\SectionNodes.cs" />
+    <Compile Include="Assets\Scripts\Model\Navigation\NeighborDijkstra.cs" />
+    <Compile Include="Assets\Scripts\Model\Navigation\NodeDijkstra.cs" />
+    <Compile Include="Assets\Scripts\Model\Navigation\PathDataDijkstra.cs" />
+    <Compile Include="Assets\Scripts\Model\Navigation\PathDijkstra.cs" />
     <Compile Include="Assets\Scripts\View\Pivot.cs" />
     <Compile Include="Assets\Scripts\View\UIAnimation.cs" />
     <Compile Include="Assets\Scripts\View\UIBuilding.cs" />

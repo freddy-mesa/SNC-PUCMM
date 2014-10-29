@@ -5,17 +5,17 @@ using System.Text;
 
 namespace SncPucmm.Model.Domain
 {
-    public class Usuario
+    public class Usuario : IJson
     {
         #region Atributos
 
-        public int idusuario;
+        public int? idUsuario;
         public string nombre;
         public string apellido;
         public string contrasena;
         public string usuario;
-        public Tipousuario tipousuario;
-        public Cuentafacebook cuentafacebook;
+        public TipoUsuario tipoUsuario;
+        public CuentaFacebook cuentaFacebook;
 
         #endregion
 
@@ -39,35 +39,24 @@ namespace SncPucmm.Model.Domain
         {
             for (int i = 0; i < json.list.Count; i++)
             {
-                string key = (string)json.keys[i];
+                if (!json.list[i].IsNull)
+                {
+                    string key = (string)json.keys[i];
 
-                if (key == "idUsuario")
-                {
-                    this.idusuario = (int)json.list[i].n;
-                }
-                else if (key == "nombre")
-                {
-                    this.nombre = json.list[i].str;
-                }
-                else if (key == "apellido")
-                {
-                    this.apellido = json.list[i].str;
-                }
-                else if (key == "contrasena")
-                {
-                    this.contrasena = json.list[i].str;
-                }
-                else if (key == "contrasena")
-                {
-                    this.usuario = json.list[i].str;
-                }
-                else if (key == "tipousuario")
-                {
-                    this.tipousuario = new Tipousuario(json.list[i]);
-                }
-                else
-                {
-                    this.cuentafacebook = new Cuentafacebook(json.list[i]);
+                    if (key == "idUsuario")
+                        this.idUsuario = (int)json.list[i].n;
+                    else if (key == "nombre")
+                        this.nombre = json.list[i].str;
+                    else if (key == "apellido")
+                        this.apellido = json.list[i].str;
+                    else if (key == "contrasena")
+                        this.contrasena = json.list[i].str;
+                    else if (key == "contrasena")
+                        this.usuario = json.list[i].str;
+                    else if (key == "tipoUsuario")
+                        this.tipoUsuario = new TipoUsuario(json.list[i]);
+                    else
+                        this.cuentaFacebook = new CuentaFacebook(json.list[i]);
                 }
             }
         }
@@ -76,26 +65,27 @@ namespace SncPucmm.Model.Domain
         {
             JSONObject json = new JSONObject();
             
-            json.AddField("idusuario", idusuario);
-            json.AddField("nombre", nombre);
-            json.AddField("apellido", apellido);
-            json.AddField("usuario", usuario);
-            json.AddField("contrasena", contrasena);
-            if (tipousuario != null)
-            {
-                json.AddField("tipousuario", tipousuario.ToJson());
-            }
-            if (cuentafacebook != null)
-            {
-                json.AddField("cuentafacebook", cuentafacebook.ToJson());
-            }
+            if(idUsuario.HasValue)
+                json.AddField("idUsuario", idUsuario.Value);
+            if(nombre != null)
+                json.AddField("nombre", nombre);
+            if(apellido != null)
+                json.AddField("apellido", apellido);
+            if(usuario != null)
+                json.AddField("usuario", usuario);
+            if(contrasena != null)
+                json.AddField("contrasena", contrasena);
+            if (tipoUsuario != null)
+                json.AddField("tipoUsuario", tipoUsuario.ToJson());
+            if (cuentaFacebook != null)
+                json.AddField("cuentaFacebook", cuentaFacebook.ToJson());
             
             return json;
         }
 
         public override string ToString()
         {
-            return String.Format("Usuario [idUsuario = {0}]", this.idusuario);
+            return String.Format("Usuario [idUsuario: {0}, Usuario: {1}]", idUsuario.HasValue ? idUsuario.Value.ToString() : string.Empty, usuario);
         }
 
         #endregion

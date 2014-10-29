@@ -21,13 +21,13 @@ namespace SncPucmm.Controller
             MenuManager.GetInstance();
             ModelPoolManager.GetInstance();
             SQLiteService.GetInstance();
-            State.ChangeState(eState.Navigation);
 
             GUIInitializer();
             BuildingInitializer();
             ModelPoolInit();
 
             UIUtils.ActivateCameraLabels(true);
+            State.ChangeState(eState.Navigation);
         }
 
         private void GUIInitializer()
@@ -42,8 +42,8 @@ namespace SncPucmm.Controller
 
             //Seleccionando desde la Base de datos los localidades
             reader = SQLiteService.GetInstance().Query(true,
-                "SELECT UBI.abreviacion, LOC.idLocalizacion, UBI.idUbicacion, LOC.nombre FROM Ubicacion UBI, Localizacion LOC " +
-                "WHERE UBI.idUbicacion = LOC.idLocalizacion"
+                "SELECT UBI.abreviacion, UBI.idUbicacion, NOD.idNodo, NOD.nombre FROM Ubicacion UBI, Nodo NOD " +
+                "WHERE UBI.idUbicacion = NOD.edificio"
             );
 
             List<object> list = new List<object>();
@@ -54,8 +54,8 @@ namespace SncPucmm.Controller
                 {
                     Abreviacion = Convert.ToString(reader["abreviacion"]),
                     Nombre = Convert.ToString(reader["nombre"]),
-                    Localizacion = Convert.ToInt32(reader["idLocalizacion"]),
-                    Ubicacion = Convert.ToInt32(reader["idUbicacion"])
+                    Idnodo = Convert.ToInt32(reader["idNodo"]),
+                    Idubicacion = Convert.ToInt32(reader["idUbicacion"])
                 });
             }
 
@@ -75,11 +75,11 @@ namespace SncPucmm.Controller
                         var localizacion = child.GetComponent<ModelObject>();
 
                         string nombre = Convert.ToString(item.GetType().GetProperty("Nombre").GetValue(item, null));
-                        int idUbicacion = Convert.ToInt32(item.GetType().GetProperty("Ubicacion").GetValue(item, null));
-                        int idLocalizacion = Convert.ToInt32(item.GetType().GetProperty("Localizacion").GetValue(item, null));
+                        int idUbicacion = Convert.ToInt32(item.GetType().GetProperty("Idubicacion").GetValue(item, null));
+                        int idNodo = Convert.ToInt32(item.GetType().GetProperty("Idnodo").GetValue(item, null));
 
-                        localizacion.ObjectTag = new ModelLocalizacion() { idLocalizacion = idLocalizacion, name = nombre, idUbicacion = idUbicacion };
-                        localizacion.Id = idLocalizacion;
+                        localizacion.ObjectTag = new ModelNode() { idNodo = idNodo, name = nombre, idUbicacion = idUbicacion };
+                        localizacion.Id = idNodo;
 
 
                         if (nombre.Length < 20)
@@ -110,9 +110,6 @@ namespace SncPucmm.Controller
         {
             NavigationController navigationCtrl = new NavigationController();
             ModelPoolManager.GetInstance().Add("navigationCtrl", navigationCtrl);
-
-            TourController tourCtrl = new TourController();
-            ModelPoolManager.GetInstance().Add("tourCtrl", tourCtrl);
         }
     }
 }

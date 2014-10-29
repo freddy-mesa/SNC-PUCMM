@@ -56,22 +56,42 @@ CREATE TABLE Ubicacion (
 	CONSTRAINT PK_Ubicacion PRIMARY KEY(idUbicacion)
 );
 
-CREATE TABLE Localizacion (
-	idLocalizacion serial,
+CREATE TABLE Nodo (
+	idNodo serial,
 	idUbicacion integer,
+	edificio integer,
 	nombre text,
-	CONSTRAINT PK_Localizacion PRIMARY KEY (idLocalizacion),
-	CONSTRAINT FK_Localizacion_Ubicacion FOREIGN KEY (idUbicacion) REFERENCES Ubicacion(idUbicacion)
+	activo integer,
+	CONSTRAINT PK_Nodo PRIMARY KEY (idNodo),
+	CONSTRAINT FK_Nodo_Ubicacion FOREIGN KEY (idUbicacion) REFERENCES Ubicacion(idUbicacion)
+);
+
+CREATE TABLE CoordenadaNodo (
+	idCoordenadaNodo serial,
+	idNodo integer,
+	longitud real,
+	latitud real,
+	CONSTRAINT PK_CoordenadaNodo PRIMARY KEY (idCoordenadaNodo),
+	CONSTRAINT FK_CoordenadaNodo_Nodo FOREIGN KEY (idNodo) REFERENCES Nodo(idNodo)
+);
+
+CREATE TABLE Neighbor (
+	idNeighbor serial,
+	idNodo integer,
+	idNodoNeighbor integer,
+	CONSTRAINT PK_Neighbor PRIMARY KEY (idNeighbor),
+	CONSTRAINT FK_Neighbor_Nodo FOREIGN KEY (idNodo) REFERENCES Nodo(idNodo),
+	CONSTRAINT FK_Neighbor_NodoNeighbor FOREIGN KEY (idNodoNeighbor) REFERENCES Nodo(idNodo)
 );
 
 CREATE TABLE LocalizacionUsuario (
 	idLocalizacionUsuario serial,
 	idUsuario integer,
-	idLocalizacion integer,
+	idNodo integer,
 	fechaLocalizacion timestamp,
 	CONSTRAINT PK_LocalizacionUsuario PRIMARY KEY (idLocalizacionUsuario),
 	CONSTRAINT FK_LocalizacionUsuario_Usuario FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario),
-	CONSTRAINT FK_LocalizacionUsuario_Localizacion FOREIGN KEY (idLocalizacion) REFERENCES Localizacion(idLocalizacion)
+	CONSTRAINT FK_LocalizacionUsuario_Localizacion FOREIGN KEY (idNodo) REFERENCES Nodo(idNodo)
 );
 
 CREATE TABLE Tour (
@@ -99,11 +119,11 @@ CREATE TABLE UsuarioTour (
 
 CREATE TABLE PuntoReunionTour (
 	idPuntoReunion serial,
-	idLocalizacion integer,
+	idNodo integer,
 	idTour integer,
 	secuenciaPuntoReunion integer,
 	CONSTRAINT PK_PuntoReunionTour PRIMARY KEY (idPuntoReunion),
-	CONSTRAINT FK_PuntoReunionTour_Localizacion FOREIGN KEY (idLocalizacion) REFERENCES Localizacion(idLocalizacion),
+	CONSTRAINT FK_PuntoReunionTour_Nodo FOREIGN KEY (idNodo) REFERENCES Nodo(idNodo),
 	CONSTRAINT FK_PuntoReunionTour_Tour FOREIGN KEY (idTour) REFERENCES Tour(idTour)
 );
 
@@ -118,29 +138,20 @@ CREATE TABLE DetalleUsuarioTour (
 	CONSTRAINT FK_DetalleUsuarioTour_UsuarioTour FOREIGN KEY (idUsuarioTour) REFERENCES UsuarioTour(idUsuarioTour),
 	CONSTRAINT FK_DetalleUsuarioTour_PuntoReunionTour FOREIGN KEY (idPuntoReunion) REFERENCES PuntoReunionTour(idPuntoReunion)
 );
-
-CREATE TABLE CoordenadaLocalizacion (
-	idCoordenada serial,
-	idLocalizacion integer,
-	longitud real,
-	latitud real,
-	CONSTRAINT PK_CoordenadaLocalizacion PRIMARY KEY (idCoordenada),
-	CONSTRAINT FK_CoordenadaLocalizacion_Localizacion FOREIGN KEY (idLocalizacion) REFERENCES Localizacion(idLocalizacion)
-);
-
 --DROP TABLE
 /*
 DROP TABLE DetalleUsuarioTour;
 DROP TABLE PuntoReunionTour;
 DROP TABLE UsuarioTour;
 DROP TABLE Tour;
+DROP TABLE Neighbor;
+DROP TABLE CoordenadaNodo;
 DROP TABLE LocalizacionUsuario;
-DROP TABLE Localizacion;
+DROP TABLE Nodo;
 DROP TABLE Ubicacion;
 DROP TABLE VideoLlamada;
 DROP TABLE FollowUsuario;
 DROP TABLE Usuario;
 DROP TABLE CuentaFacebook;
 DROP TABLE TipoUsuario;
-DROP TABLE CoordenadaLocalizacion;
 */

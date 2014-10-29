@@ -1,8 +1,5 @@
 ﻿using SncPucmm.Model.Navigation;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace SncPucmm.View
@@ -12,11 +9,11 @@ namespace SncPucmm.View
         public Transform PrefabCamino;
         public Transform PrefabCaminoSelected;
 
-        public void PrintDirections(List<PathData> pathList, PathData selected)
+        public void PrintPath(List<PathDataDijkstra> pathList, PathDataDijkstra selected)
         {
             UIUtils.DestroyChilds("/PUCMM/Directions", false);
 
-            foreach (PathData path in pathList)
+            foreach (PathDataDijkstra path in pathList)
             {
                 float adjacent = UIUtils.getXDistance(path.StartNode.Longitude) - UIUtils.getXDistance(path.EndNode.Longitude);
                 float opposite = UIUtils.getZDistance(path.StartNode.Latitude) - UIUtils.getZDistance(path.EndNode.Latitude);
@@ -32,21 +29,27 @@ namespace SncPucmm.View
                 Quaternion rotation = Quaternion.AngleAxis(degrees, Vector3.up);
                 Vector3 position = new Vector3(UIUtils.getXDistance(path.StartNode.Longitude), 0.7f, UIUtils.getZDistance(path.StartNode.Latitude));
 
-                Transform prefab = null;
+                Transform prefabPlane = null;
                 if (path.Equals(selected))
                 {
-                    prefab = (Transform)Instantiate(PrefabCaminoSelected, position, rotation);
+                    prefabPlane = Instantiate(PrefabCaminoSelected, position, rotation) as Transform;
                 }
                 else
                 {
-                    prefab = (Transform)Instantiate(PrefabCamino, position, rotation);
+                    prefabPlane = Instantiate(PrefabCamino, position, rotation) as Transform;
                 }
 
-                var camino = prefab.gameObject.AddComponent<UICamino>();
+                var camino = prefabPlane.gameObject.AddComponent<UICamino>();
                 camino.Name = path.StartNode.Name + " - " + path.EndNode.Name;
-                prefab.transform.parent = this.transform;
-                prefab.transform.localScale = new Vector3(hypotenuse / 10, 1, 0.2f);
+
+                prefabPlane.transform.parent = this.transform;
+                prefabPlane.transform.localScale = new Vector3(hypotenuse / 10, 1, 0.2f);
             }
+        }
+
+        private void PrintDirection()
+        {
+
         }
     }
 }

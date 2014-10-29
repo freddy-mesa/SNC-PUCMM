@@ -8,13 +8,15 @@ using System.Xml.Serialization;
 
 namespace SncPucmm.Model.Navigation
 {
-    public class Node
+    public class NodeDijkstra
     {
         #region Propiedades
 
+        public int IdNode { get; set; }
+
         public string Name { get; set; }
 
-        public List<Neighbor> Neighbors { get; set; }
+        public List<NeighborDijkstra> Neighbors { get; set; }
 
         public bool Active { get; set; }
 
@@ -22,39 +24,31 @@ namespace SncPucmm.Model.Navigation
         
         public float DijkstraDistance { get; set; }
 
-        public DijkstraPath DijkstraPath { get; set; }
+        public PathDijkstra DijkstraPath { get; set; }
 
         public float Latitude { get; set; }
 
         public float Longitude { get; set; }
-
-        List<Point> puntosGeograficosList { get; set; }
         
         #endregion
 
         #region Constructor
 
-        public Node() { }
+        public NodeDijkstra() { }
 
-        public Node(Node node) : this(node.Name, node.Neighbors, node.DijkstraDistance, node.Active) { }
+        public NodeDijkstra(NodeDijkstra node) : this(node.Name, node.Neighbors, node.DijkstraDistance, node.Active) { }
 
-        public Node(string name, List<Neighbor> neighbors, float distance, bool active)
+        public NodeDijkstra(string name, List<NeighborDijkstra> neighbors, float distance, bool active)
         {
             this.Name = name;
             this.Neighbors = neighbors;
             this.Active = active;
             this.DijkstraDistance = distance;
-            puntosGeograficosList = new List<Point>();
         }
         
         #endregion
 
         #region Metodos
-
-        public void AddPuntosGeograficos(float latitude, float longitude)
-        {
-            puntosGeograficosList.Add(new Point() { Latitude = latitude, Longitude = longitude });
-        }
 
         public override String ToString()
         {

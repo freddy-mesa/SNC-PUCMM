@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using SncPucmm.Controller;
 using SncPucmm.Model;
 using SncPucmm.Controller.Control;
@@ -27,16 +26,21 @@ namespace SncPucmm.View
         /// Tapped Building Name
         /// </summary>
         private int locationTapped;
-
-        private bool isButtonTapped;
+        
         /// <summary>
         /// Tapped Button 
         /// </summary>
         private string buttonTapped = string.Empty;
 
+        /// <summary>
+        /// Selected Building in Tours
+        /// </summary>
+        private static ModelObject selectedModelObjectTour;
+
         public static bool isMoving = false;
         public static bool isZooming = false;
         public static bool isRotating = false;
+        private static bool isButtonTapped = false;
 
         public void Update()
         {
@@ -73,7 +77,18 @@ namespace SncPucmm.View
                                 {
                                     if (this.buttonTapped.Equals(this.name))
                                     {
-                                        ((UIButton)this).OnTouchButton(this.name);
+                                        if (State.GetCurrentState().Equals(eState.TourCreation))
+                                        {
+                                            if (selectedModelObjectTour)
+                                            {
+                                                ((UIButton)this).OnTouchButton(this.name, selectedModelObjectTour);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ((UIButton)this).OnTouchButton(this.name);
+                                        }
+
                                         isHover = false;
                                     }
                                 }
@@ -105,43 +120,12 @@ namespace SncPucmm.View
                     if (
                             State.GetCurrentState().Equals(eState.Navigation) || 
                             State.GetCurrentState().Equals(eState.MenuDirection) || 
-                            State.GetCurrentState().Equals(eState.Tour)
+                            State.GetCurrentState().Equals(eState.Tour) ||
+                            State.GetCurrentState().Equals(eState.TourCreation)
                         )
                     {
-                        if (this is UIModel && !isButtonTapped && State.GetCurrentState().Equals(eState.Navigation))
-                        {
-                            if (!UITouch.isMoving && !UITouch.isRotating && !UITouch.isZooming)
-                            {
-                                if (Input.GetTouch(i).phase == TouchPhase.Stationary)
-                                {
-                                    ray = Camera.main.ScreenPointToRay(objectPosition);
-                                    if (Physics.Raycast(ray, out rayHitInfo))
-                                    {
-                                        var locationObject = rayHitInfo.transform.gameObject;
-                                        if (locationObject != null && locationObject.tag.Equals("Building"))
-                                        {
-                                            locationTapped = locationObject.GetComponent<ModelObject>().Id;
-                                        }
-                                    }
-                                }
-                                else if (Input.GetTouch(i).phase == TouchPhase.Ended)
-                                {
-                                    ray = Camera.main.ScreenPointToRay(objectPosition);
-                                    if (Physics.Raycast(ray, out rayHitInfo))
-                                    {
-                                        var locationObject = rayHitInfo.transform.gameObject;
-                                        var modelObject = locationObject.GetComponent<ModelObject>();
-
-                                        if (locationObject != null && locationObject.tag.Equals("Building") && locationTapped.Equals(modelObject.Id))
-                                        {
-                                            var obj = new { location = modelObject.ObjectTag, button = "ModelController" };
-                                            ((UIModel)this).OnTouchBuilding(obj);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (this is UIMovement || this is UIZoomRotation)
+                        
+                        if (this is UIMovement || this is UIZoomRotation)
                         {
                             if (Input.GetTouch(i).phase == TouchPhase.Began && this is UIMovement)
                             {
@@ -154,6 +138,40 @@ namespace SncPucmm.View
                             if (Input.GetTouch(i).phase == TouchPhase.Stationary && this is UIZoomRotation)
                             {
                                 ((UIZoomRotation)this).OnTouchStayedAnywhere();
+                            }
+                        }
+                    }
+
+                    if (State.GetCurrentState().Equals(eState.Navigation))
+                    {
+                        if (this is UIModel && !isButtonTapped && !isMoving && !isRotating && !isZooming)
+                        {
+                            if (Input.GetTouch(i).phase == TouchPhase.Stationary)
+                            {
+                                ray = Camera.main.ScreenPointToRay(objectPosition);
+                                if (Physics.Raycast(ray, out rayHitInfo))
+                                {
+                                    var locationObject = rayHitInfo.transform.gameObject;
+                                    if (locationObject != null && locationObject.tag.Equals("Building"))
+                                    {
+                                        locationTapped = locationObject.GetComponent<ModelObject>().Id;
+                                    }
+                                }
+                            }
+                            else if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                            {
+                                ray = Camera.main.ScreenPointToRay(objectPosition);
+                                if (Physics.Raycast(ray, out rayHitInfo))
+                                {
+                                    var locationObject = rayHitInfo.transform.gameObject;
+                                    var modelObject = locationObject.GetComponent<ModelObject>();
+
+                                    if (locationObject != null && locationObject.tag.Equals("Building") && locationTapped.Equals(modelObject.Id))
+                                    {
+                                        var obj = new { location = modelObject.ObjectTag, button = "ModelController" };
+                                        ((UIModel)this).OnTouchBuilding(obj);
+                                    }
+                                }
                             }
                         }
                     }
@@ -197,36 +215,40 @@ namespace SncPucmm.View
                             }
                         }
                     }
-                    else if (State.GetCurrentState().Equals(eState.Tour))
+                    
+                    else if (State.GetCurrentState().Equals(eState.TourCreation))
                     {
-                        if (this is UITour) 
+                        if (this is UITour && !isButtonTapped && !isMoving && !isRotating && !isZooming)
                         {
-                            if (!UITouch.isMoving && !UITouch.isRotating && !UITouch.isZooming)
+                            if (Input.GetTouch(i).phase == TouchPhase.Stationary)
                             {
-                                if (Input.GetTouch(i).phase == TouchPhase.Stationary)
+                                ray = Camera.main.ScreenPointToRay(objectPosition);
+                                if (Physics.Raycast(ray, out rayHitInfo))
                                 {
-                                    ray = Camera.main.ScreenPointToRay(objectPosition);
-                                    if (Physics.Raycast(ray, out rayHitInfo))
+                                    var locationObject = rayHitInfo.transform.gameObject;
+                                    if (locationObject != null && locationObject.tag.Equals("Building"))
                                     {
-                                        var locationObject = rayHitInfo.transform.gameObject;
-                                        if (locationObject != null && locationObject.tag.Equals("Building"))
-                                        {
-                                            locationTapped = locationObject.GetComponent<ModelObject>().Id;
-                                        }
+                                        locationTapped = locationObject.GetComponent<ModelObject>().Id;
                                     }
                                 }
-                                else if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                            }
+                            else if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                            {
+                                ray = Camera.main.ScreenPointToRay(objectPosition);
+                                if (Physics.Raycast(ray, out rayHitInfo))
                                 {
-                                    ray = Camera.main.ScreenPointToRay(objectPosition);
-                                    if (Physics.Raycast(ray, out rayHitInfo))
-                                    {
-                                        var locationObject = rayHitInfo.transform.gameObject;
-                                        var modelObject = locationObject.GetComponent<ModelObject>();
+                                    var locationObject = rayHitInfo.transform.gameObject;
+                                    var modelObject = locationObject.GetComponent<ModelObject>();
 
-                                        if (locationObject != null && locationObject.tag.Equals("Building") && locationTapped.Equals(modelObject.Id))
+                                    if (locationObject != null && locationObject.tag.Equals("Building") && locationTapped.Equals(modelObject.Id))
+                                    {
+                                        if (selectedModelObjectTour)
                                         {
-                                            //((UITour)this).OnTouchBuilding((ModelLocalizacion) modelObject.ObjectTag);
+                                            selectedModelObjectTour.isSeleted = false;
                                         }
+
+                                        modelObject.isSeleted = true;
+                                        selectedModelObjectTour = modelObject;
                                     }
                                 }
                             }
@@ -236,7 +258,7 @@ namespace SncPucmm.View
             }
             else
             {
-                UITouch.isMoving = UITouch.isRotating = UITouch.isZooming = isButtonTapped = false;
+                isMoving = isRotating = isZooming = isButtonTapped = false;
             }
         }
     }

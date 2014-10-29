@@ -28,43 +28,63 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Freddy Mesa
  */
 @Entity
-@Table(name = "localizacion")
+@Table(name = "nodo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Localizacion.findAll", query = "SELECT l FROM Localizacion l"),
-    @NamedQuery(name = "Localizacion.findByIdlocalizacion", query = "SELECT l FROM Localizacion l WHERE l.idlocalizacion = :idlocalizacion"),
-    @NamedQuery(name = "Localizacion.findByNombre", query = "SELECT l FROM Localizacion l WHERE l.nombre = :nombre")})
-public class Localizacion implements Serializable {
+    @NamedQuery(name = "Nodo.findAll", query = "SELECT n FROM Nodo n"),
+    @NamedQuery(name = "Nodo.findByIdnodo", query = "SELECT n FROM Nodo n WHERE n.idnodo = :idnodo"),
+    @NamedQuery(name = "Nodo.findByEdificio", query = "SELECT n FROM Nodo n WHERE n.edificio = :edificio"),
+    @NamedQuery(name = "Nodo.findByNombre", query = "SELECT n FROM Nodo n WHERE n.nombre = :nombre"),
+    @NamedQuery(name = "Nodo.findByActivo", query = "SELECT n FROM Nodo n WHERE n.activo = :activo")})
+public class Nodo implements Serializable {
+    @OneToMany(mappedBy = "idnodo")
+    private List<Neighbor> neighborList;
+    @OneToMany(mappedBy = "idnodoneighbor")
+    private List<Neighbor> neighborList1;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "idlocalizacion")
-    private Integer idlocalizacion;
+    @Column(name = "idnodo")
+    private Integer idnodo;
+    @Column(name = "edificio")
+    private Integer edificio;
     @Size(max = 2147483647)
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(mappedBy = "idlocalizacion")
+    @Column(name = "activo")
+    private Integer activo;
+    @OneToMany(mappedBy = "idnodo")
     private List<Localizacionusuario> localizacionusuarioList;
-    @OneToMany(mappedBy = "idlocalizacion")
+    @OneToMany(mappedBy = "idnodo")
     private List<Puntoreuniontour> puntoreuniontourList;
+    @OneToMany(mappedBy = "idnodo")
+    private List<Coordenadanodo> coordenadanodoList;
     @JoinColumn(name = "idubicacion", referencedColumnName = "idubicacion")
     @ManyToOne
     private Ubicacion idubicacion;
 
-    public Localizacion() {
+    public Nodo() {
     }
 
-    public Localizacion(Integer idlocalizacion) {
-        this.idlocalizacion = idlocalizacion;
+    public Nodo(Integer idnodo) {
+        this.idnodo = idnodo;
     }
 
-    public Integer getIdlocalizacion() {
-        return idlocalizacion;
+    public Integer getIdnodo() {
+        return idnodo;
     }
 
-    public void setIdlocalizacion(Integer idlocalizacion) {
-        this.idlocalizacion = idlocalizacion;
+    public void setIdnodo(Integer idnodo) {
+        this.idnodo = idnodo;
+    }
+
+    public Integer getEdificio() {
+        return edificio;
+    }
+
+    public void setEdificio(Integer edificio) {
+        this.edificio = edificio;
     }
 
     public String getNombre() {
@@ -73,6 +93,14 @@ public class Localizacion implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public Integer getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Integer activo) {
+        this.activo = activo;
     }
 
     @XmlTransient
@@ -93,6 +121,15 @@ public class Localizacion implements Serializable {
         this.puntoreuniontourList = puntoreuniontourList;
     }
 
+    @XmlTransient
+    public List<Coordenadanodo> getCoordenadanodoList() {
+        return coordenadanodoList;
+    }
+
+    public void setCoordenadanodoList(List<Coordenadanodo> coordenadanodoList) {
+        this.coordenadanodoList = coordenadanodoList;
+    }
+
     public Ubicacion getIdubicacion() {
         return idubicacion;
     }
@@ -104,18 +141,18 @@ public class Localizacion implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idlocalizacion != null ? idlocalizacion.hashCode() : 0);
+        hash += (idnodo != null ? idnodo.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Localizacion)) {
+        if (!(object instanceof Nodo)) {
             return false;
         }
-        Localizacion other = (Localizacion) object;
-        if ((this.idlocalizacion == null && other.idlocalizacion != null) || (this.idlocalizacion != null && !this.idlocalizacion.equals(other.idlocalizacion))) {
+        Nodo other = (Nodo) object;
+        if ((this.idnodo == null && other.idnodo != null) || (this.idnodo != null && !this.idnodo.equals(other.idnodo))) {
             return false;
         }
         return true;
@@ -123,7 +160,25 @@ public class Localizacion implements Serializable {
 
     @Override
     public String toString() {
-        return "com.sncpucmm.web.domain.Localizacion[ idlocalizacion=" + idlocalizacion + " ]";
+        return "com.sncpucmm.web.domain.Nodo[ idnodo=" + idnodo + " ]";
+    }
+
+    @XmlTransient
+    public List<Neighbor> getNeighborList() {
+        return neighborList;
+    }
+
+    public void setNeighborList(List<Neighbor> neighborList) {
+        this.neighborList = neighborList;
+    }
+
+    @XmlTransient
+    public List<Neighbor> getNeighborList1() {
+        return neighborList1;
+    }
+
+    public void setNeighborList1(List<Neighbor> neighborList1) {
+        this.neighborList1 = neighborList1;
     }
     
 }

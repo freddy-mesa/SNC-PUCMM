@@ -7,6 +7,8 @@ namespace SncPucmm.Controller
 		Navigation,
 		Security,
 		Tour,
+		TourCreation,
+		TourCreationForm,
 		MenuMain,
 		MenuBuildingDescriptor,
 		MenuDirection,

@@ -5,19 +5,17 @@ using System.Text;
 
 namespace SncPucmm.Model.Navigation
 {
-    public class PathData
+    public class PathDataDijkstra
     {
         #region Propiedades
 
-        public Node StartNode { get; set; }
+        public NodeDijkstra StartNode { get; set; }
 
-        public Node EndNode { get; set; }
+        public NodeDijkstra EndNode { get; set; }
 
         public float DistanceToNeighbor { get; set; }
 
         public float DistancePathed { get; set; }
-
-        public eDirection Direction { get; set; }
         
         #endregion
 
@@ -25,7 +23,7 @@ namespace SncPucmm.Model.Navigation
 
         public new bool Equals(object obj)
         {
-            PathData path = (PathData) obj;
+            PathDataDijkstra path = (PathDataDijkstra)obj;
 
             if (path.StartNode.Name == this.StartNode.Name && path.EndNode.Name == this.EndNode.Name)
             {
@@ -41,14 +39,5 @@ namespace SncPucmm.Model.Navigation
         }
 
         #endregion
-    }
-
-    public enum eDirection
-    {
-        Straight,
-        Right,
-        Left,
-        SlightRight,
-        SlightLeft
     }
 }

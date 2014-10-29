@@ -5,27 +5,27 @@ using System.Text;
 
 namespace SncPucmm.Model.Domain
 {
-    public class Detalleusuariotour
+    public class DetalleUsuarioTour : IJson
     {
         #region Atributos
 
-        public int iddetalleusuariotour;
-        public String estado;
-        public DateTime fechainicio;
-        public DateTime fechallegada;
-        public Puntoreuniontour idpuntoreunion;
-        public Usuariotour idusuariotour;
+        public int? idDetalleUsuarioTour;
+        public string estado;
+        public DateTime? fechaInicio;
+        public DateTime? fechaLlegada;
+        public PuntoReunionTour puntoReunionTour;
+        public UsuarioTour usuarioTour;
 
         #endregion
 
         #region Constructor
 
-        public Detalleusuariotour()
+        public DetalleUsuarioTour()
         {
 
         }
 
-        public Detalleusuariotour(JSONObject json)
+        public DetalleUsuarioTour(JSONObject json)
         {
             Decoding(json);
         }
@@ -38,31 +38,22 @@ namespace SncPucmm.Model.Domain
         {
             for (int i = 0; i < json.list.Count; i++)
             {
-                string key = (string) json.keys[i];
+                if (!json.list[i].IsNull)
+                {
+                    string key = (string)json.keys[i];
 
-                if (key == "iddetalleusuariotour")
-                {
-                    this.iddetalleusuariotour = Convert.ToInt32(json.list[i].n);
-                }
-                else if (key == "estado")
-                {
-                    this.estado = json.list[i].str;
-                }
-                else if (key == "fechainicio")
-                {
-                    this.fechainicio = Convert.ToDateTime(json.list[i].str);
-                }
-                else if (key == "fechallegada")
-                {
-                    this.fechallegada = Convert.ToDateTime(json.list[i].str);
-                }
-                else if (key == "idpuntoreunion")
-                {
-                    this.idpuntoreunion = new Puntoreuniontour(json.list[i]);
-                }
-                else
-                {
-                    this.idusuariotour = new Usuariotour(json.list[i]);
+                    if (key == "idDetalleUsuarioTour")
+                        this.idDetalleUsuarioTour = Convert.ToInt32(json.list[i].n);
+                    else if (key == "estado")
+                        this.estado = json.list[i].str;
+                    else if (key == "fechaInicio")
+                        this.fechaInicio = Convert.ToDateTime(json.list[i].str);
+                    else if (key == "fechaLlegada")
+                        this.fechaLlegada = Convert.ToDateTime(json.list[i].str);
+                    else if (key == "puntoReunionTour")
+                        this.puntoReunionTour = new PuntoReunionTour(json.list[i]);
+                    else
+                        this.usuarioTour = new UsuarioTour(json.list[i]);
                 }
             }
         }
@@ -70,22 +61,52 @@ namespace SncPucmm.Model.Domain
         public JSONObject ToJson()
         {
             JSONObject json = new JSONObject();
-            
-            json.AddField("iddetalleusuariotour", iddetalleusuariotour);
-            json.AddField("estado", estado);
-            json.AddField("fechainicio", fechainicio.ToString("dd/MM/yyyy HH:mm:ss"));
-            json.AddField("fechallegada", fechallegada.ToString("dd/MM/yyyy HH:mm:ss"));
 
-            json.AddField("idpuntoreunion", idpuntoreunion.ToJson());
-            json.AddField("idusuariotour", idusuariotour.ToJson());
+            if (idDetalleUsuarioTour.HasValue)
+                json.AddField("idDetalleUsuarioTour", idDetalleUsuarioTour.Value);
+            if(estado != null)
+                json.AddField("estado", estado);
+            if (fechaInicio.HasValue)
+                json.AddField("fechaInicio", fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss"));
+            if(fechaLlegada.HasValue)
+                json.AddField("fechaLlegada", fechaLlegada.Value.ToString("dd/MM/yyyy HH:mm:ss"));
+            if(puntoReunionTour != null)
+                json.AddField("puntoReunionTour", puntoReunionTour.ToJson());
+            if (usuarioTour != null)
+                json.AddField("usuarioTour", usuarioTour.ToJson());
 
             return json;
         }
 
         public override string ToString()
         {
-            return String.Format("DetalleUsuarioTour [ idDetalleUsuarioTour: {0}, estado: {1} ]",iddetalleusuariotour, estado);
+            return String.Format("DetalleUsuarioTour [ idDetalleUsuarioTour: {0}, estado: {1} ]",
+                idDetalleUsuarioTour.HasValue ? idDetalleUsuarioTour.Value.ToString() : string.Empty, estado
+            );
         }
+
+        public static JSONObject ToJsonArray(List<DetalleUsuarioTour> detalleUsuarioList)
+        {
+            JSONObject json = new JSONObject(JSONObject.Type.ARRAY);
+
+            foreach (var detalleUsuarioTour in detalleUsuarioList)
+            {
+                json.Add(detalleUsuarioTour.ToJson());
+            }
+
+            return json;
+        }
+
+        public static List<DetalleUsuarioTour> ToDetalleUsuarioTourList(JSONObject json)
+        {
+            List<DetalleUsuarioTour> detalleUsuarioList = new List<DetalleUsuarioTour>();
+            for (int i = 0; i < json.Count; ++i)
+            {
+                detalleUsuarioList.Add(new DetalleUsuarioTour(json.list[i]));
+            }
+
+            return detalleUsuarioList;
+        } 
 
         #endregion
     }

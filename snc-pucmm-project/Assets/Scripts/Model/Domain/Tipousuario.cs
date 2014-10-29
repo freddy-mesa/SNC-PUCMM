@@ -5,24 +5,24 @@ using System.Text;
 
 namespace SncPucmm.Model.Domain
 {
-    public class Tipousuario
+    public class TipoUsuario : IJson
     {
         #region Atributos
 
-        public int idtipousuario;
-        public String nombre;
-        public String descripcion;
+        public int? idTipoUsuario;
+        public string nombre;
+        public string descripcion;
     
         #endregion
 
         #region Constructor
 
-        public Tipousuario()
+        public TipoUsuario()
         {
 
         }
 
-        public Tipousuario(JSONObject json)
+        public TipoUsuario(JSONObject json)
         {
             Decoding(json);
         }
@@ -35,19 +35,16 @@ namespace SncPucmm.Model.Domain
         {
             for (int i = 0; i < json.list.Count; i++)
             {
-                string key = (string) json.keys[i];
+                if (!json.list[i].IsNull)
+                {
+                    string key = (string)json.keys[i];
 
-                if (key == "idtipousuario")
-                {
-                    this.idtipousuario = Convert.ToInt32(json.list[i].n);
-                }
-                else if (key == "nombre")
-                {
-                    this.nombre = json.list[i].str;
-                }
-                else
-                {
-                    this.descripcion = json.list[i].str;
+                    if (key == "idTipoUsuario")
+                        this.idTipoUsuario = Convert.ToInt32(json.list[i].n);
+                    else if (key == "nombre")
+                        this.nombre = json.list[i].str;
+                    else
+                        this.descripcion = json.list[i].str;
                 }
             }
         }
@@ -56,16 +53,21 @@ namespace SncPucmm.Model.Domain
         {
             JSONObject json = new JSONObject();
             
-            json.AddField("idtipousuario", idtipousuario);
-            json.AddField("nombre", nombre);
-            json.AddField("descripcion", descripcion);
+            if(idTipoUsuario.HasValue)
+                json.AddField("idTipoUsuario", idTipoUsuario.Value);
+            if(nombre != null)
+                json.AddField("nombre", nombre);
+            if(descripcion != null)
+                json.AddField("descripcion", descripcion);
 
             return json;
         }
 
         public override string ToString()
         {
-            return String.Format("Tipousuario [ idTipoUsuario: {0}, nombre: {1} ]", idtipousuario, nombre);
+            return String.Format("TipoUsuario [idTipoUsuario: {0}, nombre: {1}]", 
+                idTipoUsuario.HasValue ? idTipoUsuario.Value.ToString() : string.Empty, nombre
+            );
         }
 
         #endregion

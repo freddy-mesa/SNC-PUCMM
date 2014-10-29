@@ -47,7 +47,7 @@ public class Ubicacion implements Serializable {
     @Column(name = "abreviacion")
     private String abreviacion;
     @OneToMany(mappedBy = "idubicacion")
-    private List<Localizacion> localizacionList;
+    private List<Nodo> nodoList;
 
     public Ubicacion() {
     }
@@ -81,12 +81,12 @@ public class Ubicacion implements Serializable {
     }
 
     @XmlTransient
-    public List<Localizacion> getLocalizacionList() {
-        return localizacionList;
+    public List<Nodo> getNodoList() {
+        return nodoList;
     }
 
-    public void setLocalizacionList(List<Localizacion> localizacionList) {
-        this.localizacionList = localizacionList;
+    public void setNodoList(List<Nodo> nodoList) {
+        this.nodoList = nodoList;
     }
 
     @Override

@@ -7,7 +7,6 @@ package com.sncpucmm.web.ejb;
 
 import com.sncpucmm.web.domain.Tour;
 import com.sncpucmm.web.domain.Usuario;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;

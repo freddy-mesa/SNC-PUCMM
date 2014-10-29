@@ -5,11 +5,13 @@
  */
 package com.sncpucmm.web.ejb;
 
+import com.sncpucmm.web.domain.Coordenadanodo;
 import com.sncpucmm.web.domain.Cuentafacebook;
 import com.sncpucmm.web.domain.Detalleusuariotour;
 import com.sncpucmm.web.domain.Followusuario;
-import com.sncpucmm.web.domain.Localizacion;
 import com.sncpucmm.web.domain.Localizacionusuario;
+import com.sncpucmm.web.domain.Neighbor;
+import com.sncpucmm.web.domain.Nodo;
 import com.sncpucmm.web.domain.Puntoreuniontour;
 import com.sncpucmm.web.domain.Tipousuario;
 import com.sncpucmm.web.domain.Tour;
@@ -56,6 +58,15 @@ public class JsonWrapperService {
     private String dateToString(Date source) {
         return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(source);
     }
+    
+    public String CoordenadaNodoToJson(Coordenadanodo coordenada) {
+        JSONObject json = new JSONObject();
+        json.put("idneighbor", coordenada.getIdcoordenadanodo());
+        json.put("idnodo", nodoToJson(coordenada.getIdnodo()));
+        json.put("latitud", coordenada.getLatitud());
+        json.put("longitud", coordenada.getLongitud());
+        return json.toString();
+    }
 
     public String cuentaFacebookToJson(Cuentafacebook cuentafacebook) {
         JSONObject json = new JSONObject();
@@ -89,12 +100,20 @@ public class JsonWrapperService {
 
         return json.toString();
     }
-
-    public String localizacionToJson(Localizacion localizacion) {
+    
+    public String neighborToJson(Neighbor neighbor) {
         JSONObject json = new JSONObject();
-        json.put("idlocalizacion", localizacion.getIdlocalizacion());
-        json.put("nombre", localizacion.getNombre());
-        json.put("idubicacion", ubicacionToJson(localizacion.getIdubicacion()));
+        json.put("idneighbor", neighbor.getIdneighbor());
+        json.put("idnodo", nodoToJson(neighbor.getIdnodo()));
+        json.put("idnodoneighbor", nodoToJson(neighbor.getIdnodoneighbor()));
+        return json.toString();
+    }
+    
+    public String nodoToJson(Nodo nodo) {
+        JSONObject json = new JSONObject();
+        json.put("idnodo", nodo.getIdnodo());
+        json.put("nombre", nodo.getNombre());
+        json.put("idubicacion", ubicacionToJson(nodo.getIdubicacion()));
         return json.toString();
     }
 
@@ -102,7 +121,7 @@ public class JsonWrapperService {
         JSONObject json = new JSONObject();
         json.put("idlocalizacionusuario", localizacionUsuario.getIdlocalizacionusuario());
         json.put("fechalocalizacion", dateToString(localizacionUsuario.getFechalocalizacion()));
-        json.put("idlocalizacion", localizacionToJson(localizacionUsuario.getIdlocalizacion()));
+        json.put("idnodo", nodoToJson(localizacionUsuario.getIdnodo()));
         json.put("idusuario", usuarioToJson(localizacionUsuario.getIdusuario()));
 
         return json.toString();
@@ -113,7 +132,7 @@ public class JsonWrapperService {
         json.put("idpuntoreunion", puntoReunionTour.getIdpuntoreunion());
         json.put("secuenciapuntoreunion", puntoReunionTour.getSecuenciapuntoreunion());
         json.put("idtour", tourToJson(puntoReunionTour.getIdtour()));
-        json.put("idlocalizacion", localizacionToJson(puntoReunionTour.getIdlocalizacion()));
+        json.put("idnodo", nodoToJson(puntoReunionTour.getIdnodo()));
         return json.toString();
     }
 
@@ -188,6 +207,26 @@ public class JsonWrapperService {
 
         return json.toString();
     }
+    
+    public Coordenadanodo jsonToCoordenadaNodo(String source){
+        Coordenadanodo coordenada = new Coordenadanodo();
+        JSONObject json = new JSONObject(source);
+        
+        if (hasJsonValue(json, "idcoordenadanodo") != null) {
+            coordenada.setIdcoordenadanodo((Integer) hasJsonValue(json, "idcoordenadanodo"));
+        }
+        if (hasJsonValue(json, "idnodo") != null) {
+            coordenada.setIdnodo(jsonToNodo((String) hasJsonValue(json, "idnodo")));
+        }
+        if (hasJsonValue(json, "latitud") != null) {
+            coordenada.setLatitud((Float) hasJsonValue(json, "latitud"));
+        }
+        if (hasJsonValue(json, "longitud") != null) {
+            coordenada.setLongitud((Float) hasJsonValue(json, "longitud"));
+        }
+        
+        return coordenada;
+    }
 
     public Cuentafacebook jsonToCuentaFacebook(String source) {
         Cuentafacebook cuentafacebook = new Cuentafacebook();
@@ -258,23 +297,40 @@ public class JsonWrapperService {
 
         return followusuario;
     }
-
-    public Localizacion jsonToLocalizacion(String source) {
-        Localizacion localizacion = new Localizacion();
+    
+    public Neighbor jsonToNeighbor(String source) {
+        Neighbor neighbor = new Neighbor();
         JSONObject json = new JSONObject(source);
-
-        if (hasJsonValue(json, "idlocalizacion") != null) {
-            localizacion.setIdlocalizacion((Integer) hasJsonValue(json, "idlocalizacion"));
+        
+        if (hasJsonValue(json, "idneighbor") != null) {
+            neighbor.setIdneighbor((Integer) hasJsonValue(json, "idneighbor"));
+        }
+        if (hasJsonValue(json, "idnodo") != null) {
+            neighbor.setIdnodo(jsonToNodo((String) hasJsonValue(json, "idnodo")));
         }
         if (hasJsonValue(json, "nombre") != null) {
-            localizacion.setNombre((String) hasJsonValue(json, "nombre"));
-        }
-        if (hasJsonValue(json, "idubicacion") != null) {
-            localizacion.setIdubicacion(jsonToUbicacion((String) hasJsonValue(json, "idubicacion")));
+            neighbor.setIdnodoneighbor(jsonToNodo((String) hasJsonValue(json, "idnodoneighbor")));
         }
 
-        return localizacion;
+        return neighbor;
     }
+    
+    public Nodo jsonToNodo(String source) {
+        Nodo nodo = new Nodo();
+        JSONObject json = new JSONObject(source);
+
+        if (hasJsonValue(json, "idnodo") != null) {
+            nodo.setIdnodo((Integer) hasJsonValue(json, "idnodo"));
+        }
+        if (hasJsonValue(json, "nombre") != null) {
+            nodo.setNombre((String) hasJsonValue(json, "nombre"));
+        }
+        if (hasJsonValue(json, "idubicacion") != null) {
+            nodo.setIdubicacion(jsonToUbicacion((String) hasJsonValue(json, "idubicacion")));
+        }
+
+        return nodo;
+    } 
 
     public Localizacionusuario jsonToLocalizacionUsuario(String source) {
         Localizacionusuario localizacionusuario = new Localizacionusuario();
@@ -286,8 +342,8 @@ public class JsonWrapperService {
         if (hasJsonValue(json, "fechalocalizacion") != null) {
             localizacionusuario.setFechalocalizacion(convertToDate((String) hasJsonValue(json, "fechalocalizacion")));
         }
-        if (hasJsonValue(json, "idlocalizacion") != null) {
-            localizacionusuario.setIdlocalizacion(jsonToLocalizacion((String) hasJsonValue(json, "idlocalizacion")));
+        if (hasJsonValue(json, "idnodo") != null) {
+            localizacionusuario.setIdnodo(jsonToNodo((String) hasJsonValue(json, "idnodo")));
         }
         if (hasJsonValue(json, "idusuario") != null) {
             localizacionusuario.setIdusuario(jsonToUsuario((String) hasJsonValue(json, "idusuario")));
@@ -306,8 +362,8 @@ public class JsonWrapperService {
         if (hasJsonValue(json, "secuenciapuntoreunion") != null) {
             puntoreuniontour.setSecuenciapuntoreunion((Integer) hasJsonValue(json, "secuenciapuntoreunion"));
         }
-        if (hasJsonValue(json, "idlocalizacion") != null) {
-            puntoreuniontour.setIdlocalizacion(jsonToLocalizacion((String) hasJsonValue(json, "idlocalizacion")));
+        if (hasJsonValue(json, "idnodo") != null) {
+            puntoreuniontour.setIdnodo(jsonToNodo((String) hasJsonValue(json, "idnodo")));
         }
         if (hasJsonValue(json, "idtour") != null) {
             puntoreuniontour.setIdtour(jsonToTour((String) hasJsonValue(json, "idtour")));

@@ -15,7 +15,7 @@ namespace SncPucmm.Controller.GUI
         #region Atributos
 
         private string name;
-        private ModelLocalizacion location;
+        private ModelNode location;
 
         public List<Button> buttonList;
 
@@ -23,7 +23,7 @@ namespace SncPucmm.Controller.GUI
 
         #region Constructor
 
-        public GUIMenuBuildingDescriptor(string name, ModelLocalizacion location)
+        public GUIMenuBuildingDescriptor(string name, ModelNode location)
         {
             this.name = name;
             this.location = location;

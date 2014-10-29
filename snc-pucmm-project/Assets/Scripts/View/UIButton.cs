@@ -1,10 +1,9 @@
-using System;
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using SncPucmm.Controller.GUI;
 using SncPucmm.Controller;
 using SncPucmm.Controller.Control;
+using System;
+using System.Text;
 
 namespace SncPucmm.View
 {
@@ -30,16 +29,32 @@ namespace SncPucmm.View
 		/// <summary>
 		/// Raise a touch event on button
 		/// </summary>
-		public void OnTouchButton(String buttonName)
+		public void OnTouchButton(string buttonName)
 		{
 			OnTouchNormalButton();
 
 			var menu = MenuManager.GetInstance().GetCurrentMenu() as IButton;
 
-			menu.GetButtonList().ForEach(x => {
-				if (x.Name.Equals(buttonName))
+			menu.GetButtonList().ForEach(button =>
+			{
+				if (button.Name.Equals(buttonName))
 				{
-					x.OnTouch(null);
+					button.OnTouch(null);
+				}
+			});
+		}
+
+		public void OnTouchButton(string buttonName, object selectedModelObjectTour)
+		{
+			OnTouchNormalButton();
+	
+			var menu = MenuManager.GetInstance().GetCurrentMenu() as IButton;
+
+			menu.GetButtonList().ForEach(button =>
+			{
+				if (button.Name.Equals(buttonName))
+				{
+					button.OnTouch(selectedModelObjectTour);
 				}
 			});
 		}
@@ -50,7 +65,9 @@ namespace SncPucmm.View
 		public void OnTouchHoverButton()
 		{
 			if (this.guiTexture.texture)
+			{
 				this.guiTexture.texture = textureBoxOnHover;
+			}
 		}
 
 		/// <summary>
@@ -59,7 +76,9 @@ namespace SncPucmm.View
 		public void OnTouchNormalButton()
 		{
 			if (this.guiTexture.texture)
+			{
 				this.guiTexture.texture = textureBoxOnNormal;
+			}
 		}
 
 		#endregion

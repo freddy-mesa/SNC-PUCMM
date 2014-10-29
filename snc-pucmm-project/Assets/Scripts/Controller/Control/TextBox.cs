@@ -9,16 +9,15 @@ namespace SncPucmm.Controller.Control
     {
         #region Atributos
 
-        public Label label;
+        public string Text { get; set; }
         
         #endregion
 
         #region Constructor
 
-        public TextBox(string name, string labelName) : base(name) 
+        public TextBox(string name) : base(name) 
         {
-            label = new Label(labelName);
-            label.Text = String.Empty;
+            Text = String.Empty;
         }
         
         #endregion
