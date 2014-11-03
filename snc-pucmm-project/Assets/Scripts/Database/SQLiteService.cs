@@ -97,7 +97,7 @@ namespace SncPucmm.Database
 			{
 				if (Application.platform == RuntimePlatform.WindowsEditor)
 				{
-					DropAllDataBaseTables();
+					DropAllModelTables();
 				}
 
 				InitializeDataBase();
@@ -106,11 +106,12 @@ namespace SncPucmm.Database
 
 		private void InitializeDataBase() 
 		{
-			InitCreateTables();
+			InitCreateModelTables();
+			InitCreateOtherTables();
 			InitInsertInTables();
 		}
 
-		private void InitCreateTables()
+		private void InitCreateModelTables()
 		{
 			//Ubicacion
 			CreateTableQuery(
@@ -186,7 +187,101 @@ namespace SncPucmm.Database
 				},
 				new Dictionary<string, string[]> { } 
 			);
-								
+		}
+
+		private void InitCreateOtherTables()
+		{
+			CreateTableQuery(
+				"Usuario",
+				new Dictionary<string, string>
+				{
+					{"id","integer"},
+					{"nombre","text"},
+					{"apellido", "text"},
+					{"contrasena","text"},
+					{"usuario","text"},
+					{"idTipoUsuario", "integer"},
+					{"idCuentaUsuario","integer"}
+				},
+				new Dictionary<string, string[]> { },
+				new Dictionary<string, string[]> { }
+			);
+
+			//Guardar los ultimos tours
+			CreateTableQuery(
+				"Tour",
+				new Dictionary<string, string>
+				{
+					{"id","integer"},
+					{"nombreTour","text"},
+					{"fechaCreacion", "text"},
+					{"fechaInicio","text"},
+					{"fechaFin","text"},
+					{"idUsuario","integer"}
+				},
+				new Dictionary<string, string[]> { },
+				new Dictionary<string, string[]> { }
+			);
+
+			CreateTableQuery(
+				"PuntoReunionTour",
+				new Dictionary<string, string>
+				{
+					{"id","integer"},
+					{"secuencia","integer"},
+					{"idNodo","integer"},
+					{"idTour","integer"}
+				},
+				new Dictionary<string, string[]> { },
+				new Dictionary<string, string[]> { }
+			);
+
+			//Datos de Sincronizacion
+			CreateTableQuery(
+				"UsuarioTour",
+				new Dictionary<string, string>
+				{
+					{"id","integer"},
+					{"estado","text"},
+					{"fechaInicio","text"},
+					{"fechaFin","text"},
+					{"idTour","integer"},
+					{"idUsuario","integer"},
+					{"request","text"}
+				},
+				new Dictionary<string, string[]> { },
+				new Dictionary<string, string[]> { }
+			);
+
+			CreateTableQuery(
+				"DetalleUsuarioTour",
+				new Dictionary<string, string>
+				{
+					{"id","integer"},
+					{"fechaInicio","text"},
+					{"fechaLlegada","text"},
+					{"fechaFin", "text"},
+					{"idPuntoReunionTour","integer"},
+					{"idUsuarioTour","integer"}
+				},
+				new Dictionary<string, string[]> { },
+				new Dictionary<string, string[]> { }
+			);
+
+			CreateTableQuery(
+				"UsuarioLocalizacion",
+				new Dictionary<string, string>
+				{
+					{"id","integer"},
+					{"idNodo","integer"},
+					{"fechaLocalizacion","text"},
+					{"idUsuario","integer"},
+					{"request","text"}
+				},
+				new Dictionary<string, string[]> { },
+				new Dictionary<string, string[]> { }
+			);
+
 		}
 
 		private void InitInsertInTables()
@@ -565,178 +660,6 @@ namespace SncPucmm.Database
 		}
 
 		/// <summary>
-		/// Selects the query.
-		/// </summary>
-		/// <returns>The query.</returns>
-		/// <param name="tableName">Table name.</param>
-		/// <param name="columns">Columns.</param>
-		/// <param name="constraints">Constraints.</param>
-		public IDataReader SelectQuery(string tableName, List<string> columns, Dictionary<string, object> constraints, List<string> order)
-		{
-			var query = "SELECT ";
-
-			if(columns == null){
-				query += "*";
-			} else {
-				columns.ForEach(x => { query += x + ","; } );
-				query += query.Substring(0,query.Length-1);
-			}
-
-			query += " FROM main." + tableName;
-			if(constraints != null){
-				query += " WHERE ";
-				foreach(var contraint in constraints){
-					query += contraint.Key + " = ";
-					if(contraint.Value is String)
-						query += "'" + Convert.ToString(contraint.Value) + "' AND ";
-					else
-						query += Convert.ToString(contraint.Value)+" AND ";
-				}
-				query = query.Substring(0,query.Length-5);
-			}
-
-			if (order != null) 
-			{
-				query += " ORDER BY ";
-				order.ForEach(x => { query += x + ","; } );
-				query = query.Substring(0, query.Length - 1);
-			}
-
-			Debug.Log(query);
-
-			IDataReader dataReader = null;
-
-			try
-			{
-				IDbCommand _databaseCommand = _databaseConnection.CreateCommand();
-				_databaseCommand.CommandText = query; // fill the command
-				dataReader = _databaseCommand.ExecuteReader(); // execute command which returns a reader
-			}
-			catch (SqliteException e)
-			{
-				Debug.LogException(e);
-			}
-
-			return dataReader; // return the reader
-		}
-
-		/// <summary>
-		/// Deletes the query.
-		/// </summary>
-		/// <param name="tableName">Table name.</param>
-		/// <param name="constraints">Constraints.</param>
-		public void DeleteQuery(string tableName, Dictionary<string,object> constraints) 
-		{
-			var query = "DELETE FROM " + tableName;
-			if(constraints != null){
-				query += " WHERE ";
-				foreach(var contraint in constraints){
-					query += contraint.Key + " = ";
-					if(contraint.Value is String)
-						query += "'" + Convert.ToString(contraint.Value) + "' AND ";
-					else
-						query += Convert.ToString(contraint.Value)+" AND ";
-				}
-				query = query.Substring(0,query.Length-5);
-			}
-			
-			query = query.Substring(0,query.Length-5);
-
-			try
-			{
-				IDbCommand _databaseCommand = _databaseConnection.CreateCommand();
-				_databaseCommand.CommandText = query; 
-				_databaseCommand.ExecuteNonQuery();
-			}
-			catch (SqliteException e)
-			{
-				Debug.LogException(e);
-			}
-		}
-
-		/// <summary>
-		/// Inserts the query.
-		/// </summary>
-		/// <param name="tableName">Table name.</param>
-		/// <param name="values">Values.</param>
-		public void InsertQuery(string tableName, Dictionary<string, object> values)
-		{
-			var queryColumns = "INSERT INTO " + tableName + "(";
-			var queryValues = " VALUES (";
-
-			foreach (var pair in values)
-			{
-				queryColumns += pair.Key + ",";
-				if (pair.Value is String)
-				{
-					queryValues += "'" + Convert.ToString(pair.Value) + "',";
-				}
-				else
-				{
-					queryValues += Convert.ToString(pair.Value) + ",";
-				}
-			}
-
-			queryColumns = queryColumns.Substring(0, queryColumns.Length - 1) + ")";
-			queryValues = queryValues.Substring(0, queryValues.Length - 1) + ")";
-
-			var query = queryColumns + queryValues;
-
-			Debug.Log(query);
-
-			try
-			{
-				IDbCommand _databaseCommand = _databaseConnection.CreateCommand();
-				_databaseCommand.CommandText = query;
-				_databaseCommand.ExecuteNonQuery();
-			}
-			catch (SqliteException e)
-			{
-				Debug.LogException(e);
-			}
-		}
-
-		/// <summary>
-		/// Updates the query.
-		/// </summary>
-		/// <param name="tableName">Table name.</param>
-		/// <param name="values">Values.</param>
-		/// <param name="constraints">Constraints.</param>
-		public void UpdateQuery(string tableName, Dictionary<string, object> values, Dictionary<string, object> constraints)
-		{
-			var query = "UPDATE " + tableName + " SET ";
-			
-			foreach(var value in values){
-				query += value.Key + " = ";
-				if(value.Value is String){
-					query += "'" + Convert.ToString(value.Key) + "',";
-				} else {
-					query += Convert.ToString(value.Key) + ",";
-				}
-			}
-			query = query.Substring(0,query.Length-2) + " WHERE ";
-			foreach(var contraint in constraints){
-				query += contraint.Key + " = ";
-				if(contraint.Value is String)
-					query += "'" + Convert.ToString(contraint.Value) + "' AND ";
-				else
-					query += Convert.ToString(contraint.Value)+" AND ";
-			}
-			query = query.Substring(0,query.Length-5);
-
-			try
-			{
-				IDbCommand _databaseCommand = _databaseConnection.CreateCommand();
-				_databaseCommand.CommandText = query;
-				_databaseCommand.ExecuteNonQuery();
-			}
-			catch (SqliteException e)
-			{
-				Debug.LogException(e);
-			}
-		}
-
-		/// <summary>
 		/// Creates the table query.
 		/// </summary>
 		/// <param name="tableName">Table name.</param>
@@ -789,9 +712,9 @@ namespace SncPucmm.Database
 			}
 		}
 
-		#endregion
 
-		private void DropAllDataBaseTables()
+
+		private void DropAllModelTables()
 		{
 			Query(false, "DROP TABLE Neighbor");
 			Query(false, "DROP TABLE CoordenadaNodo");
@@ -799,14 +722,14 @@ namespace SncPucmm.Database
 			Query(false, "DROP TABLE Ubicacion");
 		}
 
-		public void UpdateDataBase(JSONObject json)
+		public void UpdateModel(JSONObject json)
 		{
 
 			//Drop to Tables
-			DropAllDataBaseTables();
+			DropAllModelTables();
 
 			//Create Tables
-			InitCreateTables();
+			InitCreateModelTables();
 
 			if (json.HasField("Ubicacion"))
 			{
@@ -815,7 +738,7 @@ namespace SncPucmm.Database
 				foreach (var ubicacionJson in ubicacionJsonList.list)
 				{
 					var ubicacion = new Ubicacion(ubicacionJson);
-					Query(false, "Insert Into Ubicacion values (" +ubicacion.idUbicacion + ",\'" + ubicacion.nombre + "\',\'" + ubicacion.abreviacion + "\')");
+					Query(false, "Insert Into Ubicacion values (" +ubicacion.idUbicacion + ",'" + ubicacion.nombre + "','" + ubicacion.abreviacion + "')");
 				}
 			}
 				
@@ -826,7 +749,7 @@ namespace SncPucmm.Database
 				foreach (var nodoJson in nodoJsonList.list)
 				{
 					var nodo = new Nodo(nodoJson);
-					Query(false, "Insert Into Nodo values (" + nodo.idNodo + "," + nodo.ubicacion + "," + nodo.edificio + ",\'" + nodo.nombre + "\'," + nodo.activo + ")");
+					Query(false, "Insert Into Nodo values (" + nodo.idNodo + "," + nodo.idUbicacion + "," + nodo.edificio + ",'" + nodo.nombre + "'," + (nodo.activo.Value ? 1 : 0).ToString() + ")");
 				}
 			}
 			
@@ -848,19 +771,234 @@ namespace SncPucmm.Database
 				foreach (var neighborJson in neighborJsonList.list)
 				{
 					var neighbor = new Neighbor(neighborJson);
-					Query(false, "Insert Into Neighbor values (" + neighbor.idNeighbor + "," + neighbor.nodo.idNodo + ",\'" + neighbor.nodo.nombre + "\'," + neighbor.nodoNeighbor.idNodo + ",\'" + neighbor.nodoNeighbor.nombre + "\')");
+					Query(false, "Insert Into Neighbor values (" + neighbor.idNeighbor + "," + neighbor.nodo.idNodo + ",'" + neighbor.nodo.nombre + "'," + neighbor.nodoNeighbor.idNodo + ",'" + neighbor.nodoNeighbor.nombre + "')");
 				}
 			}
 		}
 
+		public void UpdateTours(JSONObject json)
+		{
+			//Delete data from Tables
+			Query(false, "DELETE FROM Tour");
+			Query(false, "DELETE FROM PuntoReunionTour");
+			Query(false, "DELETE FROM UsuarioTour");
+			Query(false, "DELETE FROM DetalleUsuarioTour");
+			Query(false, "DELETE FROM UsuarioLocalizacion");
+
+			if (json.HasField("Tours"))
+			{
+				JSONObject tourJsonList = json.GetField("Tours");
+
+				foreach (var tourJson in tourJsonList.list)
+				{
+					var tour = new Tour(tourJson);
+					Query(false, "INSERT INTO Tour VALUES (" + 
+						tour.idTour.Value +",'" + 
+						tour.nombreTour +"','" + 
+						(tour.fechaCreacion.HasValue ? tour.fechaCreacion.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"','"+
+						(tour.fechaInicio.HasValue ? tour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"','"+
+						(tour.fechaFin.HasValue ? tour.fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"',"+
+						tour.idUsuario.Value
+					+")");
+
+
+					if (tourJson.HasField("PuntosReunion"))
+					{
+						JSONObject PuntoReunionTourJsonList = json.GetField("PuntosReunion");
+
+						foreach (var PuntoReunionTourJson in PuntoReunionTourJsonList.list)
+						{
+							var puntoReunionTour = new PuntoReunionTour(PuntoReunionTourJson);
+							Query(false, "INSERT INTO PuntoReunionTour VALUES (" +
+								puntoReunionTour.idPuntoReunionTour.Value + "," +
+								puntoReunionTour.secuencia + "," +
+								puntoReunionTour.idNodo.Value + "," +
+								puntoReunionTour.idTour.Value
+							+ ")");
+						}
+					}
+				}
+			}
+
+			if (json.HasField("UsuariosTours"))
+			{
+				JSONObject usuarioTourJsonList = json.GetField("UsuariosTours");
+
+				foreach (var usuarioTourJson in usuarioTourJsonList.list)
+				{
+					var usuarioTour = new UsuarioTour(usuarioTourJson);
+					Query(false, "INSERT INTO UsuarioTour VALUES (" +
+						usuarioTour.idUsuarioTour.Value +",'"+ 
+						usuarioTour.estado +"','"+ 
+						(usuarioTour.fechaInicio.HasValue ? usuarioTour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"','"+ 
+						(usuarioTour.fechaFin.HasValue ? usuarioTour.fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"',"+
+						usuarioTour.idTour.Value +","+
+						usuarioTour.idUsuario.Value +",'"+
+						usuarioTour.request
+					+"')");
+
+					if (json.HasField("DetalleUsuarioTourList"))
+					{
+						JSONObject detalleUsuarioTourJsonList = json.GetField("DetalleUsuarioTourList");
+
+						foreach (var detalleUsuarioTourJson in detalleUsuarioTourJsonList.list)
+						{
+							var detalleUsuarioTour = new DetalleUsuarioTour(detalleUsuarioTourJson);
+							Query(false, "INSERT INTO DetalleUsuarioTour VALUES (" +
+								detalleUsuarioTour.idDetalleUsuarioTour.Value + ",'" +
+								(detalleUsuarioTour.fechaInicio.HasValue ? detalleUsuarioTour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) + "','" +
+								(detalleUsuarioTour.fechaLlegada.HasValue ? detalleUsuarioTour.fechaLlegada.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) + "','" +
+								(detalleUsuarioTour.fechaFin.HasValue ? detalleUsuarioTour.fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) + "'," +
+								detalleUsuarioTour.idPuntoReunionTour.Value + "," +
+								detalleUsuarioTour.idUsuarioTour.Value
+							+ "')");
+						}
+					}
+				}
+			}
+		}
+
+		public JSONObject DataSynchronization()
+		{
+			JSONObject json = new JSONObject(JSONObject.Type.OBJECT);
+
+			#region UsuarioTourList
+
+			JSONObject jsonUsuarioTourArray = new JSONObject(JSONObject.Type.ARRAY);
+			
+			var resultUsuarioTour = Query(true, "SELECT * FROM UsuarioTour");
+
+			if (resultUsuarioTour.Read())
+			{
+				#region UsuarioTour
+				
+				DateTime? startDate = null, endDate = null;
+
+				string fechaInicio = Convert.ToString(resultUsuarioTour["fechaInicio"]);
+				if(!fechaInicio.Equals(string.Empty))
+				{
+					startDate = Convert.ToDateTime(fechaInicio);
+				}
+
+				string fechaFin = Convert.ToString(resultUsuarioTour["fechaFin"]);
+				if(!fechaFin.Equals(string.Empty))
+				{
+					startDate = Convert.ToDateTime(fechaInicio);
+				}
+
+				var usuarioTour = new UsuarioTour()
+				{
+					estado = Convert.ToString(resultUsuarioTour["estadoUsuarioTour"]),
+					fechaInicio = startDate,
+					fechaFin = endDate,
+					idTour = Convert.ToInt32(resultUsuarioTour["idTour"]),
+					idUsuario = Convert.ToInt32(resultUsuarioTour["idUsuario"]),
+					request = Convert.ToString(resultUsuarioTour["request"])
+				};
+
+				#region DetalleUsuarioTour
+				
+				int idUsuarioTour = Convert.ToInt32(resultUsuarioTour["id"]);
+				var resultDetalleUsuarioTour = Query(true, "SELECT * FROM DetalleUsuarioTour WHERE idUsuarioTour = " + idUsuarioTour);
+
+				var jsonDetalleUsuarioList = new JSONObject(JSONObject.Type.ARRAY);
+				if (resultDetalleUsuarioTour.Read())
+				{
+					DateTime? updatedDate = null;
+					startDate = endDate = null;
+
+					fechaInicio = Convert.ToString(resultDetalleUsuarioTour["fechaInicio"]);
+					if (!fechaInicio.Equals(string.Empty))
+					{
+						startDate = Convert.ToDateTime(fechaInicio);
+					}
+
+					fechaFin = Convert.ToString(resultDetalleUsuarioTour["fechaLlegada"]);
+					if (!fechaFin.Equals(string.Empty))
+					{
+						startDate = Convert.ToDateTime(fechaInicio);
+					}
+
+					string fechaActualizacion = Convert.ToString(resultDetalleUsuarioTour["fechaActualizacion"]);
+					if (!fechaActualizacion.Equals(string.Empty))
+					{
+						updatedDate = Convert.ToDateTime(fechaInicio);
+					}
+
+					var detalleUsuarioTour = new DetalleUsuarioTour()
+					{
+						idDetalleUsuarioTour = Convert.ToInt32(resultDetalleUsuarioTour["id"]),
+						idPuntoReunionTour = Convert.ToInt32(resultDetalleUsuarioTour["idPuntoReunionTour"]),
+						fechaInicio = startDate,
+						fechaLlegada = endDate,
+						fechaFin = updatedDate
+					};
+
+					jsonDetalleUsuarioList.Add(detalleUsuarioTour.ToJson());
+				}
+
+				#endregion
+
+				#endregion
+
+				var jsonUsuarioTour = new JSONObject(JSONObject.Type.OBJECT);
+
+				jsonUsuarioTour.AddField("UsuarioTour", usuarioTour.ToJson());
+				jsonUsuarioTour.AddField("DetalleUsuarioTourList", jsonDetalleUsuarioList);
+
+				jsonUsuarioTourArray.Add(jsonUsuarioTour);
+			}
+
+			resultUsuarioTour = null;
+
+			#endregion
+
+			#region UsuarioLocalizacionList
+
+			JSONObject jsonUsuarioLocalizacionArray = new JSONObject(JSONObject.Type.ARRAY);
+
+			var resultUsuarioLocalizacion = SQLiteService.GetInstance().Query(true, "SELECT * FROM UsuarioLocalizacion");
+			if (resultUsuarioLocalizacion.Read())
+			{
+				DateTime? localizationDate = null;
+
+				string fechaLocalizacion = Convert.ToString(resultUsuarioTour["fechaLocalizacion"]);
+				if (!fechaLocalizacion.Equals(string.Empty))
+				{
+					localizationDate = Convert.ToDateTime(fechaLocalizacion);
+				}
+
+				var usuarioLocalizacion = new UsuarioLocalizacion() 
+				{
+					idNodo = Convert.ToInt32(resultUsuarioLocalizacion["idNodo"]),
+					idUsuario = Convert.ToInt32(resultUsuarioLocalizacion["idUsuario"]),
+					fechaLocalizacion = localizationDate
+				};
+
+				jsonUsuarioLocalizacionArray.Add(usuarioLocalizacion.ToJson());
+			}
+
+			#endregion
+
+			json.AddField("UsuarioTourList", jsonUsuarioTourArray);
+			json.AddField("UsuarioLocalizacionList", jsonUsuarioLocalizacionArray);
+
+			return json;
+		}
+
+		#endregion
+
 		#region Destructor
+		
 		/// <summary>
 		/// Releases unmanaged resources and performs other cleanup operations before the
 		/// <see cref="SncPucmm.Database.SQLiteService"/> is reclaimed by garbage collection.
 		/// </summary>
-		~ SQLiteService(){
+		~SQLiteService()
+		{
 			CloseDataBase();
 		}
+
 		#endregion
 	}
 }

@@ -10,9 +10,9 @@ namespace SncPucmm.Model.Domain
         #region Atributos
 
         public int? idPuntoReunionTour;
-        public int? secuenciaPuntoReunion;
-        public Nodo nodo;
-        public Tour tour;
+        public int? secuencia;
+        public int? idNodo;
+        public int? idTour;
 
         #endregion
 
@@ -40,14 +40,14 @@ namespace SncPucmm.Model.Domain
                 {
                     string key = (string)json.keys[i];
 
-                    if (key == "idPuntoReunionTour")
+                    if (key == "id")
                         this.idPuntoReunionTour = Convert.ToInt32(json.list[i].n);
-                    else if (key == "secuenciaPuntoReunion")
-                        this.secuenciaPuntoReunion = Convert.ToInt32(json.list[i].n);
-                    else if (key == "tour")
-                        this.tour = new Tour(json.list[i]);
-                    else 
-                        this.nodo = new Nodo(json.list[i]);
+                    else if (key == "secuencia")
+                        this.secuencia = Convert.ToInt32(json.list[i].n);
+                    else if (key == "idTour")
+                        this.idTour = Convert.ToInt32(json.list[i].n);
+                    else
+                        this.idNodo = Convert.ToInt32(json.list[i].n);
                 }
             }
         }
@@ -57,22 +57,22 @@ namespace SncPucmm.Model.Domain
             JSONObject json = new JSONObject();
             
             if(idPuntoReunionTour.HasValue)
-                json.AddField("idPuntoReunionTour", idPuntoReunionTour.Value);
-            if(secuenciaPuntoReunion.HasValue)
-                json.AddField("secuenciaPuntoReunion", secuenciaPuntoReunion.Value);
-            if (tour != null)
-                json.AddField("tour", tour.ToJson());
-            if(nodo != null)
-                json.AddField("nodo", nodo.ToJson());
+                json.AddField("id", idPuntoReunionTour.Value);
+            if (secuencia.HasValue)
+                json.AddField("secuencia", secuencia.Value);
+            if (idTour.HasValue)
+                json.AddField("idTour", idTour.Value);
+            if (idNodo.HasValue)
+                json.AddField("idNodo", idNodo.Value);
 
             return json;
         }
 
         public override string ToString()
         {
-            return String.Format("PuntoReunionTour [idPuntoReunionTour: {0}, secuenciaPuntoReunion: {1}]", 
-                idPuntoReunionTour.HasValue ? idPuntoReunionTour.Value.ToString() : string.Empty, 
-                secuenciaPuntoReunion.HasValue ? secuenciaPuntoReunion.Value.ToString() : string.Empty
+            return String.Format("PuntoReunionTour [idPuntoReunionTour: {0}, secuencia: {1}]", 
+                idPuntoReunionTour.HasValue ? idPuntoReunionTour.Value.ToString() : string.Empty,
+                secuencia.HasValue ? secuencia.Value.ToString() : string.Empty
             );
         }
 

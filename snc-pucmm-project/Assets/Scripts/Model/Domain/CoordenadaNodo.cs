@@ -37,7 +37,7 @@ namespace SncPucmm.Model.Domain
                 {
                     string key = (string)json.keys[i];
 
-                    if (key == "idCoordenadaNodo")
+                    if (key == "id")
                         this.idCoordenadaNodo = System.Convert.ToInt32(json.list[i].n);
                     else if (key == "nodo")
                         this.nodo = new Nodo(json.list[i]);
@@ -54,7 +54,7 @@ namespace SncPucmm.Model.Domain
             JSONObject json = new JSONObject();
 
             if (idCoordenadaNodo.HasValue)
-                json.AddField("idCoordenadaNodo", idCoordenadaNodo.Value);
+                json.AddField("id", idCoordenadaNodo.Value);
             if (nodo != null)
                 json.AddField("nodo", nodo.ToJson());
             if (longitud.HasValue)

@@ -32,7 +32,7 @@ namespace SncPucmm.Controller
 
         private void GUIInitializer()
         {
-            GUIMenuMain menuMain = new GUIMenuMain("GUIMenuMain");
+            MenuMain menuMain = new MenuMain("MenuMain");
             MenuManager.GetInstance().AddMenu(menuMain);
         }
 

@@ -67,7 +67,7 @@ public class iTween : MonoBehaviour{
 	//private members:
 	private float runningTime, percentage;
 	private float delayStarted; //probably not neccesary that this be protected but it shuts Unity's compiler up about this being "never used"
-	private bool kinematic, isLocal, loop, reverse, wasPaused, physics;
+	private bool isLocal, loop, reverse, wasPaused, physics;
 	private Hashtable tweenArguments;
 	private Space space;
 	private delegate float EasingFunction(float start, float end, float Value);

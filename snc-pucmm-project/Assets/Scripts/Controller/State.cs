@@ -7,12 +7,10 @@ namespace SncPucmm.Controller
 		Navigation,
 		Security,
 		Tour,
-		TourCreation,
-		TourCreationForm,
 		MenuMain,
-		MenuBuildingDescriptor,
-		MenuDirection,
-		Exit
+		MenuBuilding,
+		MenuNavigation,
+		Exit        
 	}
 
 	public class State

@@ -6,12 +6,12 @@ namespace SncPucmm.View
 	public class UIGPS : MonoBehaviour
 	{
 		#region Atributos
-		public GUIText lblAltitude;
-		public GUIText lblLongitude;
-		public GUIText lblLatitude;
-		public GUIText lblAccuracy;
-		public GUIText lblComponentX;
-		public GUIText lblComponentZ;
+		public UILabel lblAltitude;
+		public UILabel lblLongitude;
+		public UILabel lblLatitude;
+		public UILabel lblAccuracy;
+		public UILabel lblPosX;
+		public UILabel lblPosZ;
 
 		public GameObject character;
 
@@ -75,7 +75,7 @@ namespace SncPucmm.View
 				character.transform.position = new Vector3(planeAxeX, 0.1f, planeAxeZ);
 
 				character.transform.FindChild("Range").localScale = new Vector3(
-				    (accuracy / 1.5f), 0.1f, (accuracy / 1.5f)
+					(accuracy / 1.5f), 0.1f, (accuracy / 1.5f)
 				);
 
 			}
@@ -85,8 +85,8 @@ namespace SncPucmm.View
 			lblLatitude.text = "Latitude: " + latitude.ToString();
 			lblAccuracy.text = "Accuracy: " + accuracy.ToString();
 
-			lblComponentX.text = "Pos X: " + planeAxeX.ToString();
-			lblComponentZ.text = "Pos Z: " + planeAxeZ.ToString();
+			lblPosX.text = "Pos X: " + planeAxeX.ToString();
+			lblPosZ.text = "Pos Z: " + planeAxeZ.ToString();
 		}
 
 		#endregion

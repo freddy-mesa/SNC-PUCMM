@@ -36,7 +36,7 @@ namespace SncPucmm.Model.Domain
                 {
                     string key = (string)json.keys[i];
 
-                    if (key == "idNeighbor")
+                    if (key == "id")
                         this.idNeighbor = System.Convert.ToInt32(json.list[i].n);
                     else if (key == "nodo")
                         this.nodo = new Nodo (json.list[i]);
@@ -51,7 +51,7 @@ namespace SncPucmm.Model.Domain
             JSONObject json = new JSONObject();
 
             if (idNeighbor.HasValue)
-                json.AddField("idNeighbor", idNeighbor.Value);
+                json.AddField("id", idNeighbor.Value);
             if (nodo != null)
                 json.AddField("nodo", nodo.ToJson());
             if (nodoNeighbor != null)

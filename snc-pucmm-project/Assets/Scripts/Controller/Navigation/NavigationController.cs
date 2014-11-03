@@ -2,6 +2,7 @@
 using SncPucmm.Controller.Navigation;
 using SncPucmm.Database;
 using SncPucmm.Model;
+using SncPucmm.Model.Domain;
 using SncPucmm.Model.Navigation;
 using SncPucmm.View;
 using System.Collections.Generic;
@@ -12,9 +13,8 @@ namespace SncPucmm.Controller.Navigation
     class NavigationController
     {
         #region Atributos
-        Graph graph;
 
-        public static bool isUsingNavigation; 
+        Graph graph;
 
         #endregion
 
@@ -31,25 +31,55 @@ namespace SncPucmm.Controller.Navigation
 
         private void Initializer()
         {
-            isUsingNavigation = false;
-            graph = new Graph();
             CreateGraph();
         }
 
         public void StartNavigation(string destinationName)
-        {
-            isUsingNavigation = true;
-            
+        {           
             //List<PathData> bestPath = GetBestPathData(destinationName);
             List<PathDataDijkstra> bestPath = graph.Dijkstra("Aulas 3", destinationName);
 
             //Mostrar el menu de direciones
-            GUIMenuDirection menuDirection = new GUIMenuDirection("GUIMenuDirection", bestPath);
-            MenuManager.GetInstance().AddMenu(menuDirection);
+            MenuNavigation menuNavigation = new MenuNavigation("MenuNavigation", bestPath);
+            MenuManager.GetInstance().AddMenu(menuNavigation);
 
-            State.ChangeState(eState.MenuDirection);
+            State.ChangeState(eState.MenuNavigation);
+        }
 
-            isUsingNavigation = false;
+        public void StartTourNavigation(List<DetalleUsuarioTour> detalleUsuarioTourList)
+        {
+            List<PathDataDijkstra> tourPath = new List<PathDataDijkstra>();
+
+            for (int i = 0; i < detalleUsuarioTourList.Count; ++i)
+            {
+                if (i + 1 != detalleUsuarioTourList.Count)
+                {
+                    //Buscar en la base de dato el desde y el hasta
+                    string desde = string.Empty, hasta = string.Empty;
+
+                    var result = SQLiteService.GetInstance().Query(true,
+                        "SELECT NODA.nombre as desde NODB.nombre as hasta "+
+                        "FROM PuntoReunionTour PUNA, Nodo NODA,PuntoReunionTour PUNB, Nodo NODB " +
+                        "WHERE PUNA.id = " + detalleUsuarioTourList[i].idPuntoReunionTour + " AND PUNA.idNodo = NODA.idNodo "+
+                        "AND PUNB.id = " + detalleUsuarioTourList[i + 1].idPuntoReunionTour + " AND PUNB.idNodo = NODB.idNodo"
+                    );
+
+                    if (result.Read())
+                    {
+                        desde = System.Convert.ToString(result["desde"]);
+                        hasta = System.Convert.ToString(result["hasta"]);
+                    }
+
+                    List<PathDataDijkstra> bestPath = graph.Dijkstra(desde, hasta);
+                    tourPath.AddRange(bestPath);
+                }
+            }           
+
+            //Mostrar el menu de direciones
+            MenuNavigation menuNavigation = new MenuNavigation("MenuNavigation", tourPath);
+            MenuManager.GetInstance().AddMenu(menuNavigation);
+
+            State.ChangeState(eState.MenuNavigation);
         }
 
         private List<PathDataDijkstra> GetBestPathData(string destinationName)
@@ -145,6 +175,8 @@ namespace SncPucmm.Controller.Navigation
 
         public void CreateGraph()
         {
+            graph = new Graph();
+
             var sqliteService = SQLiteService.GetInstance();
             var reader = sqliteService.Query(
                 true,

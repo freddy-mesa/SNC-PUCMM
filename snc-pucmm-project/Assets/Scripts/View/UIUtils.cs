@@ -52,7 +52,7 @@ namespace SncPucmm.View
          
         public static void ActivateCameraLabels(bool activate) 
         {
-            var labels = FindGUI("GUICamaraLabels");
+            var labels = FindGUI("CameraLabels");
             foreach (Transform label in labels.transform)
             {
                 label.gameObject.SetActive(activate);
@@ -61,7 +61,7 @@ namespace SncPucmm.View
 
         public static GameObject FindGUI(string URI) 
         {
-            var guiObject = GameObject.Find("GUI");
+            var guiObject = GameObject.Find("/GUI");
             return guiObject.transform.FindChild(URI).gameObject;
         }
 

@@ -10,11 +10,11 @@ namespace SncPucmm.Model.Domain
         #region Atributos
 
         public int? idDetalleUsuarioTour;
-        public string estado;
         public DateTime? fechaInicio;
         public DateTime? fechaLlegada;
-        public PuntoReunionTour puntoReunionTour;
-        public UsuarioTour usuarioTour;
+        public DateTime? fechaFin;
+        public int? idPuntoReunionTour;
+        public int? idUsuarioTour;
 
         #endregion
 
@@ -42,18 +42,18 @@ namespace SncPucmm.Model.Domain
                 {
                     string key = (string)json.keys[i];
 
-                    if (key == "idDetalleUsuarioTour")
+                    if (key == "id")
                         this.idDetalleUsuarioTour = Convert.ToInt32(json.list[i].n);
-                    else if (key == "estado")
-                        this.estado = json.list[i].str;
                     else if (key == "fechaInicio")
                         this.fechaInicio = Convert.ToDateTime(json.list[i].str);
                     else if (key == "fechaLlegada")
                         this.fechaLlegada = Convert.ToDateTime(json.list[i].str);
-                    else if (key == "puntoReunionTour")
-                        this.puntoReunionTour = new PuntoReunionTour(json.list[i]);
+                    else if (key == "fechaFin")
+                        this.fechaFin = Convert.ToDateTime(json.list[i].str);
+                    else if (key == "idPuntoReunionTour")
+                        this.idPuntoReunionTour = Convert.ToInt32(json.list[i].n);
                     else
-                        this.usuarioTour = new UsuarioTour(json.list[i]);
+                        this.idUsuarioTour = Convert.ToInt32(json.list[i].n);
                 }
             }
         }
@@ -63,25 +63,25 @@ namespace SncPucmm.Model.Domain
             JSONObject json = new JSONObject();
 
             if (idDetalleUsuarioTour.HasValue)
-                json.AddField("idDetalleUsuarioTour", idDetalleUsuarioTour.Value);
-            if(estado != null)
-                json.AddField("estado", estado);
+                json.AddField("id", idDetalleUsuarioTour.Value);
             if (fechaInicio.HasValue)
                 json.AddField("fechaInicio", fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss"));
             if(fechaLlegada.HasValue)
                 json.AddField("fechaLlegada", fechaLlegada.Value.ToString("dd/MM/yyyy HH:mm:ss"));
-            if(puntoReunionTour != null)
-                json.AddField("puntoReunionTour", puntoReunionTour.ToJson());
-            if (usuarioTour != null)
-                json.AddField("usuarioTour", usuarioTour.ToJson());
+            if (fechaFin.HasValue)
+                json.AddField("fechaFin", fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss"));
+            if (idPuntoReunionTour.HasValue)
+                json.AddField("idPuntoReunionTour", idPuntoReunionTour.Value);
+            if (idUsuarioTour.HasValue)
+                json.AddField("usuarioTour", idUsuarioTour.Value);
 
             return json;
         }
 
         public override string ToString()
         {
-            return String.Format("DetalleUsuarioTour [ idDetalleUsuarioTour: {0}, estado: {1} ]",
-                idDetalleUsuarioTour.HasValue ? idDetalleUsuarioTour.Value.ToString() : string.Empty, estado
+            return String.Format("DetalleUsuarioTour [ idDetalleUsuarioTour: {0} ]",
+                idDetalleUsuarioTour.HasValue ? idDetalleUsuarioTour.Value.ToString() : string.Empty
             );
         }
 

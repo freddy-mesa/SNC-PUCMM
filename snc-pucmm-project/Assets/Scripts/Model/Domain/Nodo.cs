@@ -13,7 +13,7 @@ namespace SncPucmm.Model.Domain
         public string nombre;
         public bool? activo;
         public int? edificio;
-        public Ubicacion ubicacion;
+        public int? idUbicacion;
 
 
         #endregion
@@ -43,7 +43,7 @@ namespace SncPucmm.Model.Domain
                 {
                     string key = (string)json.keys[i];
 
-                    if (key == "idNodo")
+                    if (key == "id")
                         this.idNodo = Convert.ToInt32(json.list[i].n);
                     else if (key == "nombre")
                         this.nombre = json.list[i].str;
@@ -52,7 +52,7 @@ namespace SncPucmm.Model.Domain
                     else if (key == "edificio")
                         this.edificio = Convert.ToInt32(json.list[i].n);
                     else
-                        this.ubicacion = new Ubicacion(json.list[i]);
+                        this.idUbicacion = Convert.ToInt32(json.list[i].n);
                 }
             }
         }
@@ -62,15 +62,15 @@ namespace SncPucmm.Model.Domain
             JSONObject json = new JSONObject();
             
             if(idNodo.HasValue)
-                json.AddField("idNodo", idNodo.Value);
+                json.AddField("id", idNodo.Value);
             if (nombre != null)
                 json.AddField("nombre", nombre);
             if(activo.HasValue)
                 json.AddField("activo", activo.Value);
             if (edificio.HasValue)
                 json.AddField("edificio", edificio.Value);
-            if (ubicacion != null)
-                json.AddField("ubicacion", ubicacion.ToJson());
+            if (idUbicacion.HasValue)
+                json.AddField("idUbicacion", idUbicacion.Value);
 
             return json;
         }

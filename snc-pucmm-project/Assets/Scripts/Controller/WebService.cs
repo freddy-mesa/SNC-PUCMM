@@ -19,9 +19,15 @@ namespace SncPucmm.Controller
 
         #region Propiedades
 
-        public static bool IsConnectionAvailable { get; set; }
-        private static bool IsEnter { get; set; }
-
+        private bool IsEnterToUpdateModel { get; set; }
+        private bool IsEnterToUpdateTours { get; set; }
+        private bool IsUserLogIn
+        {
+            get
+            {
+                return ModelPoolManager.GetInstance().Contains("Usuario");
+            }
+        }
         public static WebService Instance
         {
             get
@@ -111,68 +117,109 @@ namespace SncPucmm.Controller
         
         void Start()
         {
-            IsConnectionAvailable = false;
-            IsEnter = false;
+            IsEnterToUpdateModel = true;
+            IsEnterToUpdateTours = true;
         }
 
         void Update()
         {
             //Mientras no haya conexion a internet
-            //if (!IsConnectionAvailable && !IsEnter)
+            //if (IsEnterToUpdateModel)
             //{
-            //    IsEnter = true;
-            //    StartCoroutine(UpdateService());
+            //    IsEnterToUpdateModel = false;
+            //    StartCoroutine(UpdateModelService());
+            //}
+
+            //if (IsUserLogIn && IsEnterToUpdateTours)
+            //{
+            //    IsEnterToUpdateTours = false;
+            //    StartCoroutine(UpdateToursService());
             //}
         }
 
-        private IEnumerator UpdateService()
+        private IEnumerator UpdateModelService()
         {
+            bool IsConnectionAvailable = false;
+            string responseJson = string.Empty;
+
+            //Obtener la ultima actualizacion del servidor
+            yield return WebService.Get(
+                "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/model/updates/", 
+                (status, response) => 
+                {
+                    if (status) responseJson = response;
+                    IsConnectionAvailable = status;
+                }
+            );
+
+            //Esperar que se refresque el valor de responseJson
             yield return new WaitForSeconds(0.1f);
 
-            //Verificar si se puede acceder a google.com
-            yield return WebService.Get("https://www.google.com", (status, response) => IsConnectionAvailable = status);
-
-            //Esperar que se refresque el valor de IsConnectionAvailable
-            yield return new WaitForSeconds(0.1f);
-
-            //Debug.Log(IsConnectionAvailable);
-            //Valor que se obtiene si el fue success el acceder a google.com
             if (IsConnectionAvailable)
             {
-                string responseJson = string.Empty;
-
-                //Obtener la ultima actualizacion del servidor
-                yield return WebService.Get(
-                    "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/updates/", 
-                    (status, response) => { if (status) responseJson = response; }
-                );
-
-                //Esperar que se refresque el valor de responseJson
-                yield return new WaitForSeconds(0.1f);
+                IsEnterToUpdateModel = false;
 
                 //Enconding de string a Json
-                //JSONObject json = new JSONObject(responseJson);
-                Debug.Log(responseJson);
+                JSONObject json = new JSONObject(responseJson);
+                //Debug.Log(responseJson);
 
                 ////Hacer un update a la base de datos
-                //SQLiteService.GetInstance().UpdateDataBase(json);
+                SQLiteService.GetInstance().UpdateModel(json);
 
-                ////Esperar si se esta usando la navegacion
-                //while (NavigationController.isUsingNavigation) 
-                //    yield return new WaitForSeconds(1f);
+                var navigation = (NavigationController) ModelPoolManager.GetInstance().GetValue("navigationCtrl");
 
-                //var navigation = (NavigationController) ModelPoolManager.GetInstance().GetValue("navigationCtrl");
-                
                 ////Crear el grafo con la base de datos actualizada.
-                //navigation.CreateGraph();
-
+                navigation.CreateGraph();
             }
-
-            //Condicion para volver a entrar
-            IsEnter = false;
+            else
+            {
+                //Condicion para volver a entrar
+                IsEnterToUpdateModel = true;
+            }
 
             //Salir de la corotutina
             yield return null;
+        }
+
+        private IEnumerator UpdateToursService()
+        {
+            bool IsConnectionAvailable = false;
+            string responseJson = string.Empty;
+            JSONObject json = SQLiteService.GetInstance().DataSynchronization();
+
+            //Obtener la ultima actualizacion del servidor
+            yield return WebService.Post(
+                "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/tour/updates/",
+                json.ToString(),
+                (status, response) =>
+                {
+                    if (status) responseJson = response;
+                    IsConnectionAvailable = status;
+                }
+            );
+
+            //Esperar que se refresque el valor de responseJson
+            yield return new WaitForSeconds(0.1f);
+
+            if (IsConnectionAvailable)
+            {
+                IsEnterToUpdateTours = false;
+
+                //Enconding de string a Json
+                json = new JSONObject(responseJson);
+                //Debug.Log(responseJson);
+
+                ////Hacer un update a la base de datos
+                SQLiteService.GetInstance().UpdateTours(json);
+            }
+            else
+            {
+                //Condicion para volver a entrar
+                IsEnterToUpdateTours = true;
+            }
+
+            //Salir de la corotutina esperarando 10 min 
+            yield return new WaitForSeconds(60 * 10);
         }
         
         #endregion

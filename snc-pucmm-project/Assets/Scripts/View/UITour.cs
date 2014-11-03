@@ -13,10 +13,6 @@ namespace SncPucmm.View
     {
         #region Metodos
 
-        public IEnumerator CreateTourRoleCreator(Tour tour, List<ModelNode> modelNodeList)
-        {
-            yield return StartCoroutine(TourController.GetInstance().CreateTourRoleCreator(tour, modelNodeList));
-        }
 
         #endregion
 

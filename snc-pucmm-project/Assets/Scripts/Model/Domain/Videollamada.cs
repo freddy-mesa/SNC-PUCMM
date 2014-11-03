@@ -44,7 +44,7 @@ namespace SncPucmm.Model.Domain
                 {
                     string key = (string)json.keys[i];
 
-                    if (key == "idVideoLlamada")
+                    if (key == "id")
                         this.idVideoLlamada = Convert.ToInt32(json.list[i].n);
                     else if (key == "fechaInicio")
                         this.fechaInicio = Convert.ToDateTime(json.list[i].str);
@@ -67,7 +67,7 @@ namespace SncPucmm.Model.Domain
             JSONObject json = new JSONObject();
             
             if(idVideoLlamada.HasValue)
-                json.AddField("idVideoLlamada", idVideoLlamada.Value);
+                json.AddField("id", idVideoLlamada.Value);
             if(fechaInicio.HasValue)
                 json.AddField("fechaInicio", fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss"));
             if(fechaFin.HasValue)

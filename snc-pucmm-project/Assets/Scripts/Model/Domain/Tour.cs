@@ -14,7 +14,7 @@ namespace SncPucmm.Model.Domain
         public DateTime? fechaCreacion;
         public DateTime? fechaInicio;
         public DateTime? fechaFin;
-        public Usuario usuario;
+        public int? idUsuario;
 
         #endregion
 
@@ -42,18 +42,18 @@ namespace SncPucmm.Model.Domain
                 {
                     string key = (string)json.keys[i];
 
-                    if (key == "idTour")
+                    if (key == "id")
                         this.idTour = Convert.ToInt32(json.list[i].n);
                     else if (key == "nombreTour")
                         this.nombreTour = json.list[i].str;
-                    else if (key == "fechaCreacion")
+                    else if (key == "fechaCreacion" && !json.list[i].str.Equals(""))
                         this.fechaCreacion = Convert.ToDateTime(json.list[i].str);
-                    else if (key == "fechaInicio")
+                    else if (key == "fechaInicio" && !json.list[i].str.Equals(""))
                         this.fechaInicio = Convert.ToDateTime(json.list[i].str);
-                    else if (key == "fechaFin")
+                    else if (key == "fechaFin" && !json.list[i].str.Equals(""))
                         this.fechaFin = Convert.ToDateTime(json.list[i].str);
                     else
-                        this.usuario = new Usuario(json.list[i]);
+                        this.idUsuario = Convert.ToInt32(json.list[i].n);
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace SncPucmm.Model.Domain
             JSONObject json = new JSONObject();
 
             if (idTour.HasValue)
-                json.AddField("idTour", idTour.Value);
+                json.AddField("id", idTour.Value);
             if (nombreTour != null)
                 json.AddField("nombreTour", nombreTour);
             if (fechaCreacion.HasValue)
@@ -72,8 +72,8 @@ namespace SncPucmm.Model.Domain
                 json.AddField("fechaInicio", fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss"));
             if (fechaFin.HasValue)
                 json.AddField("fechaFin", fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss"));
-            if (usuario != null)
-                json.AddField("usuario", usuario.ToJson());
+            if (idUsuario.HasValue)
+                json.AddField("idUsuarioCreador", idUsuario.Value);
 
             return json;
         }

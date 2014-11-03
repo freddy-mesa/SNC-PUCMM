@@ -39,7 +39,7 @@ namespace SncPucmm.Model.Domain
                 {
                     string key = (string)json.keys[i];
 
-                    if (key == "idUbicacion")
+                    if (key == "id")
                         this.idUbicacion = Convert.ToInt32(json.list[i].n);
                     else if (key == "nombre")
                         this.nombre = json.list[i].str;
@@ -54,7 +54,7 @@ namespace SncPucmm.Model.Domain
             JSONObject json = new JSONObject();
 
             if(idUbicacion.HasValue)
-                json.AddField("idUbicacion", idUbicacion.Value);
+                json.AddField("id", idUbicacion.Value);
             if(nombre != null)
                 json.AddField("nombre", nombre);
             if(abreviacion != null)

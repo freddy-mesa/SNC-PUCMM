@@ -44,7 +44,7 @@ namespace SncPucmm.View
 
             UIUtils.ActivateCameraLabels(false);
 
-            var imgSearchBox = UIUtils.FindGUI("GUIMenuMain/HorizontalBar/SearchBox/SearchImg").gameObject;
+            var imgSearchBox = UIUtils.FindGUI("MenuMain/Bar/SearchBox/SearchIcon").gameObject;
             imgSearchBox.SetActive(false);
         }
 
@@ -53,7 +53,7 @@ namespace SncPucmm.View
             _keyboard = null;
             _isTouchKeyboardOpen = false;
 
-            var imgSearchBox = UIUtils.FindGUI("GUIMenuMain/HorizontalBar/SearchBox/SearchImg").gameObject;
+            var imgSearchBox = UIUtils.FindGUI("MenuMain/Bar/SearchBox/SearchIcon").gameObject;
             imgSearchBox.SetActive(true);
         }
 

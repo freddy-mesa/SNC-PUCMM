@@ -14,8 +14,8 @@ namespace SncPucmm.Model.Domain
         public string apellido;
         public string contrasena;
         public string usuario;
-        public TipoUsuario tipoUsuario;
-        public CuentaFacebook cuentaFacebook;
+        public int? idTipoUsuario;
+        public int? idCuentaFacebook;
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace SncPucmm.Model.Domain
                 {
                     string key = (string)json.keys[i];
 
-                    if (key == "idUsuario")
+                    if (key == "id")
                         this.idUsuario = (int)json.list[i].n;
                     else if (key == "nombre")
                         this.nombre = json.list[i].str;
@@ -53,10 +53,10 @@ namespace SncPucmm.Model.Domain
                         this.contrasena = json.list[i].str;
                     else if (key == "contrasena")
                         this.usuario = json.list[i].str;
-                    else if (key == "tipoUsuario")
-                        this.tipoUsuario = new TipoUsuario(json.list[i]);
+                    else if (key == "idTipoUsuario")
+                        this.idTipoUsuario = Convert.ToInt32(json.list[i].n);
                     else
-                        this.cuentaFacebook = new CuentaFacebook(json.list[i]);
+                        this.idCuentaFacebook = Convert.ToInt32(json.list[i].n);
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace SncPucmm.Model.Domain
             JSONObject json = new JSONObject();
             
             if(idUsuario.HasValue)
-                json.AddField("idUsuario", idUsuario.Value);
+                json.AddField("id", idUsuario.Value);
             if(nombre != null)
                 json.AddField("nombre", nombre);
             if(apellido != null)
@@ -75,10 +75,10 @@ namespace SncPucmm.Model.Domain
                 json.AddField("usuario", usuario);
             if(contrasena != null)
                 json.AddField("contrasena", contrasena);
-            if (tipoUsuario != null)
-                json.AddField("tipoUsuario", tipoUsuario.ToJson());
-            if (cuentaFacebook != null)
-                json.AddField("cuentaFacebook", cuentaFacebook.ToJson());
+            if (idTipoUsuario.HasValue)
+                json.AddField("idTipoUsuario", idTipoUsuario.Value);
+            if (idCuentaFacebook.HasValue)
+                json.AddField("idCuentaFacebook", idCuentaFacebook.Value);
             
             return json;
         }
