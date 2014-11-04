@@ -105,7 +105,7 @@ namespace SncPucmm.Controller.GUI
 			Process(selectedTour, out usuarioTour, out detalleUsuarioTourList);
 
 			MenuManager.GetInstance().AddMenu(
-				new MenuUsuarioTourSelection("MenuUsuarioDetalleTour", usuarioTour, detalleUsuarioTourList)
+				new MenuUsuarioTourSelection("MenuUsuarioDetalleTour", selectedTour.nombreTour, usuarioTour, detalleUsuarioTourList)
 			);
 
 		}

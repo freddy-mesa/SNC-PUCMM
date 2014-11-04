@@ -59,7 +59,7 @@ namespace SncPucmm.Controller.GUI
 
         public void OnTouchNavigationButton(object sender, TouchEventArgs e)
         {
-            NavigationController controller = (NavigationController) ModelPoolManager.GetInstance().GetValue("navigationCtrl");
+            NavigationController controller = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
             controller.StartNavigation(this.location.name);
         }
 

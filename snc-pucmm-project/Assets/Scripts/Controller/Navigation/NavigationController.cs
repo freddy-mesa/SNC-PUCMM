@@ -1,5 +1,6 @@
 ﻿using SncPucmm.Controller.GUI;
 using SncPucmm.Controller.Navigation;
+using SncPucmm.Controller.Tours;
 using SncPucmm.Database;
 using SncPucmm.Model;
 using SncPucmm.Model.Domain;
@@ -46,9 +47,13 @@ namespace SncPucmm.Controller.Navigation
             State.ChangeState(eState.MenuNavigation);
         }
 
-        public void StartTourNavigation(List<DetalleUsuarioTour> detalleUsuarioTourList)
+        public void StartTourNavigation(string tourName, List<DetalleUsuarioTour> detalleUsuarioTourList)
         {
+            var tourController = new TourController(detalleUsuarioTourList);
+
             List<PathDataDijkstra> tourPath = new List<PathDataDijkstra>();
+            bool isSelectCurrentIndexSectionTour = false;
+            int indexCurrentTourPathData = 0;
 
             for (int i = 0; i < detalleUsuarioTourList.Count; ++i)
             {
@@ -58,10 +63,11 @@ namespace SncPucmm.Controller.Navigation
                     string desde = string.Empty, hasta = string.Empty;
 
                     var result = SQLiteService.GetInstance().Query(true,
-                        "SELECT NODA.nombre as desde NODB.nombre as hasta "+
-                        "FROM PuntoReunionTour PUNA, Nodo NODA,PuntoReunionTour PUNB, Nodo NODB " +
+                        "SELECT NODA.nombre as desde, NODB.nombre as hasta "+
+                        "FROM PuntoReunionTour PUNA, Nodo NODA, PuntoReunionTour PUNB, Nodo NODB " +
                         "WHERE PUNA.id = " + detalleUsuarioTourList[i].idPuntoReunionTour + " AND PUNA.idNodo = NODA.idNodo "+
-                        "AND PUNB.id = " + detalleUsuarioTourList[i + 1].idPuntoReunionTour + " AND PUNB.idNodo = NODB.idNodo"
+                        "AND PUNB.id = " + detalleUsuarioTourList[i + 1].idPuntoReunionTour + " AND PUNB.idNodo = NODB.idNodo "+
+                        "ORDER BY PUNA.id"
                     );
 
                     if (result.Read())
@@ -72,11 +78,29 @@ namespace SncPucmm.Controller.Navigation
 
                     List<PathDataDijkstra> bestPath = graph.Dijkstra(desde, hasta);
                     tourPath.AddRange(bestPath);
+
+                    tourController.AddSectionTour(new SectionTourData()
+                    { 
+                        Desde = desde,
+                        IdPuntoReuionNodoDesde =  detalleUsuarioTourList[i].idPuntoReunionTour.Value,
+                        Hasta = hasta,
+                        IdPuntoReuionNodoHasta = detalleUsuarioTourList[i + 1].idPuntoReunionTour.Value,
+                    });
+
+                    if (!isSelectCurrentIndexSectionTour && !detalleUsuarioTourList[i].fechaInicio.HasValue)
+                    {
+                        isSelectCurrentIndexSectionTour = true;
+                        tourController.SetStartSectionTour(i);
+
+                        indexCurrentTourPathData = tourPath.FindIndex(path => path.StartNode.Name == desde);
+                    }
                 }
-            }           
+            }
+
+            ModelPoolManager.GetInstance().Add("tourCtrl", tourController);
 
             //Mostrar el menu de direciones
-            MenuNavigation menuNavigation = new MenuNavigation("MenuNavigation", tourPath);
+            MenuNavigation menuNavigation = new MenuNavigation("MenuNavigation", tourPath, indexCurrentTourPathData, tourName);
             MenuManager.GetInstance().AddMenu(menuNavigation);
 
             State.ChangeState(eState.MenuNavigation);

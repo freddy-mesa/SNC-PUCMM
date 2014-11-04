@@ -31,11 +31,10 @@ namespace SncPucmm.View
 
         void Update()
         {
-            var cameraRotation = Camera.main.transform.eulerAngles;
-
             if (UICamaraControl.Vista_3era_Persona)
             {
                 var cameraPosition = Camera.main.transform.position;
+                var cameraRotation = Camera.main.transform.eulerAngles;
 
                 float distance = UIUtils.getDirectDistance(
                     nameLabel.transform.position.x,

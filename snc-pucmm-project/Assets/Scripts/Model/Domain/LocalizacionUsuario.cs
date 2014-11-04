@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SncPucmm.Model.Domain
 {
-    class UsuarioLocalizacion : IJson
+    class LocalizacionUsuario : IJson
     {
         #region Atributos
 
@@ -18,7 +18,7 @@ namespace SncPucmm.Model.Domain
 
         #region Constructor
 
-        public UsuarioLocalizacion()
+        public LocalizacionUsuario()
         {
 
         }

@@ -49,7 +49,7 @@ namespace SncPucmm.View
                     
                     if (
                             State.GetCurrentState().Equals(eState.Navigation) || 
-                            State.GetCurrentState().Equals(eState.MenuNavigation) 
+                            State.GetCurrentState().Equals(eState.MenuNavigation)
                         )
                     {
                         

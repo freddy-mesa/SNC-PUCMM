@@ -113,6 +113,7 @@ namespace SncPucmm.Database
 
 		private void InitCreateModelTables()
 		{
+
 			//Ubicacion
 			CreateTableQuery(
 				"Ubicacion",
@@ -968,7 +969,7 @@ namespace SncPucmm.Database
 					localizationDate = Convert.ToDateTime(fechaLocalizacion);
 				}
 
-				var usuarioLocalizacion = new UsuarioLocalizacion() 
+				var usuarioLocalizacion = new LocalizacionUsuario() 
 				{
 					idNodo = Convert.ToInt32(resultUsuarioLocalizacion["idNodo"]),
 					idUsuario = Convert.ToInt32(resultUsuarioLocalizacion["idUsuario"]),

@@ -301,7 +301,7 @@
     <Compile Include="Assets\Scripts\Model\Domain\Tour.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\Ubicacion.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\Usuario.cs" />
-    <Compile Include="Assets\Scripts\Model\Domain\UsuarioLocalizacion.cs" />
+    <Compile Include="Assets\Scripts\Model\Domain\LocalizacionUsuario.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\UsuarioTour.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\Videollamada.cs" />
     <Compile Include="Assets\Scripts\Model\IJson.cs" />
@@ -317,6 +317,7 @@
     <Compile Include="Assets\Scripts\View\UIButtonControl.cs" />
     <Compile Include="Assets\Scripts\View\UICamaraControl.cs" />
     <Compile Include="Assets\Scripts\View\UICamino.cs" />
+    <Compile Include="Assets\Scripts\View\UICharacter.cs" />
     <Compile Include="Assets\Scripts\View\UIDirections.cs" />
     <Compile Include="Assets\Scripts\View\UIGPS.cs" />
     <Compile Include="Assets\Scripts\View\UIKeyboard.cs" />

@@ -1,5 +1,6 @@
 ﻿using SncPucmm.Controller;
 using SncPucmm.Controller.Control;
+using SncPucmm.Controller.Navigation;
 using SncPucmm.Database;
 using SncPucmm.Model.Domain;
 using SncPucmm.View;
@@ -16,6 +17,8 @@ namespace Assets.Scripts.Controller.GUI
         #region Atributos
 
         string name;
+        string tourName;
+
         List<Button> buttonList;
         UsuarioTour usuarioTour;
         List<DetalleUsuarioTour> detalleUsuarioTourList;
@@ -25,11 +28,12 @@ namespace Assets.Scripts.Controller.GUI
 
         #region Constructores
 
-        public MenuUsuarioTourSelection(string name, UsuarioTour usuarioTour, List<DetalleUsuarioTour> detalleUsuarioTourList)
+        public MenuUsuarioTourSelection(string name, string tourName, UsuarioTour usuarioTour, List<DetalleUsuarioTour> detalleUsuarioTourList)
         {
             this.name = name;
             this.usuarioTour = usuarioTour;
             this.detalleUsuarioTourList = detalleUsuarioTourList;
+            this.tourName = tourName;
 
             Initializer();
         }
@@ -85,7 +89,8 @@ namespace Assets.Scripts.Controller.GUI
 
         private void OnTouchResumeButton(object sender, TouchEventArgs e)
         {
-            throw new NotImplementedException();
+            NavigationController controller = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
+            controller.StartTourNavigation(tourName, detalleUsuarioTourList);
         }
 
         private void OnTouchExitButton(object sender, TouchEventArgs e)

@@ -13,8 +13,25 @@ namespace SncPucmm.View
     {
         #region Metodos
 
+        new void Update()
+        {
+            base.Update();
+
+            if (State.GetCurrentState().Equals(eState.MenuNavigation) && ModelPoolManager.GetInstance().Contains("tourCtrl"))
+            {
+                var tourCotroller = ModelPoolManager.GetInstance().GetValue("tourCtrl") as TourController;
+
+                if (!tourCotroller.UpdateSectionTour())
+                {
+                    //Ha llegado a ultimo punto de reunion
+                    
+                    //Mensaje
+
+                    //
+                }
+            }
+        }        
 
         #endregion
-
     }
 }

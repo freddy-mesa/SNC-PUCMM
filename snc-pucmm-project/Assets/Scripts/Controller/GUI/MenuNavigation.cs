@@ -21,7 +21,8 @@ namespace SncPucmm.Controller.GUI
 
 		bool isBackButtonActive;
 		bool isNextButtonActive;
-		
+		string tourName;
+
 		#endregion
 
 		#region Constructor
@@ -43,13 +44,13 @@ namespace SncPucmm.Controller.GUI
 			Initializer();
 		}
 
-		public MenuNavigation(string name, List<PathDataDijkstra> nodesDirectionPath, int currentPathIndex)
+		public MenuNavigation(string name, List<PathDataDijkstra> nodesDirectionPath, int currentPathIndex, string tourName)
 			: this()
 		{
 			this.name = name;
 			this.directionPath = nodesDirectionPath;
-
-			currentDirectionPath = currentPathIndex;
+			this.tourName = tourName;
+			this.currentDirectionPath = currentPathIndex;
 
 			Initializer();
 		}
@@ -80,6 +81,17 @@ namespace SncPucmm.Controller.GUI
 
 			UIUtils.FindGUI("MenuNavigation/" + buttonList[0].Name).SetActive(false);
 			UIUtils.FindGUI("MenuNavigation/" + buttonList[1].Name).SetActive(true);
+
+			var tourBar = UIUtils.FindGUI("MenuNavigation/NameTourBar"); 
+			if (State.GetCurrentState() == eState.Tour)
+			{
+				var label = tourBar.transform.FindChild("Label").GetComponent<UILabel>();
+				label.text = tourName;
+			}
+			else
+			{
+				tourBar.SetActive(false);
+			}
 
 			ShowDirectionMenu(directionPath[currentDirectionPath]);
 			ShowNavigationDirection(directionPath[currentDirectionPath]);
@@ -142,8 +154,16 @@ namespace SncPucmm.Controller.GUI
 		{
 			UIUtils.DestroyChilds("/PUCMM/Directions", false);
 			MenuManager.GetInstance().RemoveCurrentMenu();
-			
-			State.ChangeState(eState.MenuBuilding);
+
+			if (ModelPoolManager.GetInstance().Contains("tourCtrl"))
+			{
+				State.ChangeState(eState.Tour);
+				ModelPoolManager.GetInstance().Remove("tourCtrl");
+			}
+			else
+			{
+				State.ChangeState(eState.MenuBuilding);
+			}
 		}
 
 		private void ShowDirectionMenu(PathDataDijkstra path)
