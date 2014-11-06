@@ -27,17 +27,3 @@
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: usuarioInstance, field: 'cuentaFacebook', 'error')} ">
-
-    <label>
-        Puntos de Reunión
-    </label>
-    Nodo
-    <g:select id="puntoreuniontour" name="puntoreuniontour" from="${sncpucmm.Nodo.list()}" optionKey="id" optionValue="nombre" class="many-to-one" noSelection="['null': '']"/>
-
-    No. Secuencia
-    <g:textField name="secuencia" class="secuencia" />
-
-    <div id="add" name="newPunto"><label></label><a>Add new</a></div>
-
-</div>

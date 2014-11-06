@@ -12,6 +12,7 @@ import grails.transaction.Transactional
 @Secured("permitAll")
 class TourController {
 
+    def springSecurityService
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -38,6 +39,9 @@ class TourController {
             respond tourInstance.errors, view: 'create'
             return
         }
+
+        tourInstance.creador = (Usuario)springSecurityService.getCurrentUser();
+        tourInstance.fechaCreacion = new Date();
 
         tourInstance.save flush: true
 
@@ -150,7 +154,8 @@ class TourController {
             tour.put("nombreTour", it.nombreTour)
             tour.put("fechaCreacion", it.fechaCreacion.format("dd/MM/yyyy HH:mm:ss"))
             tour.put("fechaInicio", it.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
-            tour.put("fechaFin", it.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
+            if(tour.fechaFin)
+                tour.put("fechaFin", it.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
 
             def puntosReunion = PuntoReunionTour.findAllByTour(it)
             puntosReunion.each { pr ->
@@ -169,11 +174,13 @@ class TourController {
             JSONObject userTour = new JSONObject();
             JSONObject detalle
             JSONArray detallesUT = new JSONArray();
+            userTour.put("id", ut.id)
             userTour.put("idUsuario", ut.usuario.id)
             userTour.put("idTour", ut.tour.id)
             userTour.put("estado", ut.estado)
             userTour.put("fechaInicio", ut.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
-            userTour.put("fechaFin", ut.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
+            if(ut.fechaFin)
+                userTour.put("fechaFin", ut.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
 
             def detallesUsuarioTour = DetalleUsuarioTour.findAllByUsuarioTour(ut)
             detallesUsuarioTour.each { dut ->
@@ -239,5 +246,26 @@ class TourController {
             }
         }
         redirect(action: "index")
+    }
+
+    def puntosreunion(Tour tourInstance) {
+        respond new PuntoReunionTour(params), model: [tour: tourInstance.id , puntosReunion: PuntoReunionTour.findAllByTour(tourInstance)]
+    }
+
+    @Transactional
+    def savePuntos() {
+        PuntoReunionTour puntoReunionTour = new PuntoReunionTour(nodo: Nodo.findById(params.puntoreuniontour), tour: Tour.findById(params.tour), secuenciaPuntoReunion: params.secuencia )
+
+        if (puntoReunionTour == null) {
+            notFound()
+            return
+        }
+
+        if (puntoReunionTour.hasErrors()) {
+            respond puntoReunionInstance.errors, view: 'create'
+            return
+        }
+        puntoReunionTour.save(flush: true)
+        redirect(action: "puntosreunion", id : params.tour)
     }
 }

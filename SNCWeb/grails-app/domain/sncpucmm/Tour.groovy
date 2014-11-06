@@ -10,5 +10,7 @@ class Tour {
 
     static constraints = {
         fechaFin nullable: true
+        creador nullable: true
+        fechaCreacion nullable: true
     }
 }
