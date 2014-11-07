@@ -71,6 +71,7 @@
     </ol>
     <g:form url="[resource:tourInstance, action:'delete']" method="DELETE">
         <fieldset class="buttons">
+            <g:link class="edit" action="puntosreunion" resource="${tourInstance}">Añadir Puntos de Reunión</g:link>
             <g:link class="edit" action="edit" resource="${tourInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
             <g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
         </fieldset>
