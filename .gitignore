@@ -38,6 +38,30 @@ sysinfo.txt
 hs_err_pid*
 
 
+#Grails
+
+
+# web application files
+/SNCWeb/web-app/WEB-INF/classes
+# default HSQL database files for production mode
+SNCWeb/prodDb.*
+# general HSQL database files
+*Db.properties
+*Db.script
+# logs
+SNCWeb/stacktrace.log
+SNCWeb/test/reports
+SNCWeb/logs
+# project release file
+SNCWeb/*.war
+# plugin release files
+SNCWeb/*.zip
+SNCWeb/plugin.xml
+/web-app/plugins
+# "temporary" build files
+SNCWeb/target
+
+
 #Maven
 
 

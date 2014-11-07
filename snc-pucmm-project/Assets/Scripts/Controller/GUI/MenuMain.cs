@@ -80,6 +80,33 @@ namespace SncPucmm.Controller.GUI
 			treeView.OnCloseEvent += new OnCloseEventHandler(OnCloseScrollTreeView);
 		}
 
+		private void OnTouchButtonMain(object sender, TouchEventArgs e)
+		{
+			OpenCloseMainMenu();
+		}
+
+		private void OpenCloseMainMenu()
+		{
+			var sidebar = UIUtils.FindGUI("MenuMain/Sidebar");
+			sidebar.SetActive(true);
+			float position;
+
+			if (sidebar.transform.localPosition.x > -130)
+			{
+				position = -0.60f;
+				State.ChangeState(eState.Navigation);
+			}
+			else
+			{
+				position = 0.60f;
+				State.ChangeState(eState.MenuMain);
+			}
+
+			UIAnimation.MoveBy(sidebar, new Dictionary<string, object> {
+				{"x", position},{"easeType", iTween.EaseType.easeInOutExpo},{"time", 1}
+			});
+		}
+
 		#region Sidebar
 
 		private void OnTouchButtonLogout(object sender, TouchEventArgs e)
@@ -89,7 +116,8 @@ namespace SncPucmm.Controller.GUI
 
 		private void OnTouchButtonTours(object sender, TouchEventArgs e)
 		{
-
+			MenuManager.GetInstance().AddMenu(new MenuTourSelection("MenuTourSelection"));
+			State.ChangeState(eState.Tour);
 		}
 
 		private void OnTouchButtonSeguridad(object sender, TouchEventArgs e)
@@ -117,33 +145,6 @@ namespace SncPucmm.Controller.GUI
 			}
 
 			OpenCloseMainMenu();
-		}
-
-		private void OnTouchButtonMain(object sender, TouchEventArgs e)
-		{
-			OpenCloseMainMenu();
-		}
-
-		private void OpenCloseMainMenu()
-		{
-			var sidebar = UIUtils.FindGUI("MenuMain/Sidebar");
-			sidebar.SetActive(true);
-			float position;
-
-			if (sidebar.transform.localPosition.x > -130)
-			{
-				position = -0.60f;
-				State.ChangeState(eState.Navigation);
-			}
-			else
-			{
-				position = 0.60f;
-				State.ChangeState(eState.MenuMain);
-			}
-
-			UIAnimation.MoveBy(sidebar, new Dictionary<string, object> {
-				{"x", position},{"easeType", iTween.EaseType.easeInOutExpo},{"time", 1}
-			});
 		}
 
 		#endregion

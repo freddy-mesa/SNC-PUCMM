@@ -73,7 +73,7 @@ namespace SncPucmm.Model.Domain
             if (idPuntoReunionTour.HasValue)
                 json.AddField("idPuntoReunionTour", idPuntoReunionTour.Value);
             if (idUsuarioTour.HasValue)
-                json.AddField("usuarioTour", idUsuarioTour.Value);
+                json.AddField(" ", idUsuarioTour.Value);
 
             return json;
         }

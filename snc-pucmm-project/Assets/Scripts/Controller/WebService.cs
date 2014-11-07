@@ -1,5 +1,6 @@
 ﻿using SncPucmm.Controller.Navigation;
 using SncPucmm.Database;
+using SncPucmm.Model.Domain;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,12 +60,12 @@ namespace SncPucmm.Controller
 
         #region Metodos
         
-        public static Coroutine Get(string url, System.Action<bool, string> callback)
+        public static Coroutine GET(string url, System.Action<bool, string> callback)
         {
             return Instance.StartCoroutine(GetRequest(url, callback));
         }
 
-        public static Coroutine Post(string url, string json, System.Action<bool, string> callback)
+        public static Coroutine POST(string url, string json, System.Action<bool, string> callback)
         {
             return Instance.StartCoroutine(PostRequest(url, json, callback));
         }
@@ -135,6 +136,12 @@ namespace SncPucmm.Controller
             //    IsEnterToUpdateTours = false;
             //    StartCoroutine(UpdateToursService());
             //}
+
+            if (IsEnterToUpdateTours)
+            {
+                IsEnterToUpdateTours = false;
+                StartCoroutine(UpdateToursService());
+            }
         }
 
         private IEnumerator UpdateModelService()
@@ -143,7 +150,7 @@ namespace SncPucmm.Controller
             string responseJson = string.Empty;
 
             //Obtener la ultima actualizacion del servidor
-            yield return WebService.Get(
+            yield return WebService.GET(
                 "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/model/updates/", 
                 (status, response) => 
                 {
@@ -153,7 +160,7 @@ namespace SncPucmm.Controller
             );
 
             //Esperar que se refresque el valor de responseJson
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
 
             if (IsConnectionAvailable)
             {
@@ -161,20 +168,23 @@ namespace SncPucmm.Controller
 
                 //Enconding de string a Json
                 JSONObject json = new JSONObject(responseJson);
-                //Debug.Log(responseJson);
+                Debug.Log(responseJson);
 
                 ////Hacer un update a la base de datos
                 SQLiteService.GetInstance().UpdateModel(json);
 
-                var navigation = (NavigationController) ModelPoolManager.GetInstance().GetValue("navigationCtrl");
+                var navigation = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
 
-                ////Crear el grafo con la base de datos actualizada.
+                //Crear el grafo con la base de datos actualizada.
                 navigation.CreateGraph();
             }
             else
             {
-                //Condicion para volver a entrar
-                IsEnterToUpdateModel = true;
+                if (!IsEnterToUpdateModel)
+                {
+                    StartCoroutine(CountDown(600f,value => IsEnterToUpdateModel = value));
+                    yield return new WaitForSeconds(0.5f);
+                }
             }
 
             //Salir de la corotutina
@@ -183,13 +193,59 @@ namespace SncPucmm.Controller
 
         private IEnumerator UpdateToursService()
         {
-            bool IsConnectionAvailable = false;
+            bool isConnectionAvailable = false, accessControlWebService = false;
             string responseJson = string.Empty;
-            JSONObject json = SQLiteService.GetInstance().DataSynchronization();
+            //JSONObject json = SQLiteService.GetInstance().DataSynchronization();
 
             //Obtener la ultima actualizacion del servidor
-            yield return WebService.Post(
-                "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/tour/updates/",
+            yield return WebService.GET(
+                "http://localhost:8080/SNCWeb/tour/list",
+                (status, response) =>
+                {
+                    if (status) { responseJson = response; }
+                    isConnectionAvailable = status;
+                    accessControlWebService = true;
+                }
+            );
+
+            //Esperar que se refresque el valores
+            yield return new WaitForSeconds(0.5f);
+
+            if (accessControlWebService)
+            {
+                if (isConnectionAvailable)
+                {
+                    //Enconding de string a Json
+                    JSONObject json = new JSONObject(responseJson);
+
+                    Debug.Log("Peticion de UpdateTours al WebService: " + json.ToString());
+
+                    //Hacer un update a la base de datos
+                    SQLiteService.GetInstance().UpdateTours(json);
+                }
+
+            }
+
+            if (!IsEnterToUpdateTours)
+            {
+                StartCoroutine(CountDown(10, value => IsEnterToUpdateTours = value));
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            yield return null;
+        }
+
+        public IEnumerator UsuarioSignIn(string username, string password)
+        {
+            bool IsConnectionAvailable = false;
+            string responseJson = string.Empty;
+            JSONObject json = new JSONObject(JSONObject.Type.OBJECT);
+            json.AddField("username", username);
+            json.AddField("password", password);
+
+            //Obtener la ultima actualizacion del servidor
+            yield return WebService.POST(
+                "http://localhost:8080/SNCWeb/usuario/signin",
                 json.ToString(),
                 (status, response) =>
                 {
@@ -199,27 +255,25 @@ namespace SncPucmm.Controller
             );
 
             //Esperar que se refresque el valor de responseJson
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
 
             if (IsConnectionAvailable)
             {
-                IsEnterToUpdateTours = false;
-
                 //Enconding de string a Json
                 json = new JSONObject(responseJson);
-                //Debug.Log(responseJson);
+                Debug.Log(responseJson);
 
-                ////Hacer un update a la base de datos
-                SQLiteService.GetInstance().UpdateTours(json);
-            }
-            else
-            {
-                //Condicion para volver a entrar
-                IsEnterToUpdateTours = true;
-            }
+                Usuario user = new Usuario(json);
 
-            //Salir de la corotutina esperarando 10 min 
-            yield return new WaitForSeconds(60 * 10);
+                ModelPoolManager.GetInstance().Add("Usuario", user);
+            }
+        }
+
+        private IEnumerator CountDown(float seconds, System.Action<bool> callback)
+        {
+            //Esperar 10 min
+            yield return new WaitForSeconds(seconds);
+            callback(true);
         }
         
         #endregion

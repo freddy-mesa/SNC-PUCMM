@@ -19,16 +19,15 @@ namespace SncPucmm.Controller.GUI
 		List<Button> buttonList;
 		List<Tour> tourList;
 		Transform scrollViewItemTemplate;
-		Transform guiScrollView;
 
 		#endregion
 
 		#region Constructor
 
-		public MenuTourSelection(string name, List<Tour> tourList)
+		public MenuTourSelection(string name)
 		{
 			this.name = name;
-			this.tourList = tourList;
+			this.tourList = GetTourList();
 
 			Initializer();
 		}
@@ -39,8 +38,7 @@ namespace SncPucmm.Controller.GUI
 
 		public void Initializer()
 		{
-			scrollViewItemTemplate = Resources.Load("GUI/TourScrollViewItem") as Transform;
-			guiScrollView = UIUtils.FindGUI("MenuTourSelection/Scroll View").transform as Transform;
+			scrollViewItemTemplate = (Resources.Load("GUI/TourScrollViewItem") as GameObject).transform;
 
 			buttonList = new List<Button>();
 
@@ -54,6 +52,10 @@ namespace SncPucmm.Controller.GUI
 
 		private void OnTouchExitButton(object sender, TouchEventArgs e)
 		{
+			//Delete ScrollView Childrens
+			UIUtils.DestroyChilds("MenuTourSelection/ScrollView", true);
+
+			//Remove Menu
 			MenuManager.GetInstance().RemoveCurrentMenu();
 
 			UIUtils.ActivateCameraLabels(true);
@@ -63,10 +65,11 @@ namespace SncPucmm.Controller.GUI
 
 		private void CreateScrollView()
 		{
+			Transform guiScrollView = UIUtils.FindGUI("MenuTourSelection/ScrollView").transform as Transform;
 			for(int i = 0; i < tourList.Count; i++)
 			{
 				//Creando el item del Tree View con world coordinates
-				var item = GameObject.Instantiate(scrollViewItemTemplate) as Transform;
+				var item = (GameObject.Instantiate(scrollViewItemTemplate.gameObject) as GameObject).transform;
 
 				item.name = "TourSelectionItem" + i;
 
@@ -76,7 +79,7 @@ namespace SncPucmm.Controller.GUI
 				//Agregando la posicion relativa del hijo con relacion al padre
 				item.transform.localPosition = new Vector3(
 					scrollViewItemTemplate.localPosition.x,
-					scrollViewItemTemplate.localPosition.y - 65f * i,
+					scrollViewItemTemplate.localPosition.y - 60f * i,
 					scrollViewItemTemplate.localPosition.z
 				);
 
@@ -105,18 +108,24 @@ namespace SncPucmm.Controller.GUI
 			Process(selectedTour, out usuarioTour, out detalleUsuarioTourList);
 
 			MenuManager.GetInstance().AddMenu(
-				new MenuUsuarioTourSelection("MenuUsuarioDetalleTour", selectedTour.nombreTour, usuarioTour, detalleUsuarioTourList)
+				new MenuUsuarioTourSelection("MenuUsuarioTourSelection", selectedTour.nombreTour, usuarioTour, detalleUsuarioTourList)
 			);
 
 		}
 
 		private void Process(Tour tour, out UsuarioTour usuarioTour, out List<DetalleUsuarioTour> detalleUsuarioTourList)
 		{
-			var user =  ModelPoolManager.GetInstance().GetValue("Usuario") as Usuario;
+			//var user =  ModelPoolManager.GetInstance().GetValue("Usuario") as Usuario;
+
 			//Del tour seleccionado verificar si el usuario esta suscrito
+			//var result = SQLiteService.GetInstance().Query(true,
+			//    "SELECT * FROM UsuarioTour "+
+			//    "WHERE idUsuario = "+ user.idUsuario +" AND idTour = " + tour.idTour
+			//);
+
 			var result = SQLiteService.GetInstance().Query(true,
-				"SELECT * FROM UsuarioTour "+
-				"WHERE idUsuario = "+ user.idUsuario +" AND idTour = " + tour.idTour
+				"SELECT * FROM UsuarioTour " +
+				"WHERE idTour = " + tour.idTour
 			);
 
 			UsuarioTour userTour = null;
@@ -138,7 +147,7 @@ namespace SncPucmm.Controller.GUI
 				string fechaFin = Convert.ToString(result["fechaFin"]);
 				if(!fechaFin.Equals(string.Empty))
 				{
-					startDate = Convert.ToDateTime(fechaInicio);
+					endDate = Convert.ToDateTime(fechaInicio);
 				}
 
 				userTour = new UsuarioTour()
@@ -173,10 +182,10 @@ namespace SncPucmm.Controller.GUI
 					fechaFin = Convert.ToString(result["fechaLlegada"]);
 					if (!fechaFin.Equals(string.Empty))
 					{
-						startDate = Convert.ToDateTime(fechaInicio);
+						endDate = Convert.ToDateTime(fechaInicio);
 					}
 
-					string fechaActualizacion = Convert.ToString(result["fechaActualizacion"]);
+					string fechaActualizacion = Convert.ToString(result["fechaFin"]);
 					if (!fechaActualizacion.Equals(string.Empty))
 					{
 						updatedDate = Convert.ToDateTime(fechaInicio);
@@ -187,6 +196,7 @@ namespace SncPucmm.Controller.GUI
 						{
 							idDetalleUsuarioTour = Convert.ToInt32(result["id"]),
 							idPuntoReunionTour = Convert.ToInt32(result["idPuntoReunionTour"]),
+							idUsuarioTour = userTour.idUsuarioTour,
 							fechaInicio = startDate,
 							fechaLlegada = endDate,
 							fechaFin = updatedDate
@@ -218,19 +228,32 @@ namespace SncPucmm.Controller.GUI
 				//Creacion del UsuarioTour
 
 				//Insertando en la base de datos
-				SQLiteService.GetInstance().Query(false, 
-					"INSERT INTO UsuarioTour (id, fechaInicio, idTour, idUsuario, request) "+
-					"VALUES ("+ idUsuarioTour +",'"+ fechaInicio.ToString("dd/MM/yyyy HH:mm:ss") +"',"+ tour.idTour +","+ user.idUsuario +",'create')"
+				//SQLiteService.GetInstance().Query(false, 
+				//    "INSERT INTO UsuarioTour (id, idTour, idUsuario, request) "+
+				//    "VALUES ("+ idUsuarioTour +","+ tour.idTour +","+ user.idUsuario +",'create')"
+				//);
+
+				SQLiteService.GetInstance().Query(false,
+					"INSERT INTO UsuarioTour (id, idTour, request) " +
+					"VALUES (" + idUsuarioTour + "," + tour.idTour + ",'create')"
 				);
 
 				//Creacion del objeto de UsuarioTour
+				//userTour = new UsuarioTour()
+				//{
+				//    idUsuarioTour = idUsuarioTour,
+				//    fechaInicio = fechaInicio,
+				//    idTour = tour.idTour,
+				//    estado = "activo",
+				//    idUsuario = user.idUsuario,
+				//};
+
 				userTour = new UsuarioTour()
 				{
 					idUsuarioTour = idUsuarioTour,
 					fechaInicio = fechaInicio,
 					idTour = tour.idTour,
 					estado = "activo",
-					idUsuario = user.idUsuario,
 				};
 
 				#endregion
@@ -299,8 +322,20 @@ namespace SncPucmm.Controller.GUI
 			detalleUsuarioTourList = detailsList;
 		}
 
-		public List<Tour> GetTourList()
+		private List<Tour> GetTourList()
 		{
+			List<Tour> tourList = new List<Tour>();
+			var result = SQLiteService.GetInstance().Query(true, "SELECT * FROM Tour");
+
+			while(result.Read())
+			{
+				tourList.Add(new Tour()
+				{
+					idTour = Convert.ToInt32(result["id"]),
+					nombreTour = Convert.ToString(result["nombreTour"])
+				});
+			}
+
 			return tourList;
 		}
 
@@ -328,7 +363,6 @@ namespace SncPucmm.Controller.GUI
 			buttonList = null;
 			tourList = null;
 			scrollViewItemTemplate = null;
-			guiScrollView = null;
 		}
 
 		#endregion        

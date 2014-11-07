@@ -9,6 +9,7 @@ class DetalleUsuarioTour {
     Date fechaLlegada
 
     static constraints = {
+        fechaInicio nullable: true
         fechaFin nullable: true
         fechaLlegada nullable: true
     }

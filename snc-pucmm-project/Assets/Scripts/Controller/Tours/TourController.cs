@@ -39,7 +39,8 @@ namespace SncPucmm.Controller.Tours
             ResetValues();
         }
 
-        public TourController(List<DetalleUsuarioTour> detalleUsuarioTourList)
+        public TourController(List<DetalleUsuarioTour> detalleUsuarioTourList) 
+            : this()
         {
             this.detalleUsuarioTourList = detalleUsuarioTourList;
         }

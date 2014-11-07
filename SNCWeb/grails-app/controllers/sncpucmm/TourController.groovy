@@ -169,20 +169,26 @@ class TourController {
             JSONObject userTour = new JSONObject();
             JSONObject detalle
             JSONArray detallesUT = new JSONArray();
+            userTour.put("id", ut.id)
             userTour.put("idUsuario", ut.usuario.id)
             userTour.put("idTour", ut.tour.id)
             userTour.put("estado", ut.estado)
-            userTour.put("fechaInicio", ut.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
-            userTour.put("fechaFin", ut.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
+            if(ut.fechaInicio)
+                userTour.put("fechaInicio", ut.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
+            if(ut.fechaFin)
+                userTour.put("fechaFin", ut.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
 
             def detallesUsuarioTour = DetalleUsuarioTour.findAllByUsuarioTour(ut)
             detallesUsuarioTour.each { dut ->
                 detalle = new JSONObject()
                 detalle.put("id", dut.id)
                 detalle.put("idPuntoReunionTour", dut.puntoReunionTour.id)
-                detalle.put("fechaInicio", dut.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
-                detalle.put("fechaFin", dut.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
-                detalle.put("fechaLlegada", dut.fechaLlegada.format("dd/MM/yyyy HH:mm:ss"))
+                if(dut.fechaInicio)
+                    detalle.put("fechaInicio", dut.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
+                if(dut.fechaFin)
+                    detalle.put("fechaFin", dut.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
+                if(dut.fechaLlegada)
+                    detalle.put("fechaLlegada", dut.fechaLlegada.format("dd/MM/yyyy HH:mm:ss"))
                 detallesUT.put(detalle)
             }
             userTour.put("DetalleUsuarioTourList", detallesUT)

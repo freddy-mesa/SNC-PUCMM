@@ -20,7 +20,6 @@ namespace Assets.Scripts.Controller.GUI
         string tourName;
 
         List<Button> buttonList;
-        UsuarioTour usuarioTour;
         List<DetalleUsuarioTour> detalleUsuarioTourList;
         Transform scrollViewItemTemplate;
         
@@ -31,7 +30,6 @@ namespace Assets.Scripts.Controller.GUI
         public MenuUsuarioTourSelection(string name, string tourName, UsuarioTour usuarioTour, List<DetalleUsuarioTour> detalleUsuarioTourList)
         {
             this.name = name;
-            this.usuarioTour = usuarioTour;
             this.detalleUsuarioTourList = detalleUsuarioTourList;
             this.tourName = tourName;
 
@@ -44,7 +42,7 @@ namespace Assets.Scripts.Controller.GUI
 
         private void Initializer()
         {
-            scrollViewItemTemplate = Resources.Load("GUI/DetalleUsuarioTourItem") as Transform;
+            scrollViewItemTemplate = (Resources.Load("GUI/DetalleUsuarioTourItem") as GameObject).transform;
 
             buttonList = new List<Button>();
 
@@ -52,13 +50,15 @@ namespace Assets.Scripts.Controller.GUI
             btnExit.OnTouchEvent += new OnTouchEventHandler(OnTouchExitButton);
             buttonList.Add(btnExit);
 
-            Button btnResume = new Button("ButtonResumen");
+            Button btnResume = new Button("ButtonResume");
             btnResume.OnTouchEvent += new OnTouchEventHandler(OnTouchResumeButton);
             buttonList.Add(btnResume);
 
             Button btnReset = new Button("ButtonReset");
             btnReset.OnTouchEvent += new OnTouchEventHandler(OnTouchResetButton);
             buttonList.Add(btnReset);
+
+            UIUtils.FindGUI("MenuUsuarioTourSelection/Label").GetComponent<UILabel>().text = tourName;
 
             CreateScrollView();
         }
@@ -95,25 +95,31 @@ namespace Assets.Scripts.Controller.GUI
 
         private void OnTouchExitButton(object sender, TouchEventArgs e)
         {
+            //Delete ScrollView Childrens
+            UIUtils.DestroyChilds("MenuUsuarioTourSelection/ScrollView", true);
+
+            //Remove Menu
             MenuManager.GetInstance().RemoveCurrentMenu();
         }
 
         private void CreateScrollView()
         {
+            var scrollView = UIUtils.FindGUI("MenuUsuarioTourSelection/ScrollView").transform;
+
             for (int i = 0; i < detalleUsuarioTourList.Count; i++)
             {
                 //Creando el item del Tree View con world coordinates
-                var item = GameObject.Instantiate(scrollViewItemTemplate) as Transform;
+                var item = (GameObject.Instantiate(scrollViewItemTemplate.gameObject) as GameObject).transform;
 
                 item.name = "DetalleUsuarioTourItem" + i;
 
                 //Agregando relacion de padre (Tree View List) - hijo (item del Tree View List)
-                item.parent = UIUtils.FindGUI("MenuUsuarioTourSelection/ScrollView").transform;
+                item.parent = scrollView;
 
                 //Agregando la posicion relativa del hijo con relacion al padre
                 item.transform.localPosition = new Vector3(
                     scrollViewItemTemplate.localPosition.x,
-                    scrollViewItemTemplate.localPosition.y - 65f * i,
+                    scrollViewItemTemplate.localPosition.y - 60f * i,
                     scrollViewItemTemplate.localPosition.z
                 );
 
@@ -133,7 +139,9 @@ namespace Assets.Scripts.Controller.GUI
                     itemText.text = Convert.ToString(result["nombre"]);
                 }
 
-                if (!detalleUsuarioTourList[i].fechaLlegada.HasValue)
+                item.FindChild("checkImg").gameObject.SetActive(false);
+
+                if (detalleUsuarioTourList[i].fechaLlegada.HasValue)
                 {
                     item.FindChild("checkImg").gameObject.SetActive(true);
                 }
@@ -161,7 +169,6 @@ namespace Assets.Scripts.Controller.GUI
         ~MenuUsuarioTourSelection()
         {
             this.name = null;
-            this.usuarioTour = null;
             this.buttonList = null;
             this.detalleUsuarioTourList = null;
             this.scrollViewItemTemplate = null;

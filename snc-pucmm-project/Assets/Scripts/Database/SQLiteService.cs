@@ -638,8 +638,6 @@ namespace SncPucmm.Database
 
 		public IDataReader Query(bool isReturning, string sqlQuery) 
 		{
-			Debug.Log("Query :" + sqlQuery);
-
 			try
 			{
 				IDbCommand _databaseCommand = _databaseConnection.CreateCommand();
@@ -647,10 +645,12 @@ namespace SncPucmm.Database
 				if (isReturning) 
 				{ 
 					IDataReader dataReader = _databaseCommand.ExecuteReader(); // execute command which returns a reader
+					Debug.Log("Query Executed: " + sqlQuery);
 					return dataReader;
 				}
 
 				_databaseCommand.ExecuteNonQuery();
+				Debug.Log("Query Executed: " + sqlQuery);
 			}
 			catch (SqliteException e)
 			{
@@ -805,7 +805,7 @@ namespace SncPucmm.Database
 
 					if (tourJson.HasField("PuntosReunion"))
 					{
-						JSONObject PuntoReunionTourJsonList = json.GetField("PuntosReunion");
+						JSONObject PuntoReunionTourJsonList = tourJson.GetField("PuntosReunion");
 
 						foreach (var PuntoReunionTourJson in PuntoReunionTourJsonList.list)
 						{
@@ -829,30 +829,31 @@ namespace SncPucmm.Database
 				{
 					var usuarioTour = new UsuarioTour(usuarioTourJson);
 					Query(false, "INSERT INTO UsuarioTour VALUES (" +
-						usuarioTour.idUsuarioTour.Value +",'"+ 
+						usuarioTour.idUsuarioTour +",'"+ 
 						usuarioTour.estado +"','"+ 
 						(usuarioTour.fechaInicio.HasValue ? usuarioTour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"','"+ 
 						(usuarioTour.fechaFin.HasValue ? usuarioTour.fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"',"+
 						usuarioTour.idTour.Value +","+
-						usuarioTour.idUsuario.Value +",'"+
+						usuarioTour.idUsuario +",'"+
 						usuarioTour.request
 					+"')");
 
-					if (json.HasField("DetalleUsuarioTourList"))
+					if (usuarioTourJson.HasField("DetalleUsuarioTourList"))
 					{
-						JSONObject detalleUsuarioTourJsonList = json.GetField("DetalleUsuarioTourList");
+						JSONObject detalleUsuarioTourJsonList = usuarioTourJson.GetField("DetalleUsuarioTourList");
 
 						foreach (var detalleUsuarioTourJson in detalleUsuarioTourJsonList.list)
 						{
 							var detalleUsuarioTour = new DetalleUsuarioTour(detalleUsuarioTourJson);
+							detalleUsuarioTour.idUsuarioTour = usuarioTour.idUsuarioTour;
 							Query(false, "INSERT INTO DetalleUsuarioTour VALUES (" +
 								detalleUsuarioTour.idDetalleUsuarioTour.Value + ",'" +
 								(detalleUsuarioTour.fechaInicio.HasValue ? detalleUsuarioTour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) + "','" +
 								(detalleUsuarioTour.fechaLlegada.HasValue ? detalleUsuarioTour.fechaLlegada.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) + "','" +
 								(detalleUsuarioTour.fechaFin.HasValue ? detalleUsuarioTour.fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) + "'," +
 								detalleUsuarioTour.idPuntoReunionTour.Value + "," +
-								detalleUsuarioTour.idUsuarioTour.Value
-							+ "')");
+								detalleUsuarioTour.idUsuarioTour
+							+ ")");
 						}
 					}
 				}

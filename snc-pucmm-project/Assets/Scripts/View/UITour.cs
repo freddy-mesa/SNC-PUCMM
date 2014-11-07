@@ -11,6 +11,7 @@ namespace SncPucmm.View
 {
     class UITour : UITouch
     {
+
         #region Metodos
 
         new void Update()
@@ -26,8 +27,6 @@ namespace SncPucmm.View
                     //Ha llegado a ultimo punto de reunion
                     
                     //Mensaje
-
-                    //
                 }
             }
         }        
