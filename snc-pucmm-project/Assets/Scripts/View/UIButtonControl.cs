@@ -5,7 +5,7 @@ using SncPucmm.Controller.Control;
 using System;
 using System.Text;
 
-namespace SncPucmm.View
+namespace SncPucmm.View     
 {
 	public class UIButtonControl : UITouch
 	{
@@ -16,7 +16,7 @@ namespace SncPucmm.View
 		/// </summary>
 		public void OnClick()
 		{
-			isTapped = true;
+			isButtonTapped = true;
 
 			var menu = MenuManager.GetInstance().GetCurrentMenu() as IButton;
 

@@ -10,6 +10,7 @@ namespace SncPucmm.Model.Domain
         #region Atributos
 
         public int? idUbicacion;
+        public int? cantidadPlantas;
         public string nombre;
         public string abreviacion;
     
@@ -41,6 +42,8 @@ namespace SncPucmm.Model.Domain
 
                     if (key == "id")
                         this.idUbicacion = Convert.ToInt32(json.list[i].n);
+                    else if (key == "cantidadPlantas")
+                        this.cantidadPlantas = Convert.ToInt32(json.list[i].n);
                     else if (key == "nombre")
                         this.nombre = json.list[i].str;
                     else
@@ -55,6 +58,8 @@ namespace SncPucmm.Model.Domain
 
             if(idUbicacion.HasValue)
                 json.AddField("id", idUbicacion.Value);
+            if (cantidadPlantas.HasValue)
+                json.AddField("cantidadPlantas", cantidadPlantas.Value);
             if(nombre != null)
                 json.AddField("nombre", nombre);
             if(abreviacion != null)

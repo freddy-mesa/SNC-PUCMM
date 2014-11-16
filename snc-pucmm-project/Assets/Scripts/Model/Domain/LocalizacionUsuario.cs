@@ -9,7 +9,7 @@ namespace SncPucmm.Model.Domain
     {
         #region Atributos
 
-        public int? idUsuarioLocalizacion;
+        public int? idLocalizacionUsuario;
         public DateTime? fechaLocalizacion;
         public int? idNodo;
         public int? idUsuario;
@@ -31,8 +31,8 @@ namespace SncPucmm.Model.Domain
         {
             JSONObject json = new JSONObject();
 
-            if (idUsuarioLocalizacion.HasValue)
-                json.AddField("id", idUsuarioLocalizacion.Value);
+            if (idLocalizacionUsuario.HasValue)
+                json.AddField("id", idLocalizacionUsuario.Value);
             if (fechaLocalizacion.HasValue)
                 json.AddField("fechaLocalizacion", fechaLocalizacion.Value.ToString("dd/MM/yyyy HH:mm:ss"));
             if (idNodo.HasValue)
@@ -41,6 +41,11 @@ namespace SncPucmm.Model.Domain
                 json.AddField("idUsuario", idUsuario.Value);
 
             return json;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("LocalizacionUsuario[ idUsuarioLocalizacion = {0} ]", idLocalizacionUsuario);
         }
 
         #endregion

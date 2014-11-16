@@ -78,8 +78,9 @@
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed 1.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored 1.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored.shader" />
-     <None Include="Assets\Draw Call Minimizer\Example\ReadMe.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored.shader" />
+     <None Include="Assets\Plugins\Android\classes\AndroidManifest.xml" />
+     <None Include="Assets\MeshBaker\Release Notes.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed.shader" />
      <None Include="Assets\Plugins\Android\build.xml" />
@@ -90,7 +91,9 @@
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text (TextureClip).shader" />
      <None Include="Assets\NGUI\Examples\Shaders\Unlit - Depth.shader" />
      <None Include="Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Normal.txt" />
+     <None Include="Assets\MeshBaker\README.txt" />
      <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
+     <None Include="Assets\Plugins\Android\classes\build.xml" />
      <None Include="Assets\NGUI\Examples\Resources\Localization.txt" />
  <Reference Include="Mono.Data">
  <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/Mono.Data.dll</HintPath>

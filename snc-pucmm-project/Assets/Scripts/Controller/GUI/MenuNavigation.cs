@@ -16,8 +16,8 @@ namespace SncPucmm.Controller.GUI
 		string name;
 
 		List<Button> buttonList;
-		List<PathDataDijkstra> directionPath;
-		int currentDirectionPath;
+		public List<PathDataDijkstra> directionPath;
+		public int currentDirectionPath;
 
 		bool isBackButtonActive;
 		bool isNextButtonActive;
@@ -79,12 +79,17 @@ namespace SncPucmm.Controller.GUI
 			buttonExit.OnTouchEvent += new OnTouchEventHandler(OnTouchExit);
 			buttonList.Add(buttonExit);
 
+			Button buttonOk = new Button("ButtonOk");
+			buttonOk.OnTouchEvent += new OnTouchEventHandler(OnTouchExit);
+			buttonList.Add(buttonOk);
+
 			UIUtils.FindGUI("MenuNavigation/" + buttonList[0].Name).SetActive(false);
 			UIUtils.FindGUI("MenuNavigation/" + buttonList[1].Name).SetActive(true);
 
 			var tourBar = UIUtils.FindGUI("MenuNavigation/NameTourBar"); 
 			if (State.GetCurrentState() == eState.Tour)
 			{
+				tourBar.SetActive(true);
 				var label = tourBar.transform.FindChild("Label").GetComponent<UILabel>();
 				label.text = tourName;
 			}
@@ -92,6 +97,8 @@ namespace SncPucmm.Controller.GUI
 			{
 				tourBar.SetActive(false);
 			}
+
+			UIUtils.FindGUI("MenuNavigation/TourNotification").SetActive(false);
 
 			ShowDirectionMenu(directionPath[currentDirectionPath]);
 			ShowNavigationDirection(directionPath[currentDirectionPath]);
@@ -142,12 +149,15 @@ namespace SncPucmm.Controller.GUI
 		public void OnTouchResume(object sender, TouchEventArgs e) 
 		{
 			PathDataDijkstra path = directionPath[currentDirectionPath];
-			float posX = UIUtils.getXDistance(path.StartNode.Longitude) - 50f;
-			float posZ = UIUtils.getZDistance(path.StartNode.Latitude);
+
+			float nodePosX = UIUtils.getXDistance(path.StartNode.Longitude) - 50f;
+			float nodePosZ = UIUtils.getZDistance(path.StartNode.Latitude);
 
 			Transform camera = UIUtils.Find("/Vista3erPersona").camera.transform;
 			camera.eulerAngles = new Vector3(camera.eulerAngles.x, 90, 0f);
-			camera.position = new Vector3(posX, camera.position.y, posZ);
+
+			UICamaraControl.targetTransitionPosition = new Vector3(nodePosX, camera.position.y, nodePosZ);
+			UICamaraControl.isTransitionAnimated = true;
 		}
 
 		public void OnTouchExit(object sender, TouchEventArgs e) 
@@ -168,7 +178,7 @@ namespace SncPucmm.Controller.GUI
 
 		private void ShowDirectionMenu(PathDataDijkstra path)
 		{
-			String labelText = String.Format("{0} metros desde {1} hacia {2}. Metros Recorridos: {3}", path.DistanceToNeighbor, path.StartNode.Name, path.EndNode.Name, path.DistancePathed);
+			String labelText = String.Format("{0:F2} metros desde {1} hacia {2}. Metros Recorridos: {3:F2} metros", path.DistanceToNeighbor, path.StartNode.Name, path.EndNode.Name, path.DistancePathed);
 			UILabel label = UIUtils.FindGUI("MenuNavigation/StatusBar/Label").GetComponent<UILabel>();
 			label.text = UIUtils.FormatStringLabel(labelText, ' ', 20);
 		}

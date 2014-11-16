@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -36,6 +37,7 @@ namespace SncPucmm.Model.Domain
 
         private void Decoding(JSONObject json)
         {
+            DateTime temp; 
             for (int i = 0; i < json.list.Count; i++)
             {
                 if (!json.list[i].IsNull)
@@ -44,12 +46,12 @@ namespace SncPucmm.Model.Domain
 
                     if (key == "id")
                         this.idDetalleUsuarioTour = Convert.ToInt32(json.list[i].n);
-                    else if (key == "fechaInicio")
-                        this.fechaInicio = Convert.ToDateTime(json.list[i].str);
-                    else if (key == "fechaLlegada")
-                        this.fechaLlegada = Convert.ToDateTime(json.list[i].str);
-                    else if (key == "fechaFin")
-                        this.fechaFin = Convert.ToDateTime(json.list[i].str);
+                    else if (key == "fechaInicio" && DateTime.TryParseExact(json.list[i].str, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+                        this.fechaInicio = temp;
+                    else if (key == "fechaLlegada" && DateTime.TryParseExact(json.list[i].str, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+                        this.fechaLlegada = temp;
+                    else if (key == "fechaFin" && DateTime.TryParseExact(json.list[i].str, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+                        this.fechaFin = temp;
                     else if (key == "idPuntoReunionTour")
                         this.idPuntoReunionTour = Convert.ToInt32(json.list[i].n);
                     else

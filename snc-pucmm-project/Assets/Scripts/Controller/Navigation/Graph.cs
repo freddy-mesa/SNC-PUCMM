@@ -74,6 +74,41 @@ namespace SncPucmm.Controller.Navigation
             B.Neighbors.Add(new NeighborDijkstra() { Node = A, Distance = distance });
         }
 
+        public List<PathDataDijkstra> Dijkstra(int startIdNode, int destinationIdNode)
+        {
+            bool startNodeFound = false, endNodeFound = false;
+            List<NodeDijkstra> NodesDijkstra = new List<NodeDijkstra>();
+            NodeDijkstra start = new NodeDijkstra(), destination = new NodeDijkstra();
+
+            foreach (NodeDijkstra nodeInList in this.Nodes)
+            {
+                if (nodeInList.Active)
+                {
+                    NodeDijkstra node = new NodeDijkstra(nodeInList);
+
+                    if (!startNodeFound && node.IdNode.Equals(startIdNode))
+                    {
+                        node.DijkstraDistance = 0;
+                        start = node;
+                        startNodeFound = !startNodeFound;
+                    }
+                    else
+                    {
+                        node.DijkstraDistance = Int32.MaxValue;
+                    }
+                    if (!endNodeFound && node.IdNode.Equals(destinationIdNode))
+                    {
+                        destination = node;
+                        endNodeFound = !endNodeFound;
+                    }
+
+                    NodesDijkstra.Add(node);
+                }
+            }
+
+            return Dijkstra(ref NodesDijkstra, start, destination);
+        }
+
         public List<PathDataDijkstra> Dijkstra(String startName, String destinationName)
         {
             bool startNodeFound = false, endNodeFound = false;
@@ -105,6 +140,11 @@ namespace SncPucmm.Controller.Navigation
                 }
             }
 
+            return Dijkstra(ref NodesDijkstra, start, destination);
+        }
+
+        private List<PathDataDijkstra> Dijkstra(ref List<NodeDijkstra> NodesDijkstra, NodeDijkstra start, NodeDijkstra destination)
+        {
             foreach (NodeDijkstra node in NodesDijkstra)
             {
                 foreach (NeighborDijkstra neighbor in node.Neighbors)

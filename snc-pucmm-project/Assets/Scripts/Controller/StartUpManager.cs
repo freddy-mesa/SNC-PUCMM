@@ -19,8 +19,8 @@ namespace SncPucmm.Controller
         void Start()
         {
             MenuManager.GetInstance();
+            using (var service = new SQLiteService()) { }
             ModelPoolManager.GetInstance();
-            SQLiteService.GetInstance();
 
             GUIInitializer();
             BuildingInitializer();
@@ -32,31 +32,36 @@ namespace SncPucmm.Controller
 
         private void GUIInitializer()
         {
-            MenuMain menuMain = new MenuMain("MenuMain");
-            MenuManager.GetInstance().AddMenu(menuMain);
+            MenuManager.GetInstance().AddMenu(new MenuMain("MenuMain"));
+            UIUtils.ActivateCameraLabels(true);
         }
 
         private void BuildingInitializer()
         {
-            IDataReader reader;
 
             //Seleccionando desde la Base de datos los localidades
-            reader = SQLiteService.GetInstance().Query(true,
-                "SELECT UBI.abreviacion, UBI.idUbicacion, NOD.idNodo, NOD.nombre FROM Ubicacion UBI, Nodo NOD " +
-                "WHERE UBI.idUbicacion = NOD.edificio"
-            );
+            var sql = "SELECT UBI.abreviacion, UBI.idUbicacion, NOD.edificio, NOD.idNodo, NOD.nombre, UBI.cantidadPlantas "+
+                    "FROM Ubicacion UBI, Nodo NOD " +
+                    "WHERE UBI.idUbicacion = NOD.edificio";
 
             List<object> list = new List<object>();
-
-            while (reader.Read())
+            using (var service = new SQLiteService())
             {
-                list.Add(new
+                using (var reader = service.SelectQuery(sql))
                 {
-                    Abreviacion = Convert.ToString(reader["abreviacion"]),
-                    Nombre = Convert.ToString(reader["nombre"]),
-                    Idnodo = Convert.ToInt32(reader["idNodo"]),
-                    Idubicacion = Convert.ToInt32(reader["idUbicacion"])
-                });
+                    while (reader.Read())
+                    {
+                        list.Add(new
+                        {
+                            abreviacion = Convert.ToString(reader["abreviacion"]),
+                            nombre = Convert.ToString(reader["nombre"]),
+                            idNodo = Convert.ToInt32(reader["idNodo"]),
+                            idUbicacion = Convert.ToInt32(reader["idUbicacion"]),
+                            edificio = Convert.ToInt32(reader["edificio"]),
+                            cantidadPlantas = Convert.ToInt32(reader["cantidadPlantas"])
+                        });
+                    }
+                }
             }
 
             //Encontrando todos los edificios con el Tag Building
@@ -68,17 +73,29 @@ namespace SncPucmm.Controller
 
                 foreach (object item in list)
                 {
-                    string abreviacion = Convert.ToString(item.GetType().GetProperty("Abreviacion").GetValue(item, null));
+                    string abreviacion = Convert.ToString(item.GetType().GetProperty("abreviacion").GetValue(item, null));
 
                     if (child.name.Equals(abreviacion))
                     {
                         var localizacion = child.GetComponent<ModelObject>();
 
-                        string nombre = Convert.ToString(item.GetType().GetProperty("Nombre").GetValue(item, null));
-                        int idUbicacion = Convert.ToInt32(item.GetType().GetProperty("Idubicacion").GetValue(item, null));
-                        int idNodo = Convert.ToInt32(item.GetType().GetProperty("Idnodo").GetValue(item, null));
+                        string nombre = Convert.ToString(item.GetType().GetProperty("nombre").GetValue(item, null));
+                        int idUbicacion = Convert.ToInt32(item.GetType().GetProperty("idUbicacion").GetValue(item, null));
+                        int idNodo = Convert.ToInt32(item.GetType().GetProperty("idNodo").GetValue(item, null));
+                        int edificio = Convert.ToInt32(item.GetType().GetProperty("edificio").GetValue(item, null));
+                        int cantidadPlantas = Convert.ToInt32(item.GetType().GetProperty("cantidadPlantas").GetValue(item, null));
 
-                        localizacion.ObjectTag = new ModelNode() { idNodo = idNodo, name = nombre, idUbicacion = idUbicacion };
+                        var modelNode = new ModelNode() 
+                        { 
+                            idNodo = idNodo, 
+                            name = nombre, 
+                            idUbicacion = idUbicacion, 
+                            abreviacion = abreviacion,
+                            cantidadPlantas = cantidadPlantas
+                        };
+
+                        modelNode.isBuilding = (edificio == idUbicacion ? true : false);
+                        localizacion.ObjectTag = modelNode;
                         localizacion.Id = idNodo;
 
 

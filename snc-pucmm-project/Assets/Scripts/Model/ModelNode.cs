@@ -9,8 +9,12 @@ namespace SncPucmm.Model
         public int idNodo;
         public string name;
         public int idUbicacion;
-        
-        #endregion
+        public bool isBuilding;
+        public string abreviacion;
+        public int cantidadPlantas;
+        public int planta;
+
+        #endregion 
 
         #region Metodos
 

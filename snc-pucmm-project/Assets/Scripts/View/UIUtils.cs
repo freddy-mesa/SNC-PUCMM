@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SncPucmm.Model;
+using System;
 using UnityEngine;
 
 namespace SncPucmm.View
@@ -53,10 +54,7 @@ namespace SncPucmm.View
         public static void ActivateCameraLabels(bool activate) 
         {
             var labels = FindGUI("CameraLabels");
-            foreach (Transform label in labels.transform)
-            {
-                label.gameObject.SetActive(activate);
-            }
+            labels.SetActive(activate);
         }
 
         public static GameObject FindGUI(string URI) 
@@ -129,6 +127,33 @@ namespace SncPucmm.View
         public static float getDirectDistance(float x1, float y1, float x2, float y2)
         {
             return Mathf.Sqrt(Mathf.Pow(x1 - x2, 2) + Mathf.Pow(y1 - y2, 2));
+        }
+
+        public static void ConvertNodeAltitudeInMeter(string buildingName, int insideBuildingFloor, out float altitud1, out float altitud2)
+        {
+            float result1 = 0, result2 = 0;
+
+            if (buildingName == "Aulas 3")
+            {
+                if (insideBuildingFloor == 1)
+                {
+                    result1 = 4.5f;
+                    result2 = result1 - 3.5f;
+                }
+                else if (insideBuildingFloor == 2)
+                {
+                    result1 = 8.5f;
+                    result2 = result1 - 3.5f;
+                }
+                else if (insideBuildingFloor == 3)
+                {
+                    result1 = 12.5f;
+                    result2 = result1 - 3f;
+                }
+            }
+
+            altitud1 = result1;
+            altitud2 = result2;
         }
     }
 }

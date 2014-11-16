@@ -46,22 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Runtime\DrawCallMinimizer.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\CommonShaderProperties.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\DrawCallMinimizerInfo.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\MatrixExtension.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\MeshCombineUtility.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\MeshExporter.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\MeshInstance.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\ShaderProperties.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\TextureCombineOutput.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\TextureCombineUtility.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Utility\TexturePosition.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Misc\ShaderProperties.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Misc\TextureAtlasInfo.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Runtime\MeshCombineUtility.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Runtime\OptimizedCombineChildren.cs" />
-     <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Runtime\TextureCombineUtility.cs" />
      <Compile Include="Assets\GyroDroid\SampleScripts\LightControl.cs" />
      <Compile Include="Assets\GyroDroid\SampleScripts\MagneticFieldCamera.cs" />
      <Compile Include="Assets\GyroDroid\SampleScripts\MinimalSensorCamera.cs" />
@@ -95,6 +79,34 @@
      <Compile Include="Assets\JSON\JSONObject.cs" />
      <Compile Include="Assets\JSON\JSONTemplates.cs" />
      <Compile Include="Assets\JSON\VectorTemplates.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\MB2_TextureBakeResults.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\MB2_UpdateSkinnedMeshBoundsFromBones.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\MB2_UpdateSkinnedMeshBoundsFromBounds.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\MB3_BatchPrefabBaker.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\MB3_MeshBaker.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\MB3_MeshBakerCommon.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\MB3_MeshBakerRoot.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\MB3_MultiMeshBaker.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\MB3_TextureBaker.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\_Legacy\Core\MB2_MeshCombiner.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\_Legacy\Core\MB2_MultiMeshCombiner.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\_Legacy\Core\MB_TextureCombiner.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\_Legacy\MB2_MeshBaker.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\_Legacy\MB2_MeshBakerCommon.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\_Legacy\MB2_MeshBakerRoot.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\_Legacy\MB2_MultiMeshBaker.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\_Legacy\MB2_TextureBaker.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\_testing\MB2_TestShowHide.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\_testing\MB2_TestUpdate.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\core\MB2_Core.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\core\MB2_Log.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\core\MB2_MBVersion.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\core\MB2_TexturePacker.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\core\MB3_MeshCombiner.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\core\MB3_MeshCombinerSimple.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\core\MB3_MultiMeshCombiner.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\core\MB3_TextureCombiner.cs" />
+     <Compile Include="Assets\MeshBaker\scripts\core\MB_Utility.cs" />
      <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipItems.cs" />
      <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipRandomItem.cs" />
      <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Game\UICursor.cs" />
@@ -240,6 +252,7 @@
      <Compile Include="Assets\Scripts\Controller\Control\ScrollView.cs" />
      <Compile Include="Assets\Scripts\Controller\Control\TextBox.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\MenuBuilding.cs" />
+     <Compile Include="Assets\Scripts\Controller\GUI\MenuInsideBuilding.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\MenuMain.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\MenuNavigation.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\MenuTourSelection.cs" />
@@ -280,6 +293,7 @@
      <Compile Include="Assets\Scripts\View\UICharacter.cs" />
      <Compile Include="Assets\Scripts\View\UIDirections.cs" />
      <Compile Include="Assets\Scripts\View\UIGPS.cs" />
+     <Compile Include="Assets\Scripts\View\UIInsideBuilding.cs" />
      <Compile Include="Assets\Scripts\View\UIKeyboard.cs" />
      <Compile Include="Assets\Scripts\View\UIModel.cs" />
      <Compile Include="Assets\Scripts\View\UIMovement.cs" />
@@ -349,8 +363,9 @@
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed 1.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored 1.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored.shader" />
-     <None Include="Assets\Draw Call Minimizer\Example\ReadMe.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored.shader" />
+     <None Include="Assets\Plugins\Android\classes\AndroidManifest.xml" />
+     <None Include="Assets\MeshBaker\Release Notes.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed.shader" />
      <None Include="Assets\Plugins\Android\build.xml" />
@@ -361,7 +376,9 @@
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text (TextureClip).shader" />
      <None Include="Assets\NGUI\Examples\Shaders\Unlit - Depth.shader" />
      <None Include="Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Normal.txt" />
+     <None Include="Assets\MeshBaker\README.txt" />
      <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
+     <None Include="Assets\Plugins\Android\classes\build.xml" />
      <None Include="Assets\NGUI\Examples\Resources\Localization.txt" />
  <Reference Include="Mono.Data">
  <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/Mono.Data.dll</HintPath>

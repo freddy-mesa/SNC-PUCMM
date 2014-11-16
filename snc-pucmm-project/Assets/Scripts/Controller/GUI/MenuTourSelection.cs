@@ -8,6 +8,7 @@ using System.Text;
 using UnityEngine;
 using Assets.Scripts.Controller.GUI;
 using SncPucmm.Database;
+using System.Globalization;
 
 namespace SncPucmm.Controller.GUI
 {
@@ -123,199 +124,223 @@ namespace SncPucmm.Controller.GUI
 			//    "WHERE idUsuario = "+ user.idUsuario +" AND idTour = " + tour.idTour
 			//);
 
-			var result = SQLiteService.GetInstance().Query(true,
-				"SELECT * FROM UsuarioTour " +
-				"WHERE idTour = " + tour.idTour
-			);
-
 			UsuarioTour userTour = null;
 			List<DetalleUsuarioTour> detailsList = new List<DetalleUsuarioTour>();
 
-			//El UsuarioTour ya ha sido creado
-			if (result.Read())
+			using (var sqlService = new SQLiteService())
 			{
-				#region Recuperacion UsuarioTour
-				
-				DateTime? startDate = null, endDate = null;
-
-				string fechaInicio = Convert.ToString(result["fechaInicio"]);
-				if(!fechaInicio.Equals(string.Empty))
+				using (var resultUsuarioTour = sqlService.SelectQuery("SELECT * FROM UsuarioTour WHERE idTour = " + tour.idTour))
 				{
-					startDate = Convert.ToDateTime(fechaInicio);
-				}
-
-				string fechaFin = Convert.ToString(result["fechaFin"]);
-				if(!fechaFin.Equals(string.Empty))
-				{
-					endDate = Convert.ToDateTime(fechaInicio);
-				}
-
-				userTour = new UsuarioTour()
-				{
-					idUsuarioTour = Convert.ToInt32(result["id"]),
-					idTour = Convert.ToInt32(result["idTour"]),
-					estado = Convert.ToString(result["estado"]),
-					fechaInicio = startDate,
-					fechaFin = endDate
-				};
-
-				#endregion
-
-				#region Recuperacion DetalleUsuarioTour
-
-				result = SQLiteService.GetInstance().Query(true,
-					"SELECT * FROM DetalleUsuarioTour " +
-					"WHERE idUsuarioTour = " + userTour.idUsuarioTour
-				);
-
-				while (result.Read())
-				{
-					DateTime? updatedDate = null;
-					startDate = endDate = null;
-
-					fechaInicio = Convert.ToString(result["fechaInicio"]);
-					if (!fechaInicio.Equals(string.Empty))
+					//El UsuarioTour ya ha sido creado
+					if (resultUsuarioTour.Read())
 					{
-						startDate = Convert.ToDateTime(fechaInicio);
-					}
+						#region Recuperacion UsuarioTour
 
-					fechaFin = Convert.ToString(result["fechaLlegada"]);
-					if (!fechaFin.Equals(string.Empty))
-					{
-						endDate = Convert.ToDateTime(fechaInicio);
-					}
+						DateTime? startDate = null, endDate = null;
+						DateTime temp;
 
-					string fechaActualizacion = Convert.ToString(result["fechaFin"]);
-					if (!fechaActualizacion.Equals(string.Empty))
-					{
-						updatedDate = Convert.ToDateTime(fechaInicio);
-					}
-
-					detailsList.Add(
-						new DetalleUsuarioTour()
+						var obj = resultUsuarioTour["fechaInicio"];
+						if (obj != null)
 						{
-							idDetalleUsuarioTour = Convert.ToInt32(result["id"]),
-							idPuntoReunionTour = Convert.ToInt32(result["idPuntoReunionTour"]),
-							idUsuarioTour = userTour.idUsuarioTour,
+							string fechaInicio = Convert.ToString(obj);
+							if (DateTime.TryParseExact(fechaInicio, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+							{
+								startDate = temp;
+							}
+						}
+
+						obj = resultUsuarioTour["fechaFin"];
+						if (obj != null)
+						{
+							string fechaFin = Convert.ToString(obj);
+							if (DateTime.TryParseExact(fechaFin, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+							{
+								endDate = temp;
+							}
+						}
+
+						userTour = new UsuarioTour()
+						{
+							idUsuarioTour = Convert.ToInt32(resultUsuarioTour["id"]),
+							idTour = Convert.ToInt32(resultUsuarioTour["idTour"]),
+							estado = Convert.ToString(resultUsuarioTour["estado"]),
 							fechaInicio = startDate,
-							fechaLlegada = endDate,
-							fechaFin = updatedDate
-						}
-					);
-				}
+							fechaFin = endDate
+						};
 
-				#endregion
-			}
-			//Se creará un nuevo registro de UsuarioTour y sus repectivos DetalleUsuarioTour
-			else
-			{
-				#region Creacion UsuarioTour
-				
-				//BUscando el ultimo id
-				result = SQLiteService.GetInstance().Query(true, 
-					"SELECT MAX(id) as id FROM UsuarioTour"
-				);
+						#endregion
 
-				int idUsuarioTour = 0;
-				if(result.Read())
-				{
-					idUsuarioTour = Convert.ToInt32(result["id"]);
-				}
+						#region Recuperacion DetalleUsuarioTour
 
-				idUsuarioTour++;
-				var fechaInicio = DateTime.Now;
+						var sql = "SELECT * FROM DetalleUsuarioTour WHERE idUsuarioTour = " + userTour.idUsuarioTour;
 
-				//Creacion del UsuarioTour
-
-				//Insertando en la base de datos
-				//SQLiteService.GetInstance().Query(false, 
-				//    "INSERT INTO UsuarioTour (id, idTour, idUsuario, request) "+
-				//    "VALUES ("+ idUsuarioTour +","+ tour.idTour +","+ user.idUsuario +",'create')"
-				//);
-
-				SQLiteService.GetInstance().Query(false,
-					"INSERT INTO UsuarioTour (id, idTour, request) " +
-					"VALUES (" + idUsuarioTour + "," + tour.idTour + ",'create')"
-				);
-
-				//Creacion del objeto de UsuarioTour
-				//userTour = new UsuarioTour()
-				//{
-				//    idUsuarioTour = idUsuarioTour,
-				//    fechaInicio = fechaInicio,
-				//    idTour = tour.idTour,
-				//    estado = "activo",
-				//    idUsuario = user.idUsuario,
-				//};
-
-				userTour = new UsuarioTour()
-				{
-					idUsuarioTour = idUsuarioTour,
-					fechaInicio = fechaInicio,
-					idTour = tour.idTour,
-					estado = "activo",
-				};
-
-				#endregion
-
-				#region Creacion DetalleUsuarioTourList
-				
-				//Obtener los puntos de reunion del tour selecionado
-				result = SQLiteService.GetInstance().Query(true,
-					"SELECT * FROM PuntoReunionTour " +
-					"WHERE idTour = " + tour.idTour
-				);
-
-				var puntoReuionList = new List<PuntoReunionTour>();
-				if (result.Read())
-				{
-
-					var puntoReunion = new PuntoReunionTour()
-					{
-						idPuntoReunionTour = Convert.ToInt32(result["id"]),
-						secuencia = Convert.ToInt32(result["secuencia"]),
-						idNodo = Convert.ToInt32(result["idNodo"]),
-						idTour = Convert.ToInt32(result["idTour"])
-					};
-
-					puntoReuionList.Add(puntoReunion);
-				}
-
-				//Creacion del DetalleUsuarioTour
-				
-				//Buscando el ultimo id
-				result = SQLiteService.GetInstance().Query(true, 
-					"SELECT MAX(id) as id FROM DetalleUsuarioTour"
-				);
-
-				int idDetalleUsuarioTour = 0;
-				if(result.Read())
-				{
-					idDetalleUsuarioTour = Convert.ToInt32(result["id"]);
-				}
-
-				foreach(var puntoReunion in puntoReuionList)
-				{
-					idDetalleUsuarioTour++;
-
-					//Insertando en la base de datos
-					SQLiteService.GetInstance().Query(false, 
-						"INSERT INTO DetalleUsuarioTour (id, idPuntoReunionTour, idUsuarioTour) "+
-						"VALUES ("+ idDetalleUsuarioTour +","+ puntoReunion.idPuntoReunionTour +","+ idUsuarioTour +")"
-					);
-
-					//Creacion del objeto de DetalleUsuarioTour
-					detailsList.Add(
-						new DetalleUsuarioTour() 
+						using (var resultDetalleUsuarioTour = sqlService.SelectQuery(sql))
 						{
-							idDetalleUsuarioTour = idDetalleUsuarioTour,
-							idPuntoReunionTour = puntoReunion.idPuntoReunionTour,
-							idUsuarioTour = idUsuarioTour
-						}
-					);
-				}
+							while (resultDetalleUsuarioTour.Read())
+							{
+								DateTime? updatedDate = null;
+								startDate = endDate = null;
 
-				#endregion
+								obj = resultDetalleUsuarioTour["fechaInicio"];
+								if (obj != null)
+								{
+									var fechaInicio = Convert.ToString(obj);
+									if (DateTime.TryParseExact(fechaInicio, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+									{
+										startDate = temp;
+									}
+								}
+
+								obj = resultDetalleUsuarioTour["fechaLlegada"];
+								if (obj != null)
+								{
+									var fechaFin = Convert.ToString(obj);
+									if (DateTime.TryParseExact(fechaFin, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+									{
+										endDate = temp;
+									}
+								}
+
+								obj = resultDetalleUsuarioTour["fechaFin"];
+								if (obj != null)
+								{
+									var fechaActualizacion = Convert.ToString(obj);
+									if (DateTime.TryParseExact(fechaActualizacion, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+									{
+										updatedDate = temp;
+									}
+								}
+
+								detailsList.Add(
+									new DetalleUsuarioTour()
+									{
+										idDetalleUsuarioTour = Convert.ToInt32(resultDetalleUsuarioTour["id"]),
+										idPuntoReunionTour = Convert.ToInt32(resultDetalleUsuarioTour["idPuntoReunionTour"]),
+										idUsuarioTour = userTour.idUsuarioTour,
+										fechaInicio = startDate,
+										fechaLlegada = endDate,
+										fechaFin = updatedDate
+									}
+								);
+							}
+						}
+
+						#endregion
+					}
+					//Se creará un nuevo registro de UsuarioTour y sus repectivos DetalleUsuarioTour
+					else
+					{
+						#region Creacion UsuarioTour
+
+						//Buscando el ultimo id
+						int idUsuarioTour = 0;
+
+						using (var result = sqlService.SelectQuery("SELECT MAX(id) as id FROM UsuarioTour"))
+						{
+							if (result.Read())
+							{
+								idUsuarioTour = Convert.ToInt32(result["id"]);
+							}
+						}
+
+						idUsuarioTour++;
+						var fechaInicio = DateTime.Now;
+
+						//Creacion del UsuarioTour
+
+						//Insertando en la base de datos
+						//SQLiteService.GetInstance().Query(false, 
+						//    "INSERT INTO UsuarioTour (id, idTour, idUsuario, request) "+
+						//    "VALUES ("+ idUsuarioTour +","+ tour.idTour +","+ user.idUsuario +",'create')"
+						//);
+
+						sqlService.TransactionalQuery(
+							"INSERT INTO UsuarioTour (id, idTour, fechaInicio, request) " +
+							"VALUES (" + idUsuarioTour + "," + tour.idTour + ",'" + fechaInicio.ToString("dd/MM/yyyy HH:mm:ss") + "','create')"
+						);
+
+						//Creacion del objeto de UsuarioTour
+						//userTour = new UsuarioTour()
+						//{
+						//    idUsuarioTour = idUsuarioTour,
+						//    fechaInicio = fechaInicio,
+						//    idTour = tour.idTour,
+						//    estado = "activo",
+						//    idUsuario = user.idUsuario,
+						//};
+
+						userTour = new UsuarioTour()
+						{
+							idUsuarioTour = idUsuarioTour,
+							fechaInicio = fechaInicio,
+							idTour = tour.idTour,
+							estado = "activo",
+						};
+
+						#endregion
+
+						#region Creacion DetalleUsuarioTourList
+
+						//Obtener los puntos de reunion del tour selecionado
+						var puntoReuionList = new List<PuntoReunionTour>();
+
+						using (var result = sqlService.SelectQuery("SELECT * FROM PuntoReunionTour WHERE idTour = " + tour.idTour))
+						{
+							while (result.Read())
+							{
+								var puntoReunion = new PuntoReunionTour()
+								{
+									idPuntoReunionTour = Convert.ToInt32(result["id"]),
+									secuencia = Convert.ToInt32(result["secuencia"]),
+									idNodo = Convert.ToInt32(result["idNodo"]),
+									idTour = Convert.ToInt32(result["idTour"])
+								};
+
+								puntoReuionList.Add(puntoReunion);
+							}
+						}
+
+						//Creacion del DetalleUsuarioTour
+
+						//Buscando el ultimo id
+						int idDetalleUsuarioTour = 0;
+
+						using (var result = sqlService.SelectQuery("SELECT MAX(id) as id FROM DetalleUsuarioTour"))
+						{
+							if (result.Read())
+							{
+								idDetalleUsuarioTour = Convert.ToInt32(result["id"]);
+							}
+						}
+
+						StringBuilder sqlBuilder = new StringBuilder();
+
+						foreach (var puntoReunion in puntoReuionList)
+						{
+							idDetalleUsuarioTour++;
+
+							//Insertando en la base de datos
+							sqlBuilder.Append(
+								"INSERT INTO DetalleUsuarioTour (id, idPuntoReunionTour, idUsuarioTour) " +
+								"VALUES (" + idDetalleUsuarioTour + "," + puntoReunion.idPuntoReunionTour + "," + idUsuarioTour + ");"
+							);
+
+							//Creacion del objeto de DetalleUsuarioTour
+							detailsList.Add(
+								new DetalleUsuarioTour()
+								{
+									idDetalleUsuarioTour = idDetalleUsuarioTour,
+									idPuntoReunionTour = puntoReunion.idPuntoReunionTour,
+									idUsuarioTour = idUsuarioTour
+								}
+							);
+						}
+
+						sqlService.TransactionalQuery(sqlBuilder.ToString());
+
+						#endregion
+					}
+				}
 			}
 
 			usuarioTour = userTour;
@@ -325,15 +350,20 @@ namespace SncPucmm.Controller.GUI
 		private List<Tour> GetTourList()
 		{
 			List<Tour> tourList = new List<Tour>();
-			var result = SQLiteService.GetInstance().Query(true, "SELECT * FROM Tour");
 
-			while(result.Read())
+			using (var sqlService = new SQLiteService())
 			{
-				tourList.Add(new Tour()
+				using (var result = sqlService.SelectQuery("SELECT id, nombreTour FROM Tour"))
 				{
-					idTour = Convert.ToInt32(result["id"]),
-					nombreTour = Convert.ToString(result["nombreTour"])
-				});
+					while (result.Read())
+					{
+						tourList.Add(new Tour()
+						{
+							idTour = Convert.ToInt32(result["id"]),
+							nombreTour = Convert.ToString(result["nombreTour"])
+						});
+					}
+				}
 			}
 
 			return tourList;

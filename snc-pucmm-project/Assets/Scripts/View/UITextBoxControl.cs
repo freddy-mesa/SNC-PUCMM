@@ -58,7 +58,7 @@ namespace SncPucmm.View
 
         public void OnClick() 
         {
-            isTapped = true;
+            isButtonTapped = true;
 
             //Buscando el TextBox
             var menu = MenuManager.GetInstance().GetCurrentMenu() as ITextBox;

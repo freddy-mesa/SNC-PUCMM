@@ -27,7 +27,7 @@ namespace SncPucmm.View
                 }
 
                 Quaternion rotation = Quaternion.AngleAxis(degrees, Vector3.up);
-                Vector3 position = new Vector3(UIUtils.getXDistance(path.StartNode.Longitude), 0.7f, UIUtils.getZDistance(path.StartNode.Latitude));
+                Vector3 position = new Vector3(UIUtils.getXDistance(path.StartNode.Longitude), 1f, UIUtils.getZDistance(path.StartNode.Latitude));
 
                 Transform prefabPlane = null;
                 if (path.Equals(selected))

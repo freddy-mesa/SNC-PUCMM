@@ -83,7 +83,7 @@ namespace SncPucmm.View
 				}
 
 				//Zooming Condition
-				if ((!UITouch.isRotating || !UITouch.isMoving) && angleOffSet < 1.5f)
+				if ((!UITouch.isRotating || !UITouch.isMoving) && angleOffSet < 0.5f)
 				{
 					UITouch.isZooming = true;
 

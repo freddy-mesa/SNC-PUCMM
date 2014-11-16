@@ -47,6 +47,18 @@ namespace SncPucmm.Controller.Navigation
             State.ChangeState(eState.MenuNavigation);
         }
 
+        public void StartNavigation(int destinationIdNode)
+        {
+            //List<PathData> bestPath = GetBestPathData(destinationName);
+            List<PathDataDijkstra> bestPath = graph.Dijkstra(10, destinationIdNode);
+
+            //Mostrar el menu de direciones
+            MenuNavigation menuNavigation = new MenuNavigation("MenuNavigation", bestPath);
+            MenuManager.GetInstance().AddMenu(menuNavigation);
+
+            State.ChangeState(eState.MenuNavigation);
+        }
+
         public void StartTourNavigation(string tourName, List<DetalleUsuarioTour> detalleUsuarioTourList)
         {
             var tourController = new TourController(detalleUsuarioTourList);
@@ -55,44 +67,49 @@ namespace SncPucmm.Controller.Navigation
             bool isSelectCurrentIndexSectionTour = false;
             int indexCurrentTourPathData = 0;
 
-            for (int i = 0; i < detalleUsuarioTourList.Count; ++i)
+            using (var sqlService = new SQLiteService())
             {
-                if (i + 1 != detalleUsuarioTourList.Count)
+                for (int i = 0; i < detalleUsuarioTourList.Count; ++i)
                 {
-                    //Buscar en la base de dato el desde y el hasta
-                    string desde = string.Empty, hasta = string.Empty;
-
-                    var result = SQLiteService.GetInstance().Query(true,
-                        "SELECT NODA.nombre as desde, NODB.nombre as hasta "+
-                        "FROM PuntoReunionTour PUNA, Nodo NODA, PuntoReunionTour PUNB, Nodo NODB " +
-                        "WHERE PUNA.id = " + detalleUsuarioTourList[i].idPuntoReunionTour + " AND PUNA.idNodo = NODA.idNodo "+
-                        "AND PUNB.id = " + detalleUsuarioTourList[i + 1].idPuntoReunionTour + " AND PUNB.idNodo = NODB.idNodo "+
-                        "ORDER BY PUNA.id"
-                    );
-
-                    if (result.Read())
+                    if (i + 1 != detalleUsuarioTourList.Count)
                     {
-                        desde = System.Convert.ToString(result["desde"]);
-                        hasta = System.Convert.ToString(result["hasta"]);
-                    }
+                        //Buscar en la base de dato el desde y el hasta
+                        string desde = string.Empty, hasta = string.Empty;
 
-                    List<PathDataDijkstra> bestPath = graph.Dijkstra(desde, hasta);
-                    tourPath.AddRange(bestPath);
+                        var sql =
+                            "SELECT NODA.nombre as desde, NODB.nombre as hasta " +
+                            "FROM PuntoReunionTour PUNA, Nodo NODA, PuntoReunionTour PUNB, Nodo NODB " +
+                            "WHERE PUNA.id = " + detalleUsuarioTourList[i].idPuntoReunionTour + " AND PUNA.idNodo = NODA.idNodo " +
+                            "AND PUNB.id = " + detalleUsuarioTourList[i + 1].idPuntoReunionTour + " AND PUNB.idNodo = NODB.idNodo " +
+                            "ORDER BY PUNA.id";
 
-                    tourController.AddSectionTour(new SectionTourData()
-                    { 
-                        Desde = desde,
-                        IdPuntoReuionNodoDesde =  detalleUsuarioTourList[i].idPuntoReunionTour.Value,
-                        Hasta = hasta,
-                        IdPuntoReuionNodoHasta = detalleUsuarioTourList[i + 1].idPuntoReunionTour.Value,
-                    });
+                        using (var result = sqlService.SelectQuery(sql))
+                        {
+                            if (result.Read())
+                            {
+                                desde = System.Convert.ToString(result["desde"]);
+                                hasta = System.Convert.ToString(result["hasta"]);
+                            }
+                        }
 
-                    if (!isSelectCurrentIndexSectionTour && !detalleUsuarioTourList[i].fechaInicio.HasValue)
-                    {
-                        isSelectCurrentIndexSectionTour = true;
-                        tourController.SetStartSectionTour(i);
+                        List<PathDataDijkstra> bestPath = graph.Dijkstra(desde, hasta);
+                        tourPath.AddRange(bestPath);
 
-                        indexCurrentTourPathData = tourPath.FindIndex(path => path.StartNode.Name == desde);
+                        tourController.AddSectionTour(new SectionTourData()
+                        {
+                            Desde = desde,
+                            IdPuntoReuionNodoDesde = detalleUsuarioTourList[i].idPuntoReunionTour.Value,
+                            Hasta = hasta,
+                            IdPuntoReuionNodoHasta = detalleUsuarioTourList[i + 1].idPuntoReunionTour.Value,
+                        });
+
+                        if (!isSelectCurrentIndexSectionTour && !detalleUsuarioTourList[i].fechaInicio.HasValue)
+                        {
+                            isSelectCurrentIndexSectionTour = true;
+                            tourController.SetStartSectionTour(i);
+
+                            indexCurrentTourPathData = tourPath.FindIndex(path => path.StartNode.Name == desde);
+                        }
                     }
                 }
             }
@@ -201,42 +218,43 @@ namespace SncPucmm.Controller.Navigation
         {
             graph = new Graph();
 
-            var sqliteService = SQLiteService.GetInstance();
-            var reader = sqliteService.Query(
-                true,
-                "SELECT NOD.activo, NOD.nombre, NOD.idNodo, COO.latitud, COO.longitud FROM Nodo NOD, CoordenadaNodo COO " + 
-                "WHERE NOD.idNodo = COO.idNodo ORDER BY NOD.idNodo"
-            );
-
-            while (reader.Read())
+            using (var sqlService = new SQLiteService())
             {
-                bool active = (System.Convert.ToInt32(reader["activo"]) == 0 ? false : true);
+                string sql = "SELECT NOD.activo, NOD.nombre, NOD.idNodo, COO.latitud, COO.longitud FROM Nodo NOD, CoordenadaNodo COO " +
+                            "WHERE NOD.idNodo = COO.idNodo ORDER BY NOD.idNodo";
 
-                if (active)
+                using(var reader = sqlService.SelectQuery(sql))
                 {
-                    string nombre = System.Convert.ToString(reader["nombre"]);
-                    int idNode = System.Convert.ToInt32(reader["idNodo"]);
-                    float latitud = System.Convert.ToSingle(reader["latitud"]);
-                    float longitud = System.Convert.ToSingle(reader["longitud"]);
-                                    
-                    graph.Nodes.Add(new NodeDijkstra() { IdNode = idNode, Active = active, Name = nombre, Latitude = latitud, Longitude = longitud });
+                    while (reader.Read())
+                    {
+                        bool active = (System.Convert.ToInt32(reader["activo"]) == 0 ? false : true);
+
+                        if (active)
+                        {
+                            string nombre = System.Convert.ToString(reader["nombre"]);
+                            int idNode = System.Convert.ToInt32(reader["idNodo"]);
+                            float latitud = System.Convert.ToSingle(reader["latitud"]);
+                            float longitud = System.Convert.ToSingle(reader["longitud"]);
+
+                            graph.Nodes.Add(new NodeDijkstra() { IdNode = idNode, Active = active, Name = nombre, Latitude = latitud, Longitude = longitud });
+                        }
+                    }
                 }
-            }
 
-            reader = null;
+                sql = "SELECT NEI.idNodo, NEI.idNodoNeighbor " +
+                     "FROM Neighbor NEI, Nodo NOD1, Nodo NOD2 " +
+                     "WHERE NOD1.activo = 1 AND NOD2.activo = 1 AND NOD1.idNodo = NEI.idNodo AND NOD2.idNodo = NEI.idNodoNeighbor";
 
-            reader = sqliteService.Query(true, 
-                "SELECT NEI.idNodo, NEI.idNodoNeighbor " + 
-                "FROM Neighbor NEI, Nodo NOD1, Nodo NOD2 " + 
-                "WHERE NOD1.activo = 1 AND NOD2.activo = 1 AND NOD1.idNodo = NEI.idNodo AND NOD2.idNodo = NEI.idNodoNeighbor"
-            );
+                using (var reader = sqlService.SelectQuery(sql))
+                {
+                    while (reader.Read())
+                    {
+                        int idNodo = System.Convert.ToInt32(reader["idNodo"]);
+                        int idNodoNeighbor = System.Convert.ToInt32(reader["idNodoNeighbor"]);
 
-            while (reader.Read())
-            {
-                int idNodo = System.Convert.ToInt32(reader["idNodo"]);
-                int idNodoNeighbor = System.Convert.ToInt32(reader["idNodoNeighbor"]);
-
-                graph.AddNeighbor(idNodo, idNodoNeighbor);
+                        graph.AddNeighbor(idNodo, idNodoNeighbor);
+                    }
+                }
             }
         }
 

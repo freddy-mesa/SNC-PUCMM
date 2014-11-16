@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using SncPucmm.View;
 using SncPucmm.Model;
+using UnityEngine;
 
 namespace SncPucmm.Controller.GUI
 {
@@ -15,7 +16,7 @@ namespace SncPucmm.Controller.GUI
         #region Atributos
 
         private string name;
-        private ModelNode location;
+        private ModelNode modelNode;
 
         public List<Button> buttonList;
 
@@ -23,10 +24,10 @@ namespace SncPucmm.Controller.GUI
 
         #region Constructor
 
-        public MenuBuilding(string name, ModelNode location)
+        public MenuBuilding(string name, ModelNode modelNode)
         {
             this.name = name;
-            this.location = location;
+            this.modelNode = modelNode;
             Initializer();
         }
 
@@ -46,9 +47,15 @@ namespace SncPucmm.Controller.GUI
             NavigationButton.OnTouchEvent += new OnTouchEventHandler(OnTouchNavigationButton);
             buttonList.Add(NavigationButton);
 
-            var AditionalInformationButton = new Button("ButtonAditionalInformation");
-            AditionalInformationButton.OnTouchEvent += new OnTouchEventHandler(OnTouchAditionalInformationButton);
-            buttonList.Add(AditionalInformationButton);
+            var ShowInsideButton = new Button("ButtonShowInside");
+            ShowInsideButton.OnTouchEvent += new OnTouchEventHandler(OnTouchShowInsideButton);
+            buttonList.Add(ShowInsideButton);
+
+            if (!this.modelNode.isBuilding)
+            {
+                var boxCollider = UIUtils.FindGUI("MenuBuilding/ButtonShowInside").GetComponent<BoxCollider>();
+                GameObject.Destroy(boxCollider);
+            }
         }
 
         public void OnTouchExitButton(object sender, TouchEventArgs e)
@@ -60,22 +67,16 @@ namespace SncPucmm.Controller.GUI
         public void OnTouchNavigationButton(object sender, TouchEventArgs e)
         {
             NavigationController controller = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
-            controller.StartNavigation(this.location.name);
+            controller.StartNavigation(this.modelNode.name);
         }
 
-        public void OnTouchPhotosButton(object sender, TouchEventArgs e)
+        public void OnTouchShowInsideButton(object sender, TouchEventArgs e)
         {
+            //disable el box collider del edificio
+            UIUtils.Find("/PUCMM/Model3D/" + modelNode.abreviacion).GetComponent<BoxCollider>().enabled = false;
 
-        }
-
-        public void OnTouchDescriptionButton(object sender, TouchEventArgs e)
-        {
-
-        }
-
-        public void OnTouchAditionalInformationButton(object sender, TouchEventArgs e)
-        {
-
+            MenuManager.GetInstance().AddMenu(new MenuInsideBuilding("MenuInsideBuilding", modelNode));
+            State.ChangeState(eState.Navigation);
         }
 
         private void Exit()
@@ -101,7 +102,7 @@ namespace SncPucmm.Controller.GUI
         ~MenuBuilding()
         {
             this.buttonList = null;
-            this.location = null;
+            this.modelNode = null;
             this.name = null;
         }
 

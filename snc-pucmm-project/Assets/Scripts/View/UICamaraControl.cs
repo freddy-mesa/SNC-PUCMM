@@ -1,5 +1,6 @@
 ﻿using SncPucmm.View;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,9 @@ namespace SncPucmm.View
 
 		public static bool Vista_1era_Persona;
 		public static bool Vista_3era_Persona;
+
+		public static bool isTransitionAnimated;
+		public static Vector3 targetTransitionPosition;
 		
 		#endregion
 
@@ -51,7 +55,11 @@ namespace SncPucmm.View
 
 			if (Vista_3era_Persona)
 			{
-
+				if (isTransitionAnimated)
+				{
+					isTransitionAnimated = false;
+					StartCoroutine(Transition());
+				}
 			}
 		}
 
@@ -77,6 +85,19 @@ namespace SncPucmm.View
 		{
 			Vista_1era_Persona = !Vista_1era_Persona;
 			Vista_3era_Persona = !Vista_3era_Persona;
+		}
+
+		IEnumerator Transition()
+		{
+			float t = 0.0f, transitionDuration = 2.5f;
+			Vector3 startingPos = Camera.main.transform.position;
+			while (t < 1.0f)
+			{
+				t += Time.deltaTime * (Time.timeScale / transitionDuration);
+
+				Camera.main.transform.position = Vector3.Lerp(startingPos, targetTransitionPosition, t);
+				yield return 0;
+			}
 		}
 		
 		#endregion
