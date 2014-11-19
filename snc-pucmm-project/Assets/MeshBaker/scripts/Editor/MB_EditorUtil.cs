@@ -46,15 +46,16 @@ public class MB_EditorUtil
 	}
 
 	public static void RegisterUndo(UnityEngine.Object o, string s){
-#if UNITY_4_3 || UNITY_4_3_0
+#if UNITY_4_3 || UNITY_4_3_0 || UNITY_4_5
 			Undo.RecordObject(o,s);
 #else
-			Undo.RegisterUndo(o, s);
+			Undo.RecordObject(o, s);
 #endif
 	}
 
-	public static void SetInspectorLabelWidth(float width){
-#if UNITY_4_3 || UNITY_4_3_0
+	public static void SetInspectorLabelWidth(float width)
+	{
+#if UNITY_4_3 || UNITY_4_3_0 || UNITY_4_5
 		EditorGUIUtility.labelWidth = width;
 #else
 		EditorGUIUtility.LookLikeControls(width);

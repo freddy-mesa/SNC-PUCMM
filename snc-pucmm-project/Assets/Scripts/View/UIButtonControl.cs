@@ -16,17 +16,20 @@ namespace SncPucmm.View
 		/// </summary>
 		public void OnClick()
 		{
-			isButtonTapped = true;
-
-			var menu = MenuManager.GetInstance().GetCurrentMenu() as IButton;
-
-			menu.GetButtonList().ForEach(button =>
+			if (!isMoving && !isZooming && !isRotating)
 			{
-				if (button.Name.Equals(this.name))
+				isButtonTapped = true;
+
+				var menu = MenuManager.GetInstance().GetCurrentMenu() as IButton;
+
+				menu.GetButtonList().ForEach(button =>
 				{
-					button.OnTouch(null);
-				}
-			});
+					if (button.Name.Equals(this.name))
+					{
+						button.OnTouch(null);
+					}
+				});
+			}
 		}
 
 		#endregion

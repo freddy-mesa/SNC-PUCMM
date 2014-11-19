@@ -172,10 +172,6 @@ namespace SncPucmm.Controller.GUI
 			var menuManager = MenuManager.GetInstance();
 			menuManager.AddMenu(new MenuBuilding("MenuBuilding", node));
 
-			var label = UIUtils.FindGUI(menuManager.GetCurrentMenu().GetMenuName() + "/LabelBuildingName");
-			var lblBuildingName = label.GetComponent<UILabel>();
-			lblBuildingName.text = UIUtils.FormatStringLabel(node.name, ' ', 20);
-
 			State.ChangeState(eState.MenuBuilding);
 		}
 
@@ -350,6 +346,11 @@ namespace SncPucmm.Controller.GUI
 		public string GetMenuName()
 		{
 			return name;
+		}
+
+		public void Update()
+		{
+			
 		}
 
 		public List<Button> GetButtonList()

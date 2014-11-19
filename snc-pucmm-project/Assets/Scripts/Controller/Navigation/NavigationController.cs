@@ -6,6 +6,7 @@ using SncPucmm.Model;
 using SncPucmm.Model.Domain;
 using SncPucmm.Model.Navigation;
 using SncPucmm.View;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,7 +39,7 @@ namespace SncPucmm.Controller.Navigation
         public void StartNavigation(string destinationName)
         {           
             //List<PathData> bestPath = GetBestPathData(destinationName);
-            List<PathDataDijkstra> bestPath = graph.Dijkstra("Aulas 3", destinationName);
+            List<PathDataDijkstra> bestPath = graph.Dijkstra("Aulas 4", destinationName);
 
             //Mostrar el menu de direciones
             MenuNavigation menuNavigation = new MenuNavigation("MenuNavigation", bestPath);
@@ -50,7 +51,7 @@ namespace SncPucmm.Controller.Navigation
         public void StartNavigation(int destinationIdNode)
         {
             //List<PathData> bestPath = GetBestPathData(destinationName);
-            List<PathDataDijkstra> bestPath = graph.Dijkstra(10, destinationIdNode);
+            List<PathDataDijkstra> bestPath = graph.Dijkstra(11, destinationIdNode);
 
             //Mostrar el menu de direciones
             MenuNavigation menuNavigation = new MenuNavigation("MenuNavigation", bestPath);
@@ -220,23 +221,91 @@ namespace SncPucmm.Controller.Navigation
 
             using (var sqlService = new SQLiteService())
             {
-                string sql = "SELECT NOD.activo, NOD.nombre, NOD.idNodo, COO.latitud, COO.longitud FROM Nodo NOD, CoordenadaNodo COO " +
-                            "WHERE NOD.idNodo = COO.idNodo ORDER BY NOD.idNodo";
+                string sql = "SELECT NOD.activo, NOD.nombre, NOD.planta, NOD.idNodo, NOD.idUbicacion, COO.latitud, COO.longitud " +
+                            "FROM Nodo NOD LEFT JOIN CoordenadaNodo COO ON NOD.idNodo = COO.idNodo " +
+                            "ORDER BY NOD.idNodo";
 
                 using(var reader = sqlService.SelectQuery(sql))
                 {
                     while (reader.Read())
                     {
-                        bool active = (System.Convert.ToInt32(reader["activo"]) == 0 ? false : true);
+                        bool active = (Convert.ToInt32(reader["activo"]) == 0 ? false : true);
 
                         if (active)
                         {
-                            string nombre = System.Convert.ToString(reader["nombre"]);
-                            int idNode = System.Convert.ToInt32(reader["idNodo"]);
-                            float latitud = System.Convert.ToSingle(reader["latitud"]);
-                            float longitud = System.Convert.ToSingle(reader["longitud"]);
+                            string nombre = Convert.ToString(reader["nombre"]);
+                            int idNode = Convert.ToInt32(reader["idNodo"]);
 
-                            graph.Nodes.Add(new NodeDijkstra() { IdNode = idNode, Active = active, Name = nombre, Latitude = latitud, Longitude = longitud });
+                            float valueFloat, latitud = 0, longitud = 0;
+
+                            string obj = Convert.ToString(reader["latitud"]);
+                            if (float.TryParse(obj, out valueFloat))
+                            {
+                                latitud = valueFloat;
+                            }
+
+                            obj = Convert.ToString(reader["longitud"]);
+                            if (float.TryParse(obj, out valueFloat))
+                            {
+                                longitud = valueFloat;
+                            }
+
+                            bool isInsideBuilding = false;
+                            string buildingName = null;
+                            int planta = 0;
+
+                            string strObject = Convert.ToString(reader["planta"]);
+                            int value;
+                            if (int.TryParse(strObject, out value))
+                            {
+                                planta = value;
+                                isInsideBuilding = true;
+
+                                obj = Convert.ToString(reader["idUbicacion"]);
+                                int idUbicacion;
+                                if (int.TryParse(obj, out idUbicacion))
+                                {
+                                    sql = "SELECT abreviacion FROM Ubicacion WHERE idUbicacion = " + idUbicacion; 
+                                    using (var readerUbication = sqlService.SelectQuery(sql))
+                                    {
+                                        if (readerUbication.Read())
+                                        {
+                                            buildingName = Convert.ToString(readerUbication["abreviacion"]);
+                                        }
+                                    }
+                                }
+                            }
+
+                            bool isBuilding = false;
+
+                            if (!isInsideBuilding)
+                            {
+                                sql = "SELECT edificio FROM Nodo WHERE idNodo = " + idNode;
+                                using (var readerNodo = sqlService.SelectQuery(sql))
+                                {
+                                    if (readerNodo.Read())
+                                    {
+                                        string edificio = Convert.ToString(readerNodo["edificio"]);
+                                        if (int.TryParse(edificio, out value))
+                                        {
+                                            isBuilding = true;
+                                        }
+                                    }
+                                }
+                            }
+
+                            graph.Nodes.Add(new NodeDijkstra() 
+                            { 
+                                IdNode = idNode, 
+                                Active = active, 
+                                Name = nombre, 
+                                Latitude = latitud, 
+                                Longitude = longitud, 
+                                IsInsideBuilding = isInsideBuilding,
+                                BuildingName = buildingName,
+                                PlantaBuilding = planta,
+                                IsBuilding = isBuilding
+                            });
                         }
                     }
                 }

@@ -10,7 +10,7 @@ namespace SncPucmm.View
 		private Vector2 lastTouch2 = Vector2.zero;
 		
 		//Zoom
-		public float zoomSpeed = 100f;
+		private float zoomSpeed = 10f;
 		private float currentDistance = 0.0f;
 		private float lastDistance = 0.0f;
 		private float angleOffSet = 0.0f;
@@ -59,6 +59,9 @@ namespace SncPucmm.View
 					if(angleOffSet > 0.5f)
 					{
 						UITouch.isRotating = true;
+
+						angleOffSet = Mathf.Clamp(angleOffSet, 0.5f, 1.25f);
+
 						if(Vector3.Cross(previousDistance, currentDistance).z > 0)
 						{
 							//Rotation in Clockwise
@@ -83,7 +86,7 @@ namespace SncPucmm.View
 				}
 
 				//Zooming Condition
-				if ((!UITouch.isRotating || !UITouch.isMoving) && angleOffSet < 0.5f)
+				if (!UITouch.isRotating || !UITouch.isMoving)
 				{
 					UITouch.isZooming = true;
 
@@ -91,12 +94,12 @@ namespace SncPucmm.View
 					currentDistance = Vector2.Distance(currentTouch2, currentTouch1);
 					lastDistance = Vector2.Distance(lastTouch2, lastTouch1);
 
-					var zoomFactor = Mathf.Clamp(lastDistance - currentDistance, -30.0f, 30.0f);
+					var zoomFactor = Mathf.Clamp(lastDistance - currentDistance, -20.0f, 20.0f);
 
 					if (!(zoomFactor < 7.5f && zoomFactor > -7.5f))
 					{
 						var zoomVectorDistance = Vector3.forward * zoomFactor * zoomSpeed * Time.deltaTime * -1;
-						var previosPosition = this.transform.position;
+						UICamaraControl.lastPosition = this.transform.position;
 
 						this.transform.Translate(zoomVectorDistance);
 
@@ -106,7 +109,7 @@ namespace SncPucmm.View
 							this.transform.position.z < -650f || this.transform.position.z > 400f
 						)
 						{
-							this.transform.position = previosPosition;
+							this.transform.position = UICamaraControl.lastPosition;
 						}
 					}
 					else

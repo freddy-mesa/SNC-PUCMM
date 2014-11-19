@@ -136,11 +136,11 @@ namespace SncPucmm.Controller
             //    StartCoroutine(UpdateToursService());
             //}
 
-            if (IsEnterToUpdateTours)
-            {
-                IsEnterToUpdateTours = false;
-                StartCoroutine(UpdateToursService());
-            }
+            //if (IsEnterToUpdateTours)
+            //{
+            //    IsEnterToUpdateTours = false;
+            //    StartCoroutine(UpdateToursService());
+            //}
         }
 
         private IEnumerator UpdateModelService()

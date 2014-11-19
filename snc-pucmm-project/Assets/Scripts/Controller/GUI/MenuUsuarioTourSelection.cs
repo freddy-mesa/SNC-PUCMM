@@ -172,6 +172,12 @@ namespace Assets.Scripts.Controller.GUI
             return buttonList;
         }
 
+        public void Update()
+        {
+            State.ChangeState(eState.Tour);
+            ModelPoolManager.GetInstance().Remove("tourCtrl");
+        }
+
         #endregion
 
         #endregion

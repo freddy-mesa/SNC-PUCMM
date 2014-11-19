@@ -63,7 +63,7 @@ namespace SncPucmm.Controller.GUI
 
             FillButtonListWithLocations();
 
-            ShowInsidePlaneBuilding(modelNode, "Planta" + currentFloor);
+            UIUtils.ShowInsidePlaneBuilding(modelNode.abreviacion, "Planta" + currentFloor);
         }
 
         private void FillButtonListWithLocations()
@@ -90,14 +90,15 @@ namespace SncPucmm.Controller.GUI
 
         private void OnTouchLocationInsideBuilding(object sender, TouchEventArgs e)
         {
-            NavigationController controller = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
-
             var modelNode = (sender as Button).ObjectTag as ModelNode;
 
             Debug.Log(modelNode.name);
 
+            //NavigationController controller = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
             //controller.StartNavigation(modelNode.name);            
             //controller.StartNavigation(modelNode.idNodo);
+
+            MenuManager.GetInstance().AddMenu(new MenuBuilding("MenuBuilding", modelNode));
         }
 
         private void OnTouchExitButton(object sender, TouchEventArgs e)
@@ -105,10 +106,7 @@ namespace SncPucmm.Controller.GUI
             MenuManager.GetInstance().RemoveCurrentMenu();
             State.ChangeState(eState.MenuBuilding);
 
-            ShowEntireBuilding(modelNode);
-
-            //enable el box collider del edificio
-            UIUtils.Find("/PUCMM/Model3D/" + modelNode.abreviacion).GetComponent<BoxCollider>().enabled = true;
+            UIUtils.ShowEntireBuilding(modelNode.abreviacion);
         }
 
         private void OnTouchPreviousFloorButton(object sender, TouchEventArgs e)
@@ -128,7 +126,7 @@ namespace SncPucmm.Controller.GUI
                 isNextButtonActive = true;
             }
 
-            ShowInsidePlaneBuilding(modelNode, "Planta" + currentFloor);
+            UIUtils.ShowInsidePlaneBuilding(modelNode.abreviacion, "Planta" + currentFloor);
         }
 
         private void OnTouchNextFloorButton(object sender, TouchEventArgs e)
@@ -148,59 +146,7 @@ namespace SncPucmm.Controller.GUI
                 isPreviousButtonActive = true;
             }
 
-            ShowInsidePlaneBuilding(modelNode, "Planta" + currentFloor);
-        }
-
-        private void ShowInsidePlaneBuilding(ModelNode modelNode, string namePlaneFloor)
-        {
-            //Haciendo un reset del edificio
-            var edificio = ShowEntireBuilding(modelNode);
-
-            edificio.FindChild("Otros").gameObject.SetActive(false);
-            edificio.FindChild("Columnas").gameObject.SetActive(false);
-
-            var planos = edificio.transform.FindChild("Planos");
-
-            foreach (Transform plano in planos)
-            {
-                if (plano.name == namePlaneFloor)
-                {
-                    plano.gameObject.SetActive(true);
-                }
-            }
-
-            var plantas = edificio.FindChild("Plantas").transform;
-            if (namePlaneFloor == "Planta1")
-            {
-                plantas.FindChild("Planta1").gameObject.SetActive(false);
-                plantas.FindChild("Planta2").gameObject.SetActive(false);
-                plantas.FindChild("Planta3").gameObject.SetActive(false);
-            }
-            else if (namePlaneFloor == "Planta2")
-            {
-                plantas.FindChild("Planta2").gameObject.SetActive(false);
-                plantas.FindChild("Planta3").gameObject.SetActive(false);
-            }
-            else
-            {
-                plantas.FindChild("Planta3").gameObject.SetActive(false);
-            }
-        }
-
-        private Transform ShowEntireBuilding(ModelNode modelNode)
-        {
-            var edificio = UIUtils.Find("/PUCMM/Model3D/" + modelNode.abreviacion);
-
-            var plantas = edificio.transform.FindChild("Plantas");
-            foreach (Transform planta in plantas) { planta.gameObject.SetActive(true); }
-
-            var planos = edificio.transform.FindChild("Planos");
-            foreach (Transform plano in planos) { plano.gameObject.SetActive(false); }
-
-            edificio.transform.FindChild("Otros").gameObject.SetActive(true);
-            edificio.transform.FindChild("Columnas").gameObject.SetActive(true);
-
-            return edificio.transform;
+            UIUtils.ShowInsidePlaneBuilding(modelNode.abreviacion, "Planta" + currentFloor);
         }
 
         #region Implementados
@@ -213,6 +159,12 @@ namespace SncPucmm.Controller.GUI
         public List<Button> GetButtonList()
         {
             return buttonList;
+        }
+
+        public void Update()
+        {
+            UIUtils.ShowInsidePlaneBuilding(modelNode.abreviacion, "Planta" + currentFloor);
+            State.ChangeState(eState.Navigation);
         }
 
         #endregion

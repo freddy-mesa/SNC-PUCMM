@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine;
 using SncPucmm.View;
 using SncPucmm.Controller.Control;
+using SncPucmm.Controller.GUI;
 
 namespace SncPucmm.Controller
 {
@@ -70,7 +71,11 @@ namespace SncPucmm.Controller
 				//Activate Last Menu
 				ActivatePreviousMenu(true);
 
+				//Remove Actual Menu
 				_menuList.Remove(GetCurrentMenu());
+
+				//Update Last Menu
+				GetCurrentMenu().Update();
 			}
 		}
 

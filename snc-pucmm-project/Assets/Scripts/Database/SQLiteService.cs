@@ -19,6 +19,8 @@ namespace SncPucmm.Database
 
 		private const string  DATABASE_NAME = "sncpucmm.sqlite";
 
+		public static bool IsCreatingDatabase;
+
 		#endregion
 
 		#region Constructor
@@ -28,6 +30,11 @@ namespace SncPucmm.Database
 			OpenDateBaseConnection();
 		}
 
+		static SQLiteService()
+		{
+			IsCreatingDatabase = true;
+		}
+
 		#endregion
 
 		#region Metodos
@@ -35,7 +42,6 @@ namespace SncPucmm.Database
 		private void OpenDateBaseConnection() 
 		{
 			string connectionString = String.Empty;
-			bool createDataBase = false;
 
 			if(Application.platform == RuntimePlatform.WindowsEditor)
 			{
@@ -63,7 +69,7 @@ namespace SncPucmm.Database
 					
 					// then save to Application.persistentDataPath
 					File.WriteAllBytes(filePath, loadDB.bytes);
-					createDataBase = true;
+					IsCreatingDatabase = true;
 				}
 
 				connectionString = "URI=file:" + filePath + ";version=3";
@@ -81,7 +87,7 @@ namespace SncPucmm.Database
 				Debug.LogException(e);
 			}
 
-			if (createDataBase)
+			if (IsCreatingDatabase)
 			{
 				if (Application.platform == RuntimePlatform.WindowsEditor)
 				{
@@ -89,6 +95,8 @@ namespace SncPucmm.Database
 				}
 
 				InitializeDataBase();
+
+				IsCreatingDatabase = false;
 			}
 
 		}
@@ -387,7 +395,7 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (52,'Node 18',1);");
 			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (53,'Node 19',1);");
 			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (54,'Node 20',1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (55,'Node 20.5',1);");
+			//sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (55,'Node 20.5',1);");
 			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (56,'Node 21',1);");
 			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (57,'Node 21.5',1);");
 			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (58,'Node 22',1);");
@@ -432,14 +440,20 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (97,'Node 58',1);");
 			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (98,'Node 59',1);");
 
+			//Nuevos Nodos Aulas 3 desde Nodo 13 a nodo 21
+			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (99,'Node 60',1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (100,'Node 61',1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (101,'Node 62',1);");
 			TransactionalQuery(sqlBuilder.ToString());
 
 			#endregion
 
 			#region Aulas 3 -> 300
 
+			#region Nodo A3
+			
 			sqlBuilder = new StringBuilder();
-
+			
 			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (300, 10,'A3-11',1,1);");
 			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (301, 10,'A3-12',1,1);");
 			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (302, 10,'A3-14',1,1);");
@@ -460,110 +474,146 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (317, 10,'Salon de Dibujo II',1,3);");
 			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (318, 10,'A3-Bedel',1,1);");
 
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (319, 'AULAS3_Nodo1', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (320, 'AULAS3_Nodo2', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (321, 'AULAS3_Nodo3', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (322, 'AULAS3_Nodo4', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (323, 'AULAS3_Nodo5', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (324, 'AULAS3_Nodo6', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (325, 'AULAS3_Nodo7', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (326, 'AULAS3_Nodo8', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (327, 'AULAS3_Nodo9', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (328, 'AULAS3_Nodo10', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (329, 'AULAS3_Nodo11', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (330, 'AULAS3_Nodo12', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (331, 'AULAS3_Nodo13', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (332, 'AULAS3_Nodo14', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (333, 'AULAS3_Nodo15', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (334, 'AULAS3_Nodo16', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (335, 'AULAS3_Nodo17', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (336, 'AULAS3_Nodo18', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (337, 'AULAS3_Nodo19', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (338, 'AULAS3_Nodo20', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (339, 'AULAS3_Nodo21', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (340, 'AULAS3_Nodo22', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (341, 'AULAS3_Nodo23', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (342, 'AULAS3_Nodo24', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (343, 'AULAS3_Nodo25', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (344, 'AULAS3_Nodo26', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (345, 'AULAS3_Nodo27', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (346, 'AULAS3_Nodo28', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (347, 'AULAS3_Nodo29', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (348, 'AULAS3_Nodo30', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (349, 'AULAS3_Nodo31', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (350, 'AULAS3_Nodo32', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (351, 'AULAS3_Nodo33', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (352, 'AULAS3_Nodo34', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (353, 'AULAS3_Nodo35', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (354, 'AULAS3_Nodo36', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (355, 'AULAS3_Nodo37', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (356, 'AULAS3_Nodo38', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (357, 'AULAS3_Nodo39', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (358, 'AULAS3_Nodo40', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (359, 'AULAS3_Nodo41', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (360, 'AULAS3_Nodo42', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (361, 'AULAS3_Nodo43', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (362, 'AULAS3_Nodo44', 1);");
-			sqlBuilder.Append("Insert Into Nodo (idNodo, nombre, activo) values (363, 'AULAS3_Nodo45', 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (319, 10, 'AULAS3_Nodo1', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (320, 10, 'AULAS3_Nodo2', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (321, 10, 'AULAS3_Nodo3', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (322, 10, 'AULAS3_Nodo4', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (323, 10, 'AULAS3_Nodo5', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (324, 10, 'AULAS3_Nodo6', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (325, 10, 'AULAS3_Nodo7', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (326, 10, 'AULAS3_Nodo8', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (327, 10, 'AULAS3_Nodo9', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (328, 10, 'AULAS3_Nodo10', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (329, 10, 'AULAS3_Nodo11', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (330, 10, 'AULAS3_Nodo12', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (331, 10, 'AULAS3_Nodo13', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (332, 10, 'AULAS3_Nodo14', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (333, 10, 'AULAS3_Nodo15', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (334, 10, 'AULAS3_Nodo16', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (335, 10, 'AULAS3_Nodo17', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (336, 10, 'AULAS3_Nodo18', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (337, 10, 'AULAS3_Nodo19', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (338, 10, 'AULAS3_Nodo20', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (339, 10, 'AULAS3_Nodo21', 1, 1);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (340, 10, 'AULAS3_Nodo22', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (341, 10, 'AULAS3_Nodo23', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (342, 10, 'AULAS3_Nodo24', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (343, 10, 'AULAS3_Nodo25', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (344, 10, 'AULAS3_Nodo26', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (345, 10, 'AULAS3_Nodo27', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (346, 10, 'AULAS3_Nodo28', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (347, 10, 'AULAS3_Nodo29', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (348, 10, 'AULAS3_Nodo30', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (349, 10, 'AULAS3_Nodo31', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (350, 10, 'AULAS3_Nodo32', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (351, 10, 'AULAS3_Nodo33', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (352, 10, 'AULAS3_Nodo34', 1, 2);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (353, 10, 'AULAS3_Nodo35', 1, 3);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (354, 10, 'AULAS3_Nodo36', 1, 3);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (355, 10, 'AULAS3_Nodo37', 1, 3);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (356, 10, 'AULAS3_Nodo38', 1, 3);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (357, 10, 'AULAS3_Nodo39', 1, 3);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (358, 10, 'AULAS3_Nodo40', 1, 3);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (359, 10, 'AULAS3_Nodo41', 1, 3);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (360, 10, 'AULAS3_Nodo42', 1, 3);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (361, 10, 'AULAS3_Nodo43', 1, 3);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (362, 10, 'AULAS3_Nodo44', 1, 3);");
+			sqlBuilder.Append("Insert Into Nodo (idNodo, idUbicacion, nombre, activo, planta) values (363, 10, 'AULAS3_Nodo45', 1, 3);");
 
 			TransactionalQuery(sqlBuilder.ToString());
+
+			sqlBuilder = new StringBuilder();
+
+			//Unidades Unity
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 300, 300, -246.5, -91.3);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 301, 301, -245.8, -80.4);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 302, 302, -246.1, -66.3);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 303, 303, -247.3, -61.9);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 304, 304, -257.1, -78.3);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 305, 305, -268.8, -80.4);");
+
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 318, 318, -245.8, -70.6);");
+
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 319, 319, -250.7, -89.8);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 320, 320, -248.1, -89.8);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 321, 321, -248.4, -88.1);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 322, 322, -247.45, -84);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 323, 323, -247.3, -79.2);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 324, 324, -247.23, -78);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 325, 325, -247.23, -77);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 326, 326, -247.23, -75.6);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 327, 327, -247.66, -73.1);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 328, 328, -247.87, -68.75);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 329, 329, -247.87, -64.97);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 330, 330, -242.16, -76.31);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 331, 331, -248.61, -77.75);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 332, 332, -252.71, -77.75);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 333, 333, -248.84, -75.46);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 334, 334, -252.84, -75.46);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 335, 335, -236.06, -77.0);");
+			//sqlBuilder.Append("Insert Into CoordenadaNodo values ( 336, 336, , );");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 337, 337, -268.95, -81.74);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 338, 338, -249.01, -79.18);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 339, 339, -247.1, -89);");
+
+			TransactionalQuery(sqlBuilder.ToString());
+
+			#endregion
 
 			#region Planta1
 
 			sqlBuilder = new StringBuilder();
 
-			//sqlBuilder.Append("Insert Into Neighbor values (300, 318,'AULAS3_Nodo1', ,'');");
-			//sqlBuilder.Append("Insert Into Neighbor values (301, 318,'AULAS3_Nodo1', ,'');");
-			//sqlBuilder.Append("Insert Into Neighbor values (302, 318,'AULAS3_Nodo1', ,'');");
-			sqlBuilder.Append("Insert Into Neighbor values (303, 319,'AULAS3_Nodo1', 320,'AULAS3_Nodo2');");
-			sqlBuilder.Append("Insert Into Neighbor values (304, 320,'AULAS3_Nodo2', 300,'A3-11');");
-			sqlBuilder.Append("Insert Into Neighbor values (305, 319,'AULAS3_Nodo1', 321,'AULAS3_Nodo3');");
-			sqlBuilder.Append("Insert Into Neighbor values (306, 321,'AULAS3_Nodo3', 322,'AULAS3_Nodo4');");
-			sqlBuilder.Append("Insert Into Neighbor values (307, 322,'AULAS3_Nodo4', 323,'AULAS3_Nodo5');");
-			sqlBuilder.Append("Insert Into Neighbor values (308, 322,'AULAS3_Nodo4', 301,'A3-11');");
-			sqlBuilder.Append("Insert Into Neighbor values (309, 323,'AULAS3_Nodo5', 324,'AULAS3_Nodo6');");
-			sqlBuilder.Append("Insert Into Neighbor values (310, 324,'AULAS3_Nodo6', 325,'AULAS3_Nodo7');");
-			sqlBuilder.Append("Insert Into Neighbor values (311, 325,'AULAS3_Nodo7', 326,'AULAS3_Nodo8');");
-			sqlBuilder.Append("Insert Into Neighbor values (312, 326,'AULAS3_Nodo8', 327,'AULAS3_Nodo9');");
-			sqlBuilder.Append("Insert Into Neighbor values (313, 327,'AULAS3_Nodo9', 328,'AULAS3_Nodo10');");
-			sqlBuilder.Append("Insert Into Neighbor values (314, 327,'AULAS3_Nodo9', 318,'A3-Bedel');");
-			sqlBuilder.Append("Insert Into Neighbor values (315, 328,'AULAS3_Nodo10', 329,'AULAS3_Nodo11');");
-			sqlBuilder.Append("Insert Into Neighbor values (316, 328,'AULAS3_Nodo10', 302,'A3-14');");
-			sqlBuilder.Append("Insert Into Neighbor values (317, 329,'AULAS3_Nodo11', 303,'A3-15');");
+			sqlBuilder.Append("Insert Into Neighbor values (300, 319,'AULAS3_Nodo1', 56,'Node 21');");
+			sqlBuilder.Append("Insert Into Neighbor values (301, 319,'AULAS3_Nodo1', 320,'AULAS3_Nodo2');");
+			sqlBuilder.Append("Insert Into Neighbor values (302, 320,'AULAS3_Nodo2', 300,'A3-11');");
+			sqlBuilder.Append("Insert Into Neighbor values (303, 319,'AULAS3_Nodo1', 321,'AULAS3_Nodo3');");
+			sqlBuilder.Append("Insert Into Neighbor values (304, 321,'AULAS3_Nodo3', 322,'AULAS3_Nodo4');");
+			sqlBuilder.Append("Insert Into Neighbor values (305, 322,'AULAS3_Nodo4', 323,'AULAS3_Nodo5');");
+			sqlBuilder.Append("Insert Into Neighbor values (306, 322,'AULAS3_Nodo4', 301,'A3-12');");
+			sqlBuilder.Append("Insert Into Neighbor values (307, 323,'AULAS3_Nodo5', 301,'A3-12');");
+			sqlBuilder.Append("Insert Into Neighbor values (308, 323,'AULAS3_Nodo5', 324,'AULAS3_Nodo6');");
+			sqlBuilder.Append("Insert Into Neighbor values (309, 324,'AULAS3_Nodo6', 325,'AULAS3_Nodo7');");
+			sqlBuilder.Append("Insert Into Neighbor values (310, 325,'AULAS3_Nodo7', 326,'AULAS3_Nodo8');");
+			sqlBuilder.Append("Insert Into Neighbor values (311, 326,'AULAS3_Nodo8', 327,'AULAS3_Nodo9');");
+			sqlBuilder.Append("Insert Into Neighbor values (312, 327,'AULAS3_Nodo9', 328,'AULAS3_Nodo10');");
+			sqlBuilder.Append("Insert Into Neighbor values (313, 327,'AULAS3_Nodo9', 318,'A3-Bedel');");
+			sqlBuilder.Append("Insert Into Neighbor values (314, 328,'AULAS3_Nodo10', 329,'AULAS3_Nodo11');");
+			sqlBuilder.Append("Insert Into Neighbor values (315, 328,'AULAS3_Nodo10', 302,'A3-14');");
+			sqlBuilder.Append("Insert Into Neighbor values (316, 329,'AULAS3_Nodo11', 303,'A3-15');");
+			
+			//Nodo Aulas 3
+			sqlBuilder.Append("Insert Into Neighbor values (317, 10,'Aulas 3', 324,'AULAS3_Nodo6');");
+			sqlBuilder.Append("Insert Into Neighbor values (318, 10,'Aulas 3', 326,'AULAS3_Nodo8');");
+			sqlBuilder.Append("Insert Into Neighbor values (319, 10,'Aulas 3', 330,'AULAS3_Nodo12');");
 
-			sqlBuilder.Append("Insert Into Neighbor values (318, 330,'AULAS3_Nodo12', 324,'AULAS3_Nodo6');");
-			sqlBuilder.Append("Insert Into Neighbor values (319, 330,'AULAS3_Nodo12', 325,'AULAS3_Nodo7');");
-			sqlBuilder.Append("Insert Into Neighbor values (320, 330,'AULAS3_Nodo12', 326,'AULAS3_Nodo8');");
-
-			sqlBuilder.Append("Insert Into Neighbor values (321, 331,'AULAS3_Nodo13', 324,'AULAS3_Nodo6');");
-			sqlBuilder.Append("Insert Into Neighbor values (322, 331,'AULAS3_Nodo13', 332,'AULAS3_Nodo14');");
+			sqlBuilder.Append("Insert Into Neighbor values (320, 331,'AULAS3_Nodo13', 324,'AULAS3_Nodo6');");
+			sqlBuilder.Append("Insert Into Neighbor values (321, 331,'AULAS3_Nodo13', 332,'AULAS3_Nodo14');");
 			//Insertar con la parte exterior
-			//sqlBuilder.Append("Insert Into Neighbor values (323, 332,'AULAS3_Nodo14', ,'');");
+			sqlBuilder.Append("Insert Into Neighbor values (322, 332,'AULAS3_Nodo14', 100,'Node 61');");
 
-			sqlBuilder.Append("Insert Into Neighbor values (324, 333,'AULAS3_Nodo15', 326,'AULAS3_Nodo8');");
-			sqlBuilder.Append("Insert Into Neighbor values (325, 333,'AULAS3_Nodo15', 334,'AULAS3_Nodo16');");
-			//Insertar con la parte exterior
-			//sqlBuilder.Append("Insert Into Neighbor values (326, 334,'AULAS3_Nodo16', ,'');");
+			sqlBuilder.Append("Insert Into Neighbor values (323, 333,'AULAS3_Nodo15', 326,'AULAS3_Nodo8');");
+			sqlBuilder.Append("Insert Into Neighbor values (324, 333,'AULAS3_Nodo15', 334,'AULAS3_Nodo16');");
+			//Insertar con la parte exterio
+			sqlBuilder.Append("Insert Into Neighbor values (325, 334,'AULAS3_Nodo16', 99,'Node 99');");
 
-			sqlBuilder.Append("Insert Into Neighbor values (327, 335,'AULAS3_Nodo17', 330,'AULAS3_Nodo12');");
+			sqlBuilder.Append("Insert Into Neighbor values (326, 335,'AULAS3_Nodo17', 330,'AULAS3_Nodo12');");
 			//Insertar con la parte exterior
-			//sqlBuilder.Append("Insert Into Neighbor values (328, 335,'AULAS3_Nodo17', ,'');");
-
-			sqlBuilder.Append("Insert Into Neighbor values (329, 336,'AULAS3_Nodo18', 330,'AULAS3_Nodo12');");
-			//Insertar con la parte exterior
-			//sqlBuilder.Append("Insert Into Neighbor values (330, 336,'AULAS3_Nodo18', ,'');");
+			sqlBuilder.Append("Insert Into Neighbor values (327, 335,'AULAS3_Nodo17', 54,'Node 20');");
 
 			//Insertar con la parte exterior
-			//sqlBuilder.Append("Insert Into Neighbor values (331, ,'', 304,'A3-16');");
+			sqlBuilder.Append("Insert Into Neighbor values (328, 100,'Node 61', 304,'A3-16');");
 
 			//Insertar con la parte exterior
-			//sqlBuilder.Append("Insert Into Neighbor values (332, 337,'AULAS3_Nodo19', ,'');");
-			//sqlBuilder.Append("Insert Into Neighbor values (333, 337,'AULAS3_Nodo19', 305,'A3-17');");
+			sqlBuilder.Append("Insert Into Neighbor values (329, 337,'AULAS3_Nodo19', 101,'Node 62');");
+			sqlBuilder.Append("Insert Into Neighbor values (330, 337,'AULAS3_Nodo19', 305,'A3-17');");
 
-			sqlBuilder.Append("Insert Into Neighbor values (334, 338,'AULAS3_Nodo20', 331,'AULAS3_Nodo13');");
-			sqlBuilder.Append("Insert Into Neighbor values (335, 338,'AULAS3_Nodo20', 339,'AULAS3_Nodo21');");
-			sqlBuilder.Append("Insert Into Neighbor values (336, 338,'AULAS3_Nodo21', 330,'AULAS3_Nodo12');");
-			sqlBuilder.Append("Insert Into Neighbor values (337, 338,'AULAS3_Nodo20', 322,'AULAS3_Nodo4');");
+
+			sqlBuilder.Append("Insert Into Neighbor values (331, 338,'AULAS3_Nodo20', 331,'AULAS3_Nodo13');");
+			sqlBuilder.Append("Insert Into Neighbor values (332, 338,'AULAS3_Nodo20', 323,'AULAS3_Nodo5');");
+
+			sqlBuilder.Append("Insert Into Neighbor values (333, 322,'AULAS3_Nodo4', 339,'AULAS3_Nodo21');");
+			sqlBuilder.Append("Insert Into Neighbor values (334, 339,'AULAS3_Nodo21', 300,'A3-11');");
 
 			TransactionalQuery(sqlBuilder.ToString());
 
@@ -670,7 +720,7 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 44, 44, 19.441075, -70.683132);");
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 45, 45, 19.441135, -70.683132);");
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 46, 46, 19.441468, -70.683127);");
-			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 47, 47, 19.441459, -70.683335);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 47, 47, 19.441460, -70.683340);");
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 48, 48, 19.441140, -70.682723);");
 			//sqlBuilder.Append("Insert Into CoordenadaNodo values ( 49, 49, );");
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 50, 50, 19.441480, -70.682723);");
@@ -678,9 +728,9 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 52, 52, 19.441679, -70.682722);");
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 53, 53, 19.441684, -70.683045);");
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 54, 54, 19.441683, -70.683398);");
-			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 55, 55, 19.441608, -70.683400);");
-			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 56, 56, 19.441608, -70.683400);");
-			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 57, 57, 19.441145, -70.683655);");
+			//sqlBuilder.Append("Insert Into CoordenadaNodo values ( 55, 55, 19.441635, -70.683398);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 56, 56, 19.441495, -70.683510);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 57, 57, 19.441165, -70.683670);");
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 58, 58, 19.441930, -70.683395);");
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 59, 59, 19.441930, -70.683140);");
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 60, 60, 19.441979, -70.683082);");
@@ -725,6 +775,10 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 97, 97, 19.440581, -70.683506);");
 			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 98, 98, 19.440582, -70.683577);");
 
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 99, 99, 19.441460, -70.683375);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 100, 100, 19.441460, -70.683395);");
+			sqlBuilder.Append("Insert Into CoordenadaNodo values ( 101, 101, 19.441455, -70.683427);");
+
 			TransactionalQuery(sqlBuilder.ToString());
 
 			#endregion
@@ -754,7 +808,7 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("Insert Into Neighbor values (19, 38,'Node 6.5',   2,'Talleres de Ingeniería Electrónica y Electromecánica');");
 			sqlBuilder.Append("Insert Into Neighbor values (20, 39,'Node 7',    40,'Node 8');");
 			sqlBuilder.Append("Insert Into Neighbor values (21, 40,'Node 8',    41,'Node 8.5');");
-			sqlBuilder.Append("Insert Into Neighbor values (22, 42,'Node 9',    56,'Node 21');");
+			sqlBuilder.Append("Insert Into Neighbor values (22, 42,'Node 9',    57,'Node 21.5');");
 			sqlBuilder.Append("Insert Into Neighbor values (23, 42,'Node 9',    43,'Node 9.5');");
 			sqlBuilder.Append("Insert Into Neighbor values (24, 43,'Node 9.5',   3,'Suministro y Talleres');");
 			sqlBuilder.Append("Insert Into Neighbor values (25, 44,'Node 10',   45,'Node 11');");
@@ -765,7 +819,7 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("Insert Into Neighbor values (30, 46,'Node 12',   50,'Node 16');");
 			sqlBuilder.Append("Insert Into Neighbor values (31, 46,'Node 12',   52,'Node 18');");
 			sqlBuilder.Append("Insert Into Neighbor values (32, 46,'Node 12',   53,'Node 19');");
-			sqlBuilder.Append("Insert Into Neighbor values (33, 47,'Node 13',   10,'Aulas 3');");
+			//sqlBuilder.Append("Insert Into Neighbor values (33, 47,'Node 13',   10,'Aulas 3');");
 			sqlBuilder.Append("Insert Into Neighbor values (34, 48,'Node 14',    4,'Laboratorios Generales de Ingeniería');");
 			sqlBuilder.Append("Insert Into Neighbor values (35, 48,'Node 14',   50,'Node 16');");
 			sqlBuilder.Append("Insert Into Neighbor values (36, 50,'Node 16',   51,'Node 17');");
@@ -775,12 +829,13 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("Insert Into Neighbor values (39, 53,'Node 19',   54,'Node 20');");
 			sqlBuilder.Append("Insert Into Neighbor values (40, 53,'Node 19',    5,'Departamentos de Ingeniería');");
 			sqlBuilder.Append("Insert Into Neighbor values (41, 54,'Node 20',   58,'Node 22');");
-			sqlBuilder.Append("Insert Into Neighbor values (42, 54,'Node 20',   55,'Node 20.5');");
-			sqlBuilder.Append("Insert Into Neighbor values (43, 55,'Node 20.5', 10,'Aulas 3');");
+			//sqlBuilder.Append("Insert Into Neighbor values (42, 54,'Node 20',   55,'Node 20.5');");
+			//Conexion con A3 -> caminos internos (300)
+			//sqlBuilder.Append("Insert Into Neighbor values (43, 55,'Node 20.5', 10,'Aulas 3');");
 			sqlBuilder.Append("Insert Into Neighbor values (44, 56,'Node 21',   57,'Node 21.5');");
-			sqlBuilder.Append("Insert Into Neighbor values (45, 56,'Node 21',   10,'Aulas 3');");
+			//sqlBuilder.Append("Insert Into Neighbor values (45, 56,'Node 21',   10,'Aulas 3');");
 			sqlBuilder.Append("Insert Into Neighbor values (46, 58,'Node 22',   59,'Node 23');");
-			sqlBuilder.Append("Insert Into Neighbor values (47, 58,'Node 22',    6,'iencias Básicas I');");
+			sqlBuilder.Append("Insert Into Neighbor values (47, 58,'Node 22',    6,'Ciencias Básicas I');");
 			sqlBuilder.Append("Insert Into Neighbor values (48, 59,'Node 23',   60,'Node 24');");
 			sqlBuilder.Append("Insert Into Neighbor values (49, 59,'Node 23',   62,'Node 25');");
 			sqlBuilder.Append("Insert Into Neighbor values (50, 60,'Node 24',   62,'Node 25');");
@@ -788,7 +843,7 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("Insert Into Neighbor values (52, 61,'Node 24.5',  7,'Ciencias Básicas II');");
 			sqlBuilder.Append("Insert Into Neighbor values (53, 62,'Node 25',   63,'Node 25.5');");
 			sqlBuilder.Append("Insert Into Neighbor values (54, 63,'Node 25.5',  5,'Departamentos de Ingeniería');");
-			sqlBuilder.Append("Insert Into Neighbor values (55, 64,'Node 26',    7,'iencias Básicas II');");
+			sqlBuilder.Append("Insert Into Neighbor values (55, 64,'Node 26',    7,'Ciencias Básicas II');");
 			sqlBuilder.Append("Insert Into Neighbor values (56, 64,'Node 26',    8,'Aulas 1');");
 			sqlBuilder.Append("Insert Into Neighbor values (57, 64,'Node 26',   65,'Node 27');");
 			sqlBuilder.Append("Insert Into Neighbor values (58, 64,'Node 26',   66,'Node 28');");
@@ -837,16 +892,22 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("Insert Into Neighbor values (101, 91,'Node 52',  92,'Node 53');");
 			sqlBuilder.Append("Insert Into Neighbor values (102, 92,'Node 53',  11,'Aulas 4');");
 
-			sqlBuilder.Append("Insert Into Neighbor values (103, 94,'Node 55',    34,'Node 4');");
-			sqlBuilder.Append("Insert Into Neighbor values (104, 94,'Node 55',     3,'Suministro y Talleres');");
-			sqlBuilder.Append("Insert Into Neighbor values (105, 95,'Node 56',    32,'Node 3');");
-			sqlBuilder.Append("Insert Into Neighbor values (106, 95,'Node 56',     3,'Suministro y Talleres');");
-			sqlBuilder.Append("Insert Into Neighbor values (107, 96,'Node 57',    42,'Node 9');");
-			sqlBuilder.Append("Insert Into Neighbor values (108, 96,'Node 57',     3,'Suministro y Talleres');");
-			sqlBuilder.Append("Insert Into Neighbor values (109, 97,'Node 58',    98,'Node 59');");
-			sqlBuilder.Append("Insert Into Neighbor values (110, 97,'Node 58',     3,'Suministro y Talleres');");
-			sqlBuilder.Append("Insert Into Neighbor values (111, 98,'Node 59',    41,'Node 8.5');");
-			sqlBuilder.Append("Insert Into Neighbor values (112, 98,'Node 59',    42,'Node 9');");
+			sqlBuilder.Append("Insert Into Neighbor values (103, 94,'Node 55',  34,'Node 4');");
+			sqlBuilder.Append("Insert Into Neighbor values (104, 94,'Node 55',   3,'Suministro y Talleres');");
+			sqlBuilder.Append("Insert Into Neighbor values (105, 95,'Node 56',  32,'Node 3');");
+			sqlBuilder.Append("Insert Into Neighbor values (106, 95,'Node 56',   3,'Suministro y Talleres');");
+			sqlBuilder.Append("Insert Into Neighbor values (107, 96,'Node 57',  42,'Node 9');");
+			sqlBuilder.Append("Insert Into Neighbor values (108, 96,'Node 57',   3,'Suministro y Talleres');");
+			sqlBuilder.Append("Insert Into Neighbor values (109, 97,'Node 58',  98,'Node 59');");
+			sqlBuilder.Append("Insert Into Neighbor values (110, 97,'Node 58',   3,'Suministro y Talleres');");
+			sqlBuilder.Append("Insert Into Neighbor values (111, 98,'Node 59',  41,'Node 8.5');");
+			sqlBuilder.Append("Insert Into Neighbor values (112, 98,'Node 59',  42,'Node 9');");
+
+			//Nodos Aulas 3 de Nodo 13 al Nodo 21
+			sqlBuilder.Append("Insert Into Neighbor values (113, 99,'Node 60',  47,'Node 13');");
+			sqlBuilder.Append("Insert Into Neighbor values (114, 99,'Node 60', 100,'Node 61');");
+			sqlBuilder.Append("Insert Into Neighbor values (115,100,'Node 61',101,'Node 62');");
+			sqlBuilder.Append("Insert Into Neighbor values (116,101,'Node 62', 56,'Node 21');");
 
 			TransactionalQuery(sqlBuilder.ToString());
 

@@ -20,6 +20,8 @@ namespace SncPucmm.View
 
 		public static bool isTransitionAnimated;
 		public static Vector3 targetTransitionPosition;
+
+		public static Vector3 lastPosition;
 		
 		#endregion
 

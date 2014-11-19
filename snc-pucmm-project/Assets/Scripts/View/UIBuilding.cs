@@ -53,5 +53,13 @@ namespace SncPucmm.View
                 }                
             }
         }
+
+        void OnTriggerEnter(Collider objectCollider)
+        {
+            if (UICamaraControl.Vista_3era_Persona)
+            {
+                Camera.main.transform.position = UICamaraControl.lastPosition;
+            }
+        }
     }
 }

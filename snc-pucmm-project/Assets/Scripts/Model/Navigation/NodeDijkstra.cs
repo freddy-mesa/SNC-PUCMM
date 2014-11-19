@@ -29,6 +29,14 @@ namespace SncPucmm.Model.Navigation
         public float Latitude { get; set; }
 
         public float Longitude { get; set; }
+
+        public bool IsInsideBuilding { get; set; }
+
+        public string BuildingName { get; set; }
+
+        public int PlantaBuilding { get; set; }
+
+        public bool IsBuilding { get; set; }
         
         #endregion
 

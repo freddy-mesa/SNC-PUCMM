@@ -11,6 +11,8 @@ namespace SncPucmm.View
         #region Atributos
 
         public string Name;
+        public float Distance;
+        public float DistancePath;
 
         #endregion
     }

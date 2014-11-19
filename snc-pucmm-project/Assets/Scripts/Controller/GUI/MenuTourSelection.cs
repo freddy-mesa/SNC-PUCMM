@@ -381,6 +381,11 @@ namespace SncPucmm.Controller.GUI
 			return buttonList;
 		}
 
+		public void Update()
+		{
+
+		}
+
 		#endregion
 
 		#endregion

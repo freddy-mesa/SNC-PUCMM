@@ -155,6 +155,7 @@ namespace SncPucmm.Controller.GUI
 
 			Transform camera = UIUtils.Find("/Vista3erPersona").camera.transform;
 			camera.eulerAngles = new Vector3(camera.eulerAngles.x, 90, 0f);
+			camera.position = new Vector3(camera.position.x, 30f,camera.position.z);
 
 			UICamaraControl.targetTransitionPosition = new Vector3(nodePosX, camera.position.y, nodePosZ);
 			UICamaraControl.isTransitionAnimated = true;
@@ -164,16 +165,6 @@ namespace SncPucmm.Controller.GUI
 		{
 			UIUtils.DestroyChilds("/PUCMM/Directions", false);
 			MenuManager.GetInstance().RemoveCurrentMenu();
-
-			if (ModelPoolManager.GetInstance().Contains("tourCtrl"))
-			{
-				State.ChangeState(eState.Tour);
-				ModelPoolManager.GetInstance().Remove("tourCtrl");
-			}
-			else
-			{
-				State.ChangeState(eState.MenuBuilding);
-			}
 		}
 
 		private void ShowDirectionMenu(PathDataDijkstra path)
@@ -185,8 +176,21 @@ namespace SncPucmm.Controller.GUI
 
 		private void ShowNavigationDirection(PathDataDijkstra path)
 		{
+			UIUtils.EnableInsideFloorCaminosBuilding(directionPath);
+
+			if (path.StartNode.IsInsideBuilding)
+			{
+				UIUtils.ShowInsidePlaneBuilding(path.StartNode.BuildingName, "Planta" + path.StartNode.PlantaBuilding);
+			}
+			else if (path.EndNode.IsInsideBuilding)
+			{
+				UIUtils.ShowInsidePlaneBuilding(path.EndNode.BuildingName, "Planta" + path.EndNode.PlantaBuilding);
+			}
+
 			var directions = UIUtils.Find("/PUCMM/Directions").GetComponent<UIDirections>();
 			directions.PrintPath(directionPath, path);
+
+			UIUtils.DisableInsideFloorCaminosBuilding(directionPath, path);
 		}
 
 		#region Implemented methods
@@ -194,6 +198,11 @@ namespace SncPucmm.Controller.GUI
 		public string GetMenuName()
 		{
 			return name;
+		}
+
+		public void Update()
+		{
+			
 		}
 
 		public List<Button> GetButtonList()

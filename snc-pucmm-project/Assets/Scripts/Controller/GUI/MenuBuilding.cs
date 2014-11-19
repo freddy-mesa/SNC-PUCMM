@@ -18,6 +18,7 @@ namespace SncPucmm.Controller.GUI
         private string name;
         private ModelNode modelNode;
 
+        private string locationName;
         public List<Button> buttonList;
 
         #endregion
@@ -51,16 +52,11 @@ namespace SncPucmm.Controller.GUI
             ShowInsideButton.OnTouchEvent += new OnTouchEventHandler(OnTouchShowInsideButton);
             buttonList.Add(ShowInsideButton);
 
-            if (!this.modelNode.isBuilding)
-            {
-                var boxCollider = UIUtils.FindGUI("MenuBuilding/ButtonShowInside").GetComponent<BoxCollider>();
-                GameObject.Destroy(boxCollider);
-            }
+            Update();
         }
 
         public void OnTouchExitButton(object sender, TouchEventArgs e)
         {
-            UIUtils.ActivateCameraLabels(true);
             Exit();
         }
 
@@ -73,7 +69,11 @@ namespace SncPucmm.Controller.GUI
         public void OnTouchShowInsideButton(object sender, TouchEventArgs e)
         {
             //disable el box collider del edificio
-            UIUtils.Find("/PUCMM/Model3D/" + modelNode.abreviacion).GetComponent<BoxCollider>().enabled = false;
+            var boxColliderList = UIUtils.Find("/PUCMM/Model3D/" + modelNode.abreviacion).GetComponents<BoxCollider>();
+            foreach (var boxCollider in boxColliderList)
+            {
+                boxCollider.enabled = false;
+            }
 
             MenuManager.GetInstance().AddMenu(new MenuInsideBuilding("MenuInsideBuilding", modelNode));
             State.ChangeState(eState.Navigation);
@@ -82,9 +82,16 @@ namespace SncPucmm.Controller.GUI
         private void Exit()
         {
             MenuManager.GetInstance().RemoveCurrentMenu();
-            State.ChangeState(eState.Navigation);
+
+            if (this.modelNode.isBuilding)
+            {
+                UIUtils.ActivateCameraLabels(true);
+                State.ChangeState(eState.Navigation);
+            }
         }
 
+        #region Implemented Methods
+        
         public string GetMenuName()
         {
             return name;
@@ -94,6 +101,33 @@ namespace SncPucmm.Controller.GUI
         {
             return buttonList;
         }
+
+        public void Update()
+        {
+            var label = UIUtils.FindGUI("MenuBuilding/LabelBuildingName");
+            var lblBuildingName = label.GetComponent<UILabel>();
+            lblBuildingName.text = UIUtils.FormatStringLabel(modelNode.name, ' ', 20);
+
+            if (!this.modelNode.isBuilding)
+            {
+                UIUtils.FindGUI("MenuBuilding/ButtonShowInside").SetActive(false);
+            }
+            else
+            {
+                var menu = UIUtils.FindGUI("MenuBuilding").transform;
+                menu.FindChild("ButtonShowInside").gameObject.SetActive(true);
+
+                var boxColliderList = UIUtils.Find("/PUCMM/Model3D/" + modelNode.abreviacion).GetComponents<BoxCollider>();
+                foreach (var boxCollider in boxColliderList)
+                {
+                    boxCollider.enabled = true;
+                }
+            }
+
+            State.ChangeState(eState.MenuBuilding);
+        }
+
+        #endregion
 
         #endregion
 

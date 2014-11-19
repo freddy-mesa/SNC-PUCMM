@@ -12,5 +12,7 @@ namespace SncPucmm.Controller.Control
 		/// </summary>
 		/// <value>The menu name.</value>
 		string GetMenuName();
+
+		void Update();
 	}
 }
