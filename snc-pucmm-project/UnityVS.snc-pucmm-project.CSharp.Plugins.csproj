@@ -79,10 +79,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Plugins\Pixelplacement\iTween\iTween.cs" />
-    <None Include="Assets\Draw Call Minimizer\Example\ReadMe.txt" />
     <None Include="Assets\GyroDroid\GyroDroid-minimal-README.txt" />
     <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
     <None Include="Assets\JSON\readme.txt" />
+    <None Include="Assets\MeshBaker\README.txt" />
+    <None Include="Assets\MeshBaker\Release Notes.txt" />
     <None Include="Assets\NGUI\Examples\Atlases\Fantasy\Fantasy Font - Normal.txt" />
     <None Include="Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Header.txt" />
     <None Include="Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Normal.txt" />
@@ -120,6 +121,8 @@
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed.shader" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Plugins\Android\build.xml" />
+    <None Include="Assets\Plugins\Android\classes\AndroidManifest.xml" />
+    <None Include="Assets\Plugins\Android\classes\build.xml" />
     <None Include="Assets\UniWeb\CHANGES.txt" />
     <None Include="Assets\UniWeb\FAQ.txt" />
     <None Include="Assets\UniWeb\README.txt" />

@@ -100,22 +100,27 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\DCMEditorWindow.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\DrawCallMinimizerInspector.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\GenericListAdaptor.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\IReorderableListAdaptor.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\Internal\GUIHelper.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\Internal\ReorderableListResources.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\ReorderableListControl.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\ReorderableListFlags.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\ReorderableListGUI.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\NEW\Editor\Reorderable List\SerializedPropertyAdaptor.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Editor\AssetExporter.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Editor\CombineMeshInEditor.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Editor\CombineMeshInEditorWindow.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Editor\RevertFromDevelopmentBake.cs" />
-    <Compile Include="Assets\Draw Call Minimizer\Scripts\OLD\Editor\TextureExporter.cs" />
     <Compile Include="Assets\JSON\Editor\JSONChecker.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\Editor\MB3_BakeInPlace.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\Editor\MB3_BatchPrefabBakerEditor.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\Editor\MB3_MeshBakerEditor.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\Editor\MB3_MeshBakerEditorFunctions.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\Editor\MB3_MeshBakerEditorInternal.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\Editor\MB3_MeshBakerEditorWindow.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\Editor\MB3_MultiMeshBakerEditor.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\Editor\MB3_TextureBakerEditor.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\Editor\MB3_TextureBakerEditorInternal.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\Editor\MB3_TextureCombinerEditorFunctions.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\Editor\MB_EditorUtil.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\_Legacy\Editor\MB2_BakeInPlace.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\_Legacy\Editor\MB2_MeshBakerEditor.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\_Legacy\Editor\MB2_MeshBakerEditorFunctions.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\_Legacy\Editor\MB2_MeshBakerEditorInternal.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\_Legacy\Editor\MB2_MultiMeshBakerEditor.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\_Legacy\Editor\MB2_TextureBakerEditor.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\_Legacy\Editor\MB2_TextureBakerEditorInternal.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\_Legacy\Editor\MB2_TextureCombinerEditorFunctions.cs" />
+    <Compile Include="Assets\MeshBaker\scripts\_Legacy\Editor\MB_MeshBakerEditorWindow.cs" />
     <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Editor\InvDatabaseInspector.cs" />
     <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Editor\InvFindItem.cs" />
     <Compile Include="Assets\NGUI\Scripts\Editor\ActiveAnimationEditor.cs" />
@@ -199,10 +204,11 @@
     <Compile Include="Assets\NGUI\Scripts\Editor\UIWidgetContainerEditor.cs" />
     <Compile Include="Assets\NGUI\Scripts\Editor\UIWidgetInspector.cs" />
     <Compile Include="Assets\NGUI\Scripts\Editor\UIWrapContentEditor.cs" />
-    <None Include="Assets\Draw Call Minimizer\Example\ReadMe.txt" />
     <None Include="Assets\GyroDroid\GyroDroid-minimal-README.txt" />
     <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
     <None Include="Assets\JSON\readme.txt" />
+    <None Include="Assets\MeshBaker\README.txt" />
+    <None Include="Assets\MeshBaker\Release Notes.txt" />
     <None Include="Assets\NGUI\Examples\Atlases\Fantasy\Fantasy Font - Normal.txt" />
     <None Include="Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Header.txt" />
     <None Include="Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Normal.txt" />
@@ -240,6 +246,8 @@
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed.shader" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Plugins\Android\build.xml" />
+    <None Include="Assets\Plugins\Android\classes\AndroidManifest.xml" />
+    <None Include="Assets\Plugins\Android\classes\build.xml" />
     <None Include="Assets\UniWeb\CHANGES.txt" />
     <None Include="Assets\UniWeb\FAQ.txt" />
     <None Include="Assets\UniWeb\README.txt" />

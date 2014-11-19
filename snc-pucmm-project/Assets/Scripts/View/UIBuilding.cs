@@ -43,14 +43,22 @@ namespace SncPucmm.View
                     cameraPosition.z
                 );
 
-                if (distance > 120)
+                if (distance > 100)
                 {
                     nameLabel.transform.eulerAngles = new Vector3(0, cameraRotation.y, 0);
                 }
                 else
                 {
-                    nameLabel.transform.eulerAngles = new Vector3(Mathf.Clamp(120 - distance, 15, 90), cameraRotation.y, 0);
+                    nameLabel.transform.eulerAngles = new Vector3(Mathf.Clamp(50 - distance, 10, 40), cameraRotation.y, 0);
                 }                
+            }
+        }
+
+        void OnTriggerEnter(Collider objectCollider)
+        {
+            if (UICamaraControl.Vista_3era_Persona)
+            {
+                Camera.main.transform.position = UICamaraControl.lastPosition;
             }
         }
     }

@@ -115,7 +115,6 @@ namespace SncPucmm.Controller
             }
         }
 
-        
         void Start()
         {
             IsEnterToUpdateModel = true;
@@ -137,11 +136,11 @@ namespace SncPucmm.Controller
             //    StartCoroutine(UpdateToursService());
             //}
 
-            if (IsEnterToUpdateTours)
-            {
-                IsEnterToUpdateTours = false;
-                StartCoroutine(UpdateToursService());
-            }
+            //if (IsEnterToUpdateTours)
+            //{
+            //    IsEnterToUpdateTours = false;
+            //    StartCoroutine(UpdateToursService());
+            //}
         }
 
         private IEnumerator UpdateModelService()
@@ -151,7 +150,7 @@ namespace SncPucmm.Controller
 
             //Obtener la ultima actualizacion del servidor
             yield return WebService.GET(
-                "http://localhost:8080/snc-pucmm-web/webservices/SncPucmmWS/model/updates/", 
+                "http://localhost:8080/", 
                 (status, response) => 
                 {
                     if (status) responseJson = response;
@@ -170,8 +169,11 @@ namespace SncPucmm.Controller
                 JSONObject json = new JSONObject(responseJson);
                 Debug.Log(responseJson);
 
-                ////Hacer un update a la base de datos
-                SQLiteService.GetInstance().UpdateModel(json);
+                //Hacer un update a la base de datos
+                using (var sqlService = new SQLiteService())
+                {
+                    sqlService.UpdateModel(json);
+                }
 
                 var navigation = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
 
@@ -221,14 +223,17 @@ namespace SncPucmm.Controller
                     Debug.Log("Peticion de UpdateTours al WebService: " + json.ToString());
 
                     //Hacer un update a la base de datos
-                    SQLiteService.GetInstance().UpdateTours(json);
+                    using (var sqlService = new SQLiteService())
+                    {
+                        sqlService.UpdateTours(json);
+                    }
                 }
 
             }
 
             if (!IsEnterToUpdateTours)
             {
-                StartCoroutine(CountDown(10, value => IsEnterToUpdateTours = value));
+                StartCoroutine(CountDown(600, value => IsEnterToUpdateTours = value));
                 yield return new WaitForSeconds(0.5f);
             }
 

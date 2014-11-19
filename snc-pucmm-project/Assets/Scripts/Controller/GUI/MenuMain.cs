@@ -103,7 +103,7 @@ namespace SncPucmm.Controller.GUI
 			}
 
 			UIAnimation.MoveBy(sidebar, new Dictionary<string, object> {
-				{"x", position},{"easeType", iTween.EaseType.easeInOutExpo},{"time", 1}
+				{"x", position},{"easeType", iTween.EaseType.easeInOutExpo},{"time", 0.5}
 			});
 		}
 
@@ -116,6 +116,7 @@ namespace SncPucmm.Controller.GUI
 
 		private void OnTouchButtonTours(object sender, TouchEventArgs e)
 		{
+			UIUtils.ActivateCameraLabels(false);
 			MenuManager.GetInstance().AddMenu(new MenuTourSelection("MenuTourSelection"));
 			State.ChangeState(eState.Tour);
 		}
@@ -170,10 +171,6 @@ namespace SncPucmm.Controller.GUI
 
 			var menuManager = MenuManager.GetInstance();
 			menuManager.AddMenu(new MenuBuilding("MenuBuilding", node));
-
-			var label = UIUtils.FindGUI(menuManager.GetCurrentMenu().GetMenuName() + "/LabelBuildingName");
-			var lblBuildingName = label.GetComponent<UILabel>();
-			lblBuildingName.text = UIUtils.FormatStringLabel(node.name, ' ', 20);
 
 			State.ChangeState(eState.MenuBuilding);
 		}
@@ -230,31 +227,32 @@ namespace SncPucmm.Controller.GUI
 			
 			UIUtils.ActivateCameraLabels(false);
 
-			//Obteniendo de la Base de datos
-			var sqliteService = SQLiteService.GetInstance();
-			var reader = sqliteService.Query(
-				true,
-				"SELECT nombre, idUbicacion, idNodo, edificio " +
-					"FROM Nodo " +
-					"WHERE idUbicacion is not null and nombre LIKE '%" + searchText + "%' " +
-					"ORDER BY idUbicacion, idNodo"
-			);
-
-			//Guardando los datos en memoria
 			var textList = new List<object>();
-			while (reader.Read())
-			{
-				var lugar = new
-				{
-					nombre = reader["nombre"],
-					ubicacion = reader["idUbicacion"],
-					node = reader["idNodo"],
-					edificio = reader["edificio"]
-				};
 
-				textList.Add(lugar);
+			//Obteniendo de la Base de datos
+			using (var sqlService = new SQLiteService())
+			{
+				var sql = "SELECT nombre, idUbicacion, idNodo, edificio " +
+						"FROM Nodo " +
+						"WHERE idUbicacion is not null and nombre LIKE '%" + searchText + "%' " +
+						"ORDER BY idUbicacion, idNodo";
+
+				using (var reader = sqlService.SelectQuery(sql))
+				{
+					while (reader.Read())
+					{
+						var lugar = new
+						{
+							nombre = reader["nombre"],
+							ubicacion = reader["idUbicacion"],
+							node = reader["idNodo"],
+							edificio = reader["edificio"]
+						};
+
+						textList.Add(lugar);
+					}
+				}
 			}
-			reader = null;
 
 			//Eliminando los hijos del Tree View List
 			UIUtils.DestroyChilds("MenuMain/TreeView/ScrollView", true);
@@ -348,6 +346,11 @@ namespace SncPucmm.Controller.GUI
 		public string GetMenuName()
 		{
 			return name;
+		}
+
+		public void Update()
+		{
+			
 		}
 
 		public List<Button> GetButtonList()

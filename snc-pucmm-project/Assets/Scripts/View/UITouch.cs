@@ -23,14 +23,20 @@ namespace SncPucmm.View
         private RaycastHit rayHitInfo = new RaycastHit();
 
         /// <summary>
-        /// Tapped Building Name
+        /// Tapped Building Id
         /// </summary>
-        private int locationTapped;
+        private static int locationTapped;
+
+        /// <summary>
+        /// Tapped Inside Building Location Name
+        /// </summary>
+        private static string insideLocationTapped;
 
         public static bool isMoving = false;
         public static bool isZooming = false;
         public static bool isRotating = false;
-        public static bool isTapped = false;
+        public static bool isButtonTapped = false;
+        public static bool isModelTapped = false;
 
         public void Update()
         {
@@ -72,9 +78,9 @@ namespace SncPucmm.View
 
                     if (State.GetCurrentState().Equals(eState.Navigation))
                     {
-                        if (this is UIModel && !isMoving && !isRotating && !isZooming && !isTapped)
+                        if (this is UIModel && !isMoving && !isRotating && !isZooming)
                         {
-                            if (Input.GetTouch(i).phase == TouchPhase.Stationary)
+                            if (Input.GetTouch(i).phase == TouchPhase.Stationary && !isButtonTapped)
                             {
                                 ray = Camera.main.ScreenPointToRay(objectPosition);
                                 if (Physics.Raycast(ray, out rayHitInfo))
@@ -83,6 +89,7 @@ namespace SncPucmm.View
                                     if (locationObject != null && locationObject.tag.Equals("Building"))
                                     {
                                         locationTapped = locationObject.GetComponent<ModelObject>().Id;
+                                        isButtonTapped = true;
                                     }
                                 }
                             }
@@ -102,12 +109,43 @@ namespace SncPucmm.View
                                 }
                             }
                         }
+
+                        else if (this is UIInsideBuilding && !isMoving && !isRotating && !isZooming)
+                        {
+                            if (Input.GetTouch(i).phase == TouchPhase.Stationary && !isButtonTapped)
+                            {
+                                ray = Camera.main.ScreenPointToRay(objectPosition);
+                                if (Physics.Raycast(ray, out rayHitInfo))
+                                {
+                                    var locationObject = rayHitInfo.transform.gameObject;
+                                    if (locationObject != null && locationObject.tag.Equals("InsideBuilding"))
+                                    {
+                                        insideLocationTapped = locationObject.name;
+                                        isButtonTapped = true;
+                                    }
+                                }
+                            }
+                            else if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                            {
+                                ray = Camera.main.ScreenPointToRay(objectPosition);
+                                if (Physics.Raycast(ray, out rayHitInfo))
+                                {
+                                    var locationObject = rayHitInfo.transform.gameObject;
+                                    if (locationObject != null && locationObject.tag.Equals("InsideBuilding") && insideLocationTapped.Equals(this.name))
+                                    {
+                                        ((UIInsideBuilding) this).OnTouchBuildingInsideLocation(this.name);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
             else
             {
-                isMoving = isRotating = isZooming = isTapped = false;
+                isMoving = isRotating = isZooming = isButtonTapped = false;
+                locationTapped = 0;
+                insideLocationTapped = "";
             }
         }
     }

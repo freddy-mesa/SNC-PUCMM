@@ -35,7 +35,6 @@ namespace SncPucmm.Controller.Tours
         public TourController()
         {
             sectionTourDataList = new List<SectionTourData>();
-
             ResetValues();
         }
 
@@ -83,7 +82,7 @@ namespace SncPucmm.Controller.Tours
                     isEndingSectionTour = true;
                     var detalleUsuarioTour = this.detalleUsuarioTourList.Find(detalle =>
                     {
-                        return detalle.idPuntoReunionTour == currentSectionTourData.IdPuntoReuionNodoDesde;
+                        return detalle.idPuntoReunionTour == currentSectionTourData.IdPuntoReuionNodoHasta;
                     });
 
                     detalleUsuarioTour.fechaFin = DateTime.Now;
@@ -93,7 +92,7 @@ namespace SncPucmm.Controller.Tours
             if (isEndingSectionTour && isStartingSectionTour)
             {
                 ResetValues();
-                if (!CanChangeToNextSectionTour())
+                if (CanChangeToNextSectionTour())
                 {
                     isTourEnd = true;
                 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using SncPucmm.View;
 using SncPucmm.Model;
+using UnityEngine;
 
 namespace SncPucmm.Controller.GUI
 {
@@ -15,18 +16,19 @@ namespace SncPucmm.Controller.GUI
         #region Atributos
 
         private string name;
-        private ModelNode location;
+        private ModelNode modelNode;
 
+        private string locationName;
         public List<Button> buttonList;
 
         #endregion
 
         #region Constructor
 
-        public MenuBuilding(string name, ModelNode location)
+        public MenuBuilding(string name, ModelNode modelNode)
         {
             this.name = name;
-            this.location = location;
+            this.modelNode = modelNode;
             Initializer();
         }
 
@@ -46,44 +48,50 @@ namespace SncPucmm.Controller.GUI
             NavigationButton.OnTouchEvent += new OnTouchEventHandler(OnTouchNavigationButton);
             buttonList.Add(NavigationButton);
 
-            var AditionalInformationButton = new Button("ButtonAditionalInformation");
-            AditionalInformationButton.OnTouchEvent += new OnTouchEventHandler(OnTouchAditionalInformationButton);
-            buttonList.Add(AditionalInformationButton);
+            var ShowInsideButton = new Button("ButtonShowInside");
+            ShowInsideButton.OnTouchEvent += new OnTouchEventHandler(OnTouchShowInsideButton);
+            buttonList.Add(ShowInsideButton);
+
+            Update();
         }
 
         public void OnTouchExitButton(object sender, TouchEventArgs e)
         {
-            UIUtils.ActivateCameraLabels(true);
             Exit();
         }
 
         public void OnTouchNavigationButton(object sender, TouchEventArgs e)
         {
             NavigationController controller = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
-            controller.StartNavigation(this.location.name);
+            controller.StartNavigation(this.modelNode.name);
         }
 
-        public void OnTouchPhotosButton(object sender, TouchEventArgs e)
+        public void OnTouchShowInsideButton(object sender, TouchEventArgs e)
         {
+            //disable el box collider del edificio
+            var boxColliderList = UIUtils.Find("/PUCMM/Model3D/" + modelNode.abreviacion).GetComponents<BoxCollider>();
+            foreach (var boxCollider in boxColliderList)
+            {
+                boxCollider.enabled = false;
+            }
 
-        }
-
-        public void OnTouchDescriptionButton(object sender, TouchEventArgs e)
-        {
-
-        }
-
-        public void OnTouchAditionalInformationButton(object sender, TouchEventArgs e)
-        {
-
+            MenuManager.GetInstance().AddMenu(new MenuInsideBuilding("MenuInsideBuilding", modelNode));
+            State.ChangeState(eState.Navigation);
         }
 
         private void Exit()
         {
             MenuManager.GetInstance().RemoveCurrentMenu();
-            State.ChangeState(eState.Navigation);
+
+            if (this.modelNode.isBuilding)
+            {
+                UIUtils.ActivateCameraLabels(true);
+                State.ChangeState(eState.Navigation);
+            }
         }
 
+        #region Implemented Methods
+        
         public string GetMenuName()
         {
             return name;
@@ -94,6 +102,33 @@ namespace SncPucmm.Controller.GUI
             return buttonList;
         }
 
+        public void Update()
+        {
+            var label = UIUtils.FindGUI("MenuBuilding/LabelBuildingName");
+            var lblBuildingName = label.GetComponent<UILabel>();
+            lblBuildingName.text = UIUtils.FormatStringLabel(modelNode.name, ' ', 20);
+
+            if (!this.modelNode.isBuilding)
+            {
+                UIUtils.FindGUI("MenuBuilding/ButtonShowInside").SetActive(false);
+            }
+            else
+            {
+                var menu = UIUtils.FindGUI("MenuBuilding").transform;
+                menu.FindChild("ButtonShowInside").gameObject.SetActive(true);
+
+                var boxColliderList = UIUtils.Find("/PUCMM/Model3D/" + modelNode.abreviacion).GetComponents<BoxCollider>();
+                foreach (var boxCollider in boxColliderList)
+                {
+                    boxCollider.enabled = true;
+                }
+            }
+
+            State.ChangeState(eState.MenuBuilding);
+        }
+
+        #endregion
+
         #endregion
 
         #region Destructor
@@ -101,7 +136,7 @@ namespace SncPucmm.Controller.GUI
         ~MenuBuilding()
         {
             this.buttonList = null;
-            this.location = null;
+            this.modelNode = null;
             this.name = null;
         }
 

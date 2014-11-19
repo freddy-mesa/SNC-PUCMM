@@ -1,4 +1,7 @@
-﻿using System;
+﻿using SncPucmm.Model;
+using SncPucmm.Model.Navigation;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SncPucmm.View
@@ -53,10 +56,7 @@ namespace SncPucmm.View
         public static void ActivateCameraLabels(bool activate) 
         {
             var labels = FindGUI("CameraLabels");
-            foreach (Transform label in labels.transform)
-            {
-                label.gameObject.SetActive(activate);
-            }
+            labels.SetActive(activate);
         }
 
         public static GameObject FindGUI(string URI) 
@@ -129,6 +129,171 @@ namespace SncPucmm.View
         public static float getDirectDistance(float x1, float y1, float x2, float y2)
         {
             return Mathf.Sqrt(Mathf.Pow(x1 - x2, 2) + Mathf.Pow(y1 - y2, 2));
+        }
+
+        public static void ConvertNodeAltitudeInMeter(string buildingName, int insideBuildingFloor, out float altitud1, out float altitud2)
+        {
+            float result1 = 0, result2 = 0;
+
+            if (buildingName == "Aulas 3")
+            {
+                if (insideBuildingFloor == 1)
+                {
+                    result1 = 4.5f;
+                    result2 = result1 - 3.5f;
+                }
+                else if (insideBuildingFloor == 2)
+                {
+                    result1 = 8.5f;
+                    result2 = result1 - 3.5f;
+                }
+                else if (insideBuildingFloor == 3)
+                {
+                    result1 = 12.5f;
+                    result2 = result1 - 3f;
+                }
+            }
+
+            altitud1 = result1;
+            altitud2 = result2;
+        }
+
+        public static void EnableInsideFloorCaminosBuilding(List<PathDataDijkstra> nodeList)
+        {
+            foreach(var path in nodeList)
+            {
+                if (path.StartNode.IsInsideBuilding)
+                {
+                    string strPath = "/PUCMM/Model3D/" + path.StartNode.BuildingName + "/Caminos";
+                    var planta = Find(strPath).transform.FindChild("Planta" + path.StartNode.PlantaBuilding);
+                    planta.gameObject.SetActive(true);
+                }
+
+                if (path.EndNode.IsInsideBuilding)
+                {
+                    string strPath = "/PUCMM/Model3D/" + path.EndNode.BuildingName + "/Caminos";
+                    var planta = Find(strPath).transform.FindChild("Planta" + path.EndNode.PlantaBuilding);
+                    planta.gameObject.SetActive(true);
+                }
+            }
+        }
+
+        public static void DisableInsideFloorCaminosBuilding(List<PathDataDijkstra> nodeList, PathDataDijkstra selectPath)
+        {
+            //Buscar todos los edificios
+            List<string> buildingsName = new List<string>();
+            foreach (var path in nodeList)
+            {
+                if(path.EndNode.IsInsideBuilding)
+                {
+                    if (!buildingsName.Contains(path.EndNode.BuildingName))
+                    {
+                        buildingsName.Add(path.EndNode.BuildingName);
+                    }
+                }
+            }
+
+            if(selectPath.StartNode.IsInsideBuilding || selectPath.EndNode.IsInsideBuilding)
+            {
+                bool control = false;
+
+                //De los edificios encontrados buscar cual de estos hace match con el path actual
+                foreach (var building in buildingsName)
+                {
+                    if (selectPath.StartNode.IsInsideBuilding)
+                    {
+                        if (!(selectPath.StartNode.BuildingName == building))
+                        {
+                            ShowEntireBuilding(building);
+                        }
+
+                        control = true;
+                    }
+
+                    if (!control && selectPath.EndNode.IsInsideBuilding)
+                    {
+                        if (!(selectPath.EndNode.BuildingName == building))
+                        {
+                            ShowEntireBuilding(building);
+                        }
+                    }
+                }
+            }
+            else 
+            {
+                foreach (var building in buildingsName)
+                {
+                    ShowEntireBuilding(building);
+                }
+            }
+        }
+
+        public static void ShowInsidePlaneBuilding(string buildingAbbreviation, string floorName)
+        {
+            //Haciendo un reset del edificio
+            var edificio = ShowEntireBuilding(buildingAbbreviation);
+
+            edificio.FindChild("Otros").gameObject.SetActive(false);
+            edificio.FindChild("Columnas").gameObject.SetActive(false);
+            edificio.transform.FindChild("Text").gameObject.SetActive(false);
+
+            var planos = edificio.FindChild("Planos");
+            foreach (Transform plano in planos)
+            {
+                if (plano.name == floorName)
+                {
+                    plano.gameObject.SetActive(true);
+                }
+            }
+
+            var caminos = edificio.FindChild("Caminos").transform;
+            foreach (Transform planta in caminos)
+            {
+                if (planta.name == floorName)
+                {
+                    planta.gameObject.SetActive(true);
+                }
+            }
+
+            var plantas = edificio.FindChild("Plantas").transform;
+
+            if (floorName == "Planta1")
+            {
+                plantas.FindChild("Planta1").gameObject.SetActive(false);
+                plantas.FindChild("Planta2").gameObject.SetActive(false);
+                plantas.FindChild("Planta3").gameObject.SetActive(false);
+
+
+            }
+            else if (floorName == "Planta2")
+            {
+                plantas.FindChild("Planta2").gameObject.SetActive(false);
+                plantas.FindChild("Planta3").gameObject.SetActive(false);
+            }
+            else
+            {
+                plantas.FindChild("Planta3").gameObject.SetActive(false);
+            }
+        }
+
+        public static Transform ShowEntireBuilding(string buildingAbbreviation)
+        {
+            var edificio = UIUtils.Find("/PUCMM/Model3D/" + buildingAbbreviation);
+
+            var plantas = edificio.transform.FindChild("Plantas");
+            foreach (Transform planta in plantas) { planta.gameObject.SetActive(true); }
+
+            var planos = edificio.transform.FindChild("Planos");
+            foreach (Transform plano in planos) { plano.gameObject.SetActive(false); }
+
+            var caminos = edificio.transform.FindChild("Caminos");
+            foreach (Transform plano in caminos) { plano.gameObject.SetActive(false); }
+
+            edificio.transform.FindChild("Otros").gameObject.SetActive(true);
+            edificio.transform.FindChild("Columnas").gameObject.SetActive(true);
+            edificio.transform.FindChild("Text").gameObject.SetActive(true);
+
+            return edificio.transform;
         }
     }
 }

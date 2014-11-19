@@ -20,13 +20,15 @@ namespace SncPucmm.View
 
             if (State.GetCurrentState().Equals(eState.MenuNavigation) && ModelPoolManager.GetInstance().Contains("tourCtrl"))
             {
-                var tourCotroller = ModelPoolManager.GetInstance().GetValue("tourCtrl") as TourController;
+                var tourController = ModelPoolManager.GetInstance().GetValue("tourCtrl") as TourController;
 
-                if (!tourCotroller.UpdateSectionTour())
+                bool isEndTour = tourController.UpdateSectionTour();
+                if (isEndTour)
                 {
                     //Ha llegado a ultimo punto de reunion
-                    
-                    //Mensaje
+                    //var tourNotification = UIUtils.FindGUI("MenuNavigation/TourNotification");
+                    //tourNotification.SetActive(true);
+                    //tourNotification.GetComponent<UILabel>().text = "Ha finalizado el Tour";
                 }
             }
         }        

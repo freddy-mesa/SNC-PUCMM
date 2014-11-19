@@ -13,8 +13,6 @@ namespace SncPucmm.View
 		public UILabel lblPosX;
 		public UILabel lblPosZ;
 
-		public GameObject character;
-
 		static float latitude;
 		static float longitude;
 		static float altitude;
@@ -24,6 +22,7 @@ namespace SncPucmm.View
 		float planeAxeX;
 
 		AndroidJavaClass gpsActivityJavaClass;
+
 		#endregion
 
 		#region Propiedades
@@ -32,6 +31,7 @@ namespace SncPucmm.View
 		public static float Altitude { get { return altitude; } }
 		public static float Accuracy { get { return accuracy; } }
 		public static float Longitude { get { return longitude; } }
+		public static bool GPSEnterAccessControl { get; set; }
 
 		#endregion
 
@@ -56,12 +56,30 @@ namespace SncPucmm.View
 			accuracy = 0f;
 			planeAxeZ = 0f;
 			planeAxeX = 0f;
+
+			GPSEnterAccessControl = true;
 		}
 
 		void Update()
 		{
-			//yield return new WaitForSeconds(2.5f);
 
+			if (GPSEnterAccessControl)
+			{
+				GPSEnterAccessControl = false;
+				StartCoroutine(UpdateGPS());
+			}			
+
+			lblAltitude.text = "Altitude: " + altitude.ToString();
+			lblLongitude.text = "Longitude: " + longitude.ToString();
+			lblLatitude.text = "Latitude: " + latitude.ToString();
+			lblAccuracy.text = "Accuracy: " + accuracy.ToString();
+
+			lblPosX.text = "Pos X: " + planeAxeX.ToString();
+			lblPosZ.text = "Pos Z: " + planeAxeZ.ToString();
+		}
+
+		IEnumerator UpdateGPS()
+		{
 			if (Application.platform == RuntimePlatform.Android)
 			{
 				latitude = gpsActivityJavaClass.CallStatic<float>("GetLatitude");
@@ -72,21 +90,17 @@ namespace SncPucmm.View
 				planeAxeX = UIUtils.getXDistance(longitude);
 				planeAxeZ = UIUtils.getZDistance(latitude);
 
-				character.transform.position = new Vector3(planeAxeX, 0.1f, planeAxeZ);
-
-				character.transform.FindChild("Range").localScale = new Vector3(
-					(accuracy / 1.5f), 0.1f, (accuracy / 1.5f)
-				);
-
 			}
 
-			lblAltitude.text = "Altitude: " + altitude.ToString();
-			lblLongitude.text = "Longitude: " + longitude.ToString();
-			lblLatitude.text = "Latitude: " + latitude.ToString();
-			lblAccuracy.text = "Accuracy: " + accuracy.ToString();
+			StartCoroutine(CountDown());
 
-			lblPosX.text = "Pos X: " + planeAxeX.ToString();
-			lblPosZ.text = "Pos Z: " + planeAxeZ.ToString();
+			yield return null;
+		}
+
+		IEnumerator CountDown()
+		{
+			yield return new WaitForSeconds(2f);
+			GPSEnterAccessControl = true;
 		}
 
 		#endregion
