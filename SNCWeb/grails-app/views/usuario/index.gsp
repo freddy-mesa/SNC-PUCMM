@@ -3,51 +3,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="main">
+    <meta name="layout" content="sbadmin">
     <g:set var="entityName" value="${message(code: 'usuario.label', default: 'Usuario')}" />
     <title><g:message code="default.list.label" args="[entityName]" /></title>
 </head>
 <body>
-<a href="#list-usuario" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-<div class="nav" role="navigation">
-    <ul>
-        <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-        <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-    </ul>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Usuarios</h1>
+    </div>
+    <!-- /.col-lg-12 -->
 </div>
-<div id="list-usuario" class="content scaffold-list" role="main">
-    <h1><g:message code="default.list.label" args="[entityName]" /></h1>
-    <g:if test="${flash.message}">
-        <div class="message" role="status">${flash.message}</div>
-    </g:if>
-    <table>
-        <thead>
-        <tr>
 
-            <g:sortableColumn property="username" title="${message(code: 'usuario.username.label', default: 'Username')}" />
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
 
-            <th><g:message code="usuario.cuentaFacebook.label" default="Cuenta Facebook" /></th>
+                <th>Username</th>
 
-            <g:sortableColumn property="enabled" title="${message(code: 'usuario.enabled.label', default: 'Enabled')}" />
+                <th>Cuenta Facebook</th>
 
-        </tr>
-        </thead>
-        <tbody>
-        <g:each in="${usuarioInstanceList}" status="i" var="usuarioInstance">
-            <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-
-                <td><g:link action="show" id="${usuarioInstance.id}">${fieldValue(bean: usuarioInstance, field: "username")}</g:link></td>
-
-                <td>${fieldValue(bean: usuarioInstance, field: "cuentaFacebook")}</td>
-
-                <td><g:formatBoolean boolean="${usuarioInstance.enabled}" /></td>
+                <th>Habilidado</th>
 
             </tr>
-        </g:each>
-        </tbody>
-    </table>
-    <div class="pagination">
-        <g:paginate total="${usuarioInstanceCount ?: 0}" />
+            </thead>
+            <tbody>
+                <g:each in="${usuarioInstanceList}" status="i" var="usuarioInstance">
+                    <tr class="${(i % 2) == 0 ? 'even gradeA' : 'odd gradeA'}">
+
+                        <td><g:link action="show" id="${usuarioInstance.id}">${fieldValue(bean: usuarioInstance, field: "username")}</g:link></td>
+
+                        <td>${fieldValue(bean: usuarioInstance, field: "cuentaFacebook")}</td>
+
+                        <td><g:formatBoolean boolean="${usuarioInstance.enabled}" /></td>
+
+                    </tr>
+                </g:each>
+            </tbody>
+        </table>
     </div>
 </div>
 </body>

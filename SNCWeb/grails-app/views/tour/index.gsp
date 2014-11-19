@@ -3,42 +3,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="main">
+    <meta name="layout" content="sbadmin">
     <g:set var="entityName" value="${message(code: 'tour.label', default: 'Tour')}" />
     <title><g:message code="default.list.label" args="[entityName]" /></title>
 </head>
 <body>
-<a href="#list-tour" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-<div class="nav" role="navigation">
-    <ul>
-        <li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-        <li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-    </ul>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Tours</h1>
+    </div>
+    <!-- /.col-lg-12 -->
 </div>
-<div id="list-tour" class="content scaffold-list" role="main">
-    <h1><g:message code="default.list.label" args="[entityName]" /></h1>
-    <g:if test="${flash.message}">
-        <div class="message" role="status">${flash.message}</div>
-    </g:if>
-    <table>
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
 
-            <g:sortableColumn property="nombreTour" title="${message(code: 'tour.nombreTour.label', default: 'Nombre Tour')}" />
+            <th>Nombre</th>
 
-            <th><g:message code="tour.creador.label" default="Creador" /></th>
+            <th>Creador</th>
 
-            <g:sortableColumn property="fechaInicio" title="${message(code: 'tour.fechaInicio.label', default: 'Fecha Inicio')}" />
+            <th>Fecha Inicio</th>
 
-            <g:sortableColumn property="fechaFin" title="${message(code: 'tour.fechaFin.label', default: 'Fecha Fin')}" />
+            <th>Fecha Fin</th>
 
-            <g:sortableColumn property="fechaCreacion" title="${message(code: 'tour.fechaCreacion.label', default: 'Fecha Creacion')}" />
+            <th>Fecha Creacion</th>
 
         </tr>
         </thead>
         <tbody>
         <g:each in="${tourInstanceList}" status="i" var="tourInstance">
-            <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+            <tr class="${(i % 2) == 0 ? 'even gradeA' : 'odd gradeA'}">
 
                 <td><g:link action="show" id="${tourInstance.id}">${fieldValue(bean: tourInstance, field: "nombreTour")}</g:link></td>
 
@@ -53,9 +50,7 @@
         </g:each>
         </tbody>
     </table>
-    <div class="pagination">
-        <g:paginate total="${tourInstanceCount ?: 0}" />
-    </div>
+        </div>
 </div>
 </body>
 </html>
