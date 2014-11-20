@@ -269,12 +269,46 @@ namespace SncPucmm.Controller.Navigation
                 });
             }
 
-            //foreach (var node in nodeList)
-            //{
-            //    if(node.StartNode.IsInsideBuilding || n)
-            //}
+            var nodeToDelete = new List<PathDataDijkstra>();
+
+            foreach (var node in nodeList)
+            {
+                if (node.StartNode.IsInsideBuilding)
+                {
+                    node.IsInsideBuilding = true;
+                }
+
+                if (node.StartNode.IsBuilding)
+                {
+                    if (IsNodeInsideBuilding(node.StartNode.BuildingName, nodeList))
+                    {
+                        nodeToDelete.Add(node);
+                    }
+                }
+            }
+
+            foreach (var node in nodeToDelete)
+            {
+                nodeList.Remove(node);
+            }
 
             return nodeList;
+        }
+
+        private bool IsNodeInsideBuilding(string buildingName, List<PathDataDijkstra> nodeList)
+        {
+            bool exist = false;
+
+            foreach (var node in nodeList)
+            {
+                if (node.StartNode.IsInsideBuilding && node.StartNode.BuildingName == buildingName)
+                {
+                    exist = true;
+                    break;
+                }
+            }
+
+            return exist;
         }
 
         #endregion

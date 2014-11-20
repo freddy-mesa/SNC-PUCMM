@@ -182,10 +182,6 @@ namespace SncPucmm.Controller.GUI
 			{
 				UIUtils.ShowInsidePlaneBuilding(path.StartNode.BuildingName, "Planta" + path.StartNode.PlantaBuilding);
 			}
-			else if (path.EndNode.IsInsideBuilding)
-			{
-				UIUtils.ShowInsidePlaneBuilding(path.EndNode.BuildingName, "Planta" + path.EndNode.PlantaBuilding);
-			}
 
 			var directions = UIUtils.Find("/PUCMM/Directions").GetComponent<UIDirections>();
 			directions.PrintPath(directionPath, path);

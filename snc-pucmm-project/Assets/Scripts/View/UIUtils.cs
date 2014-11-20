@@ -168,13 +168,6 @@ namespace SncPucmm.View
                     var planta = Find(strPath).transform.FindChild("Planta" + path.StartNode.PlantaBuilding);
                     planta.gameObject.SetActive(true);
                 }
-
-                if (path.EndNode.IsInsideBuilding)
-                {
-                    string strPath = "/PUCMM/Model3D/" + path.EndNode.BuildingName + "/Caminos";
-                    var planta = Find(strPath).transform.FindChild("Planta" + path.EndNode.PlantaBuilding);
-                    planta.gameObject.SetActive(true);
-                }
             }
         }
 
@@ -193,29 +186,14 @@ namespace SncPucmm.View
                 }
             }
 
-            if(selectPath.StartNode.IsInsideBuilding || selectPath.EndNode.IsInsideBuilding)
+            if(selectPath.StartNode.IsInsideBuilding)
             {
-                bool control = false;
-
                 //De los edificios encontrados buscar cual de estos hace match con el path actual
                 foreach (var building in buildingsName)
                 {
-                    if (selectPath.StartNode.IsInsideBuilding)
+                    if (!(selectPath.StartNode.BuildingName == building))
                     {
-                        if (!(selectPath.StartNode.BuildingName == building))
-                        {
-                            ShowEntireBuilding(building);
-                        }
-
-                        control = true;
-                    }
-
-                    if (!control && selectPath.EndNode.IsInsideBuilding)
-                    {
-                        if (!(selectPath.EndNode.BuildingName == building))
-                        {
-                            ShowEntireBuilding(building);
-                        }
+                        ShowEntireBuilding(building);
                     }
                 }
             }
@@ -262,8 +240,6 @@ namespace SncPucmm.View
                 plantas.FindChild("Planta1").gameObject.SetActive(false);
                 plantas.FindChild("Planta2").gameObject.SetActive(false);
                 plantas.FindChild("Planta3").gameObject.SetActive(false);
-
-
             }
             else if (floorName == "Planta2")
             {
