@@ -29,7 +29,6 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
 </head>
 
 <body>
@@ -303,6 +302,22 @@
 
         <!-- Page Content -->
         <div id="page-wrapper">
+        <!-- jQuery Version 1.11.0 -->
+            <asset:javascript src="jquery-1.11.0.js"></asset:javascript>
+
+            <asset:javascript src="plugins/dataTables/jquery.dataTables.js"></asset:javascript>
+
+            <!-- Bootstrap Core JavaScript -->
+            <asset:javascript src="bootstrap.min.js"></asset:javascript>
+
+            <!-- Metis Menu Plugin JavaScript -->
+            <asset:javascript src="plugins/metisMenu/metisMenu.min.js"></asset:javascript>
+
+            <!-- Custom Theme JavaScript -->
+            <asset:javascript src="sb-admin-2.js"></asset:javascript>
+
+            <asset:javascript src="plugins/dataTables/dataTables.bootstrap.js"></asset:javascript>
+
             <g:layoutBody/>
 
         </div>
@@ -310,19 +325,6 @@
 
     </div>
     <!-- /#wrapper -->
-
-    <!-- jQuery Version 1.11.0 -->
-    <asset:javascript src="jquery-1.11.0.js"></asset:javascript>
-
-    <!-- Bootstrap Core JavaScript -->
-    <asset:javascript src="bootstrap.min.js"></asset:javascript>
-
-    <!-- Metis Menu Plugin JavaScript -->
-    <asset:javascript src="plugins/metisMenu/metisMenu.min.js"></asset:javascript>
-
-    <!-- Custom Theme JavaScript -->
-    <asset:javascript src="sb-admin-2.js"></asset:javascript>
-
 </body>
 
 </html>

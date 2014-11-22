@@ -1,11 +1,9 @@
-import groovy.sql.Sql
 import sncpucmm.TipoUsuario
 import sncpucmm.Usuario
 import sncpucmm.UsuarioTipoUsuario
 
 class BootStrap {
 
-    def grailsApplication
     def init = { servletContext ->
         //Creando tipos de usuarios
         def tipoAdmin = new TipoUsuario(authority: "ROLE_ADMIN", description: "Administrador del sistema.").save(failOnError: true);
@@ -18,7 +16,6 @@ class BootStrap {
         //Asignando usuarios a su tipo.
         UsuarioTipoUsuario.create(admin, tipoAdmin, true);
         UsuarioTipoUsuario.create(usuario, tipoUsuario, true);
-
     }
     def destroy = {
     }
