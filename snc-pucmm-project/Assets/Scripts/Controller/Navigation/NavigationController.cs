@@ -280,15 +280,17 @@ namespace SncPucmm.Controller.Navigation
 
                             if (!isInsideBuilding)
                             {
-                                sql = "SELECT edificio FROM Nodo WHERE idNodo = " + idNode;
-                                using (var readerNodo = sqlService.SelectQuery(sql))
+                                sql = "SELECT NOD.edificio, UBI.abreviacion FROM Nodo NOD, Ubicacion UBI " +
+                                    "WHERE NOD.idNodo = " + idNode + " AND NOD.idUbicacion = UBI.idUbicacion";
+                                using (var readerNodoUbicacion = sqlService.SelectQuery(sql))
                                 {
-                                    if (readerNodo.Read())
+                                    if (readerNodoUbicacion.Read())
                                     {
-                                        string edificio = Convert.ToString(readerNodo["edificio"]);
+                                        string edificio = Convert.ToString(readerNodoUbicacion["edificio"]);
                                         if (int.TryParse(edificio, out value))
                                         {
                                             isBuilding = true;
+                                            buildingName = Convert.ToString(readerNodoUbicacion["abreviacion"]);
                                         }
                                     }
                                 }

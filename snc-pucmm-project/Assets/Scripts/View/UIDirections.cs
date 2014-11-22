@@ -18,73 +18,34 @@ namespace SncPucmm.View
             foreach (PathDataDijkstra path in pathList)
             {
                 Transform prefabPlane = null;
-                bool control = false;
 
-                if ( (path.StartNode.IsInsideBuilding == true && path.StartNode.IsInsideBuilding == path.EndNode.IsInsideBuilding) ||
-                     path.StartNode.IsBuilding || path.EndNode.IsBuilding
-                    )
+                if (path.IsInsideBuilding)
                 {
-                    control = true;
-                }
-
-                if (path.StartNode.IsInsideBuilding || path.EndNode.IsInsideBuilding)
-                {
-                    bool isProcessedPath = false, isStatingNode = false;
-                    Transform camino = null;
-                    string strPath = null;
-
-                    if(path.StartNode.IsInsideBuilding)
+                    if (selected.IsInsideBuilding && path.StartNode.PlantaBuilding == selected.StartNode.PlantaBuilding)
                     {
-                        strPath = "/PUCMM/Model3D/" + path.StartNode.BuildingName + "/Caminos/Planta" + path.StartNode.PlantaBuilding;
-                        var objectToCreate = this.transform.Find(path.StartNode.Name);
-                        if (objectToCreate != null)
-                        {
-                            isProcessedPath = true;
-                        }
-                        else
-                        {
-                            camino = UIUtils.Find(strPath  + "/" + path.StartNode.Name).transform;
-                            isStatingNode = true;
-                        }
-                    }
+                        var strPath = "/PUCMM/Model3D/" + path.StartNode.BuildingName + "/Caminos/Planta" + path.StartNode.PlantaBuilding;
+                        var camino = UIUtils.Find(strPath + "/" + path.StartNode.Name).transform;
 
-                    if (path.EndNode.IsInsideBuilding && !isStatingNode)
-                    {
-                        strPath = "/PUCMM/Model3D/" + path.EndNode.BuildingName + "/Caminos/Planta" + path.EndNode.PlantaBuilding;
-                        var objectToCreate = this.transform.Find(path.EndNode.Name);
-                        if (objectToCreate != null)
-                        {
-                            isProcessedPath = true;
-                        }
-                        else
-                        {
-                            camino = UIUtils.Find(strPath + "/" + path.EndNode.Name).transform;
-                        }
-                    }
-
-                    if (!isProcessedPath)
-                    {
                         prefabPlane = Instantiate(camino, camino.position, camino.rotation) as Transform;
                         prefabPlane.name = camino.name;
-                        
+
                         prefabPlane.parent = this.transform;
 
                         if (path.Equals(selected))
                         {
-                            prefabPlane.Translate(new Vector3(0, 0.3f, 0), Space.Self);
+                            prefabPlane.Translate(new Vector3(0, 0.2f, 0), Space.Self);
                             var plane = prefabPlane.FindChild("Plane");
                             plane.GetComponent<MeshRenderer>().material = MaterialPrefabCaminoSelected;
                         }
                         else
                         {
-                            prefabPlane.Translate(new Vector3(0, 0.2f, 0), Space.Self);
+                            prefabPlane.Translate(new Vector3(0, 0.1f, 0), Space.Self);
                             var plane = prefabPlane.FindChild("Plane");
                             plane.GetComponent<MeshRenderer>().material = MaterialPrefabCamino;
                         }
                     }
                 }
-
-                if(!control)
+                else
                 {
                     float nodeStartPosX = 0, nodeStartPosZ = 0, nodeEndPosX = 0, nodeEndPosZ = 0;
 

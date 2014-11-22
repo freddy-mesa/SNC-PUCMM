@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SncPucmm.Model.Navigation
 {
-    public class PathDataDijkstra
+    public class PathDataDijkstra : IEquatable<PathDataDijkstra>
     {
         #region Propiedades
 
@@ -16,16 +16,18 @@ namespace SncPucmm.Model.Navigation
         public float DistanceToNeighbor { get; set; }
 
         public float DistancePathed { get; set; }
+
+        public bool IsInsideBuilding { get; set; }
+
+        public int PlantaBuilding { get; set; }
         
         #endregion
 
         #region Metodos
 
-        public new bool Equals(object obj)
+        public bool Equals(PathDataDijkstra other)
         {
-            PathDataDijkstra path = (PathDataDijkstra)obj;
-
-            if (path.StartNode.Name == this.StartNode.Name && path.EndNode.Name == this.EndNode.Name)
+            if (other.StartNode.Name == this.StartNode.Name && other.EndNode.Name == this.EndNode.Name)
             {
                 return true;
             }
@@ -35,7 +37,7 @@ namespace SncPucmm.Model.Navigation
 
         public override string ToString()
         {
-            return StartNode.Name + " to " + EndNode.Name; 
+            return StartNode.Name + " to " + EndNode.Name;
         }
 
         #endregion
