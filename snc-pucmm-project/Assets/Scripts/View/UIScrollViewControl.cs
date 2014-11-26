@@ -42,7 +42,7 @@ namespace SncPucmm.View
 
             if (IsWriting())
             {
-                if (State.GetCurrentState().Equals(eState.Navigation))
+                if (State.GetCurrentState().Equals(eState.Exploring))
                 {
                     State.ChangeState(eState.MenuMain);
                 }

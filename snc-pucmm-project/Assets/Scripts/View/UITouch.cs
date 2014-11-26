@@ -54,8 +54,9 @@ namespace SncPucmm.View
                     );
                     
                     if (
-                            State.GetCurrentState().Equals(eState.Navigation) || 
-                            State.GetCurrentState().Equals(eState.MenuNavigation)
+                            State.GetCurrentState() == eState.Exploring || 
+                            State.GetCurrentState() == eState.MenuNavigation ||
+                            State.GetCurrentState() == eState.MenuInsideBuilding
                         )
                     {
                         
@@ -76,7 +77,7 @@ namespace SncPucmm.View
                         }
                     }
 
-                    if (State.GetCurrentState().Equals(eState.Navigation))
+                    if (State.GetCurrentState() == eState.Exploring)
                     {
                         if (this is UIModel && !isMoving && !isRotating && !isZooming)
                         {
@@ -109,8 +110,10 @@ namespace SncPucmm.View
                                 }
                             }
                         }
-
-                        else if (this is UIInsideBuilding && !isMoving && !isRotating && !isZooming)
+                    }
+                    else if (State.GetCurrentState() == eState.MenuInsideBuilding)
+                    {
+                        if (this is UIInsideBuilding && !isMoving && !isRotating && !isZooming)
                         {
                             if (Input.GetTouch(i).phase == TouchPhase.Stationary && !isButtonTapped)
                             {

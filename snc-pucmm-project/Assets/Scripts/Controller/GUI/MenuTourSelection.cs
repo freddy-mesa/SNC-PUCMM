@@ -60,7 +60,7 @@ namespace SncPucmm.Controller.GUI
 			MenuManager.GetInstance().RemoveCurrentMenu();
 
 			UIUtils.ActivateCameraLabels(true);
-			State.ChangeState(eState.Navigation);
+			State.ChangeState(eState.Exploring);
 
 		}
 

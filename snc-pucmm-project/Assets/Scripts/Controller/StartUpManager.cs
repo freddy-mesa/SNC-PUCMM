@@ -27,7 +27,7 @@ namespace SncPucmm.Controller
             ModelPoolInit();
 
             UIUtils.ActivateCameraLabels(true);
-            State.ChangeState(eState.Navigation);
+            State.ChangeState(eState.Exploring);
         }
 
         private void GUIInitializer()
@@ -60,6 +60,26 @@ namespace SncPucmm.Controller
                             edificio = Convert.ToInt32(reader["edificio"]),
                             cantidadPlantas = Convert.ToInt32(reader["cantidadPlantas"])
                         });
+                    }
+                }
+            }
+
+            sql = "SELECT UBI.abreviacion, COUNT(NOD.idNodo) as insideNodesCount "+
+                    "FROM Ubicacion UBI, Nodo NOD " +
+                    "WHERE UBI.idUbicacion = NOD.idUbicacion "+ 
+                    "GROUP BY UBI.abreviacion";
+
+            Dictionary<string, int> buildingInsideNodeslist = new Dictionary<string,int>();
+            using (var service = new SQLiteService())
+            {
+                using (var reader = service.SelectQuery(sql))
+                {
+                    while (reader.Read())
+                    {
+                        var abreviacion = Convert.ToString(reader["abreviacion"]);
+                        var insideNodosCount = Convert.ToInt32(reader["insideNodesCount"]);
+
+                        buildingInsideNodeslist.Add(abreviacion, insideNodosCount);
                     }
                 }
             }
@@ -98,6 +118,17 @@ namespace SncPucmm.Controller
                         localizacion.ObjectTag = modelNode;
                         localizacion.Id = idNodo;
 
+                        bool containsInsideNodes = false;
+                        foreach(var building in buildingInsideNodeslist)
+                        {
+                            if (abreviacion == building.Key && building.Value > 1) 
+                            {
+                                containsInsideNodes = true;
+                                break;
+                            }
+                        }
+
+                        localizacion.ContainsInsideNodes = containsInsideNodes;
 
                         if (nombre.Length < 20)
                         {

@@ -18,7 +18,6 @@ namespace SncPucmm.Controller.GUI
         private string name;
         private ModelNode modelNode;
 
-        private string locationName;
         public List<Button> buttonList;
 
         #endregion
@@ -63,7 +62,7 @@ namespace SncPucmm.Controller.GUI
         public void OnTouchNavigationButton(object sender, TouchEventArgs e)
         {
             NavigationController controller = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
-            controller.StartNavigation(this.modelNode.name);
+           controller.StartNavigation(this.modelNode.name);
         }
 
         public void OnTouchShowInsideButton(object sender, TouchEventArgs e)
@@ -76,7 +75,7 @@ namespace SncPucmm.Controller.GUI
             }
 
             MenuManager.GetInstance().AddMenu(new MenuInsideBuilding("MenuInsideBuilding", modelNode));
-            State.ChangeState(eState.Navigation);
+            State.ChangeState(eState.MenuInsideBuilding);
         }
 
         private void Exit()
@@ -86,7 +85,7 @@ namespace SncPucmm.Controller.GUI
             if (this.modelNode.isBuilding)
             {
                 UIUtils.ActivateCameraLabels(true);
-                State.ChangeState(eState.Navigation);
+                State.ChangeState(eState.Exploring);
             }
         }
 

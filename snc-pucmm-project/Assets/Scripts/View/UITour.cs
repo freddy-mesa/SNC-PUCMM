@@ -20,15 +20,36 @@ namespace SncPucmm.View
 
             if (State.GetCurrentState().Equals(eState.MenuNavigation) && ModelPoolManager.GetInstance().Contains("tourCtrl"))
             {
-                var tourController = ModelPoolManager.GetInstance().GetValue("tourCtrl") as TourController;
+                var tourCtrl = ModelPoolManager.GetInstance().GetValue("tourCtrl") as TourController;
 
-                bool isEndTour = tourController.UpdateSectionTour();
-                if (isEndTour)
+                if (!tourCtrl.isTourActive)
                 {
-                    //Ha llegado a ultimo punto de reunion
-                    //var tourNotification = UIUtils.FindGUI("MenuNavigation/TourNotification");
-                    //tourNotification.SetActive(true);
-                    //tourNotification.GetComponent<UILabel>().text = "Ha finalizado el Tour";
+                    string nodeName;
+                    if (tourCtrl.IsUserCollidingBuilding(out nodeName) && nodeName == tourCtrl.SectionTourDataList[tourCtrl.CurrentSectionIndex].Desde)
+                    {
+                        tourCtrl.isTourActive = true;
+                    }
+                }
+
+                bool isEndTour;
+                //If true, One section of tour (from puntoReunion to other) is completed
+                if (tourCtrl.isTourActive && tourCtrl.UpdateSectionTour(out isEndTour))
+                {
+                    //Ha Completado una seccion del tour
+                    var tourNotification = UIUtils.FindGUI("MenuNavigation/NotificationSeccionTourCompletada");
+                    tourNotification.SetActive(true);
+
+                    if (isEndTour)
+                    {
+                        tourNotification.GetComponent<UILabel>().text = "Ha finalizado el Tour";
+                    }
+                    else
+                    {
+                        string desde = tourCtrl.SectionTourDataList[tourCtrl.CurrentSectionIndex].Desde;
+                        string hasta = tourCtrl.SectionTourDataList[tourCtrl.CurrentSectionIndex].Hasta;
+
+                        tourNotification.GetComponent<UILabel>().text = string.Format("Ha recorrido el tour desde {0} hasta {1}", desde, hasta);
+                    }
                 }
             }
         }        

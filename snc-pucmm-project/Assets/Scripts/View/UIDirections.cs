@@ -33,15 +33,33 @@ namespace SncPucmm.View
 
                         if (path.Equals(selected))
                         {
-                            prefabPlane.Translate(new Vector3(0, 0.2f, 0), Space.Self);
+                            prefabPlane.Translate(new Vector3(0, 0.3f, 0), Space.Self);
                             var plane = prefabPlane.FindChild("Plane");
-                            plane.GetComponent<MeshRenderer>().material = MaterialPrefabCaminoSelected;
+                            if (plane != null)
+                            {
+                                plane.GetComponent<MeshRenderer>().material = MaterialPrefabCaminoSelected;
+                            }
+                            else
+                            {
+                                prefabPlane.GetComponent<MeshRenderer>().material = MaterialPrefabCaminoSelected;
+                                prefabPlane.localScale = camino.lossyScale;
+                            }
                         }
                         else
                         {
-                            prefabPlane.Translate(new Vector3(0, 0.1f, 0), Space.Self);
+                            prefabPlane.Translate(new Vector3(0, 0.2f, 0), Space.Self);
                             var plane = prefabPlane.FindChild("Plane");
-                            plane.GetComponent<MeshRenderer>().material = MaterialPrefabCamino;
+
+                            if (plane != null)
+                            {
+                                plane.GetComponent<MeshRenderer>().material = MaterialPrefabCamino;
+                            }
+                            else
+                            {
+                                prefabPlane.GetComponent<MeshRenderer>().material = MaterialPrefabCamino;
+                                prefabPlane.localScale = camino.lossyScale;
+
+                            }
                         }
                     }
                 }
@@ -49,27 +67,10 @@ namespace SncPucmm.View
                 {
                     float nodeStartPosX = 0, nodeStartPosZ = 0, nodeEndPosX = 0, nodeEndPosZ = 0;
 
-                    if (path.StartNode.IsInsideBuilding)
-                    {
-                        nodeStartPosX = path.StartNode.Longitude;
-                        nodeStartPosZ = path.StartNode.Latitude;
-                    }
-                    else
-                    {
-                        nodeStartPosX = UIUtils.getXDistance(path.StartNode.Longitude);
-                        nodeStartPosZ = UIUtils.getZDistance(path.StartNode.Latitude);
-                    }
-
-                    if (path.EndNode.IsInsideBuilding)
-                    {
-                        nodeEndPosX = path.EndNode.Longitude;
-                        nodeEndPosZ = path.EndNode.Latitude;
-                    }
-                    else
-                    {
-                        nodeEndPosX = UIUtils.getXDistance(path.EndNode.Longitude);
-                        nodeEndPosZ = UIUtils.getZDistance(path.EndNode.Latitude);
-                    }
+                    nodeStartPosX = path.StartNode.Longitude;
+                    nodeStartPosZ = path.StartNode.Latitude;
+                    nodeEndPosX = path.EndNode.Longitude;
+                    nodeEndPosZ = path.EndNode.Latitude;
 
                     float adjacent = nodeStartPosX - nodeEndPosX;
                     float opposite = nodeStartPosZ - nodeEndPosZ;

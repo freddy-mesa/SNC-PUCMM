@@ -36,28 +36,11 @@ namespace SncPucmm.Controller.Navigation
                 neighbor.Neighbors = new List<NeighborDijkstra>();
 
             float nodePosX = 0, nodePosZ = 0, neighborPosX = 0, neighborPosZ = 0;
-            
-            if (node.IsInsideBuilding)
-            {
-                nodePosX = node.Longitude;
-                nodePosZ = node.Latitude;
-            }
-            else
-            {
-                nodePosX = UIUtils.getXDistance(node.Longitude);
-                nodePosZ = UIUtils.getZDistance(node.Latitude);
-            }
 
-            if(neighbor.IsInsideBuilding)
-            {
-                neighborPosX = neighbor.Longitude;
-                neighborPosZ = neighbor.Latitude;
-            }
-            else 
-            {
-                neighborPosX = UIUtils.getXDistance(neighbor.Longitude);
-                neighborPosZ = UIUtils.getZDistance(neighbor.Latitude);
-            }
+            nodePosX = node.Longitude;
+            nodePosZ = node.Latitude;
+            neighborPosX = neighbor.Longitude;
+            neighborPosZ = neighbor.Latitude;
 
             float distance = UIUtils.getDirectDistance( nodePosX, nodePosZ, neighborPosX, neighborPosZ);
 
@@ -97,27 +80,10 @@ namespace SncPucmm.Controller.Navigation
 
             float nodePosX = 0, nodePosZ = 0, neighborPosX = 0, neighborPosZ = 0;
 
-            if (node.IsInsideBuilding)
-            {
-                nodePosX = node.Longitude;
-                nodePosZ = node.Latitude;
-            }
-            else
-            {
-                nodePosX = UIUtils.getXDistance(node.Longitude);
-                nodePosZ = UIUtils.getZDistance(node.Latitude);
-            }
-
-            if (neighbor.IsInsideBuilding)
-            {
-                neighborPosX = neighbor.Longitude;
-                neighborPosZ = neighbor.Latitude;
-            }
-            else
-            {
-                neighborPosX = UIUtils.getXDistance(neighbor.Longitude);
-                neighborPosZ = UIUtils.getZDistance(neighbor.Latitude);
-            }
+            nodePosX = node.Longitude;
+            nodePosZ = node.Latitude;
+            neighborPosX = neighbor.Longitude;
+            neighborPosZ = neighbor.Latitude;
 
             float distance = UIUtils.getDirectDistance(nodePosX, nodePosZ, neighborPosX, neighborPosZ);
 
@@ -224,6 +190,11 @@ namespace SncPucmm.Controller.Navigation
                 NodesDijkstra.Remove(minNode);
                 minNode.Visited = true;
 
+                //if (minNode.Name == "Node 27")
+                //{
+                //    Debug.Log(minNode.Name);
+                //}
+
                 if (minNode.Neighbors != null)
                 {
                     foreach (NeighborDijkstra neighbor in minNode.Neighbors)
@@ -273,6 +244,9 @@ namespace SncPucmm.Controller.Navigation
 
             foreach (var node in nodeList)
             {
+                node.StartNode.Visited = false;
+                node.EndNode.Visited = false;
+
                 if (node.StartNode.IsInsideBuilding)
                 {
                     node.IsInsideBuilding = true;

@@ -17,6 +17,9 @@
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
     <CompilerResponseFile>
     </CompilerResponseFile>
+    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityBuildTarget>Android:13</UnityBuildTarget>
+    <UnityVersion>4.5.3f3</UnityVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -295,6 +298,7 @@
     <Compile Include="Assets\Scripts\Controller\GUI\MenuInsideBuilding.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuMain.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuNavigation.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\MenuSignIn.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuTourSelection.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuUsuarioTourSelection.cs" />
     <Compile Include="Assets\Scripts\Controller\MenuManager.cs" />
@@ -337,6 +341,7 @@
     <Compile Include="Assets\Scripts\View\UIKeyboard.cs" />
     <Compile Include="Assets\Scripts\View\UIModel.cs" />
     <Compile Include="Assets\Scripts\View\UIMovement.cs" />
+    <Compile Include="Assets\Scripts\View\UINotification.cs" />
     <Compile Include="Assets\Scripts\View\UIResolution.cs" />
     <Compile Include="Assets\Scripts\View\UIScrollViewControl.cs" />
     <Compile Include="Assets\Scripts\View\UITextBoxControl.cs" />
@@ -372,6 +377,8 @@
     <Compile Include="Assets\UniWeb\Plugins\HTTP\Utility.cs" />
     <Compile Include="Assets\UniWeb\Plugins\HTTP\WebCache.cs" />
     <Compile Include="Assets\UniWeb\Plugins\HTTP\WebSocket.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Assets\GyroDroid\GyroDroid-minimal-README.txt" />
     <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
     <None Include="Assets\JSON\readme.txt" />
@@ -420,9 +427,6 @@
     <None Include="Assets\UniWeb\FAQ.txt" />
     <None Include="Assets\UniWeb\README.txt" />
     <None Include="Assets\UniWeb\TODO.txt" />
-    <None Include="Assets\UniWeb\DLL\ionic\Ionic.Zlib.dll" />
-    <None Include="Assets\UniWeb\DLL\socketex\bouncywp71.dll" />
-    <None Include="Assets\UniWeb\DLL\UniExtensions.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

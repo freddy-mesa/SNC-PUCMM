@@ -4,18 +4,19 @@ namespace SncPucmm.Controller
 {
 	public enum eState
 	{
-		Navigation,
+		Exploring,
 		Security,
 		Tour,
 		MenuMain,
 		MenuBuilding,
 		MenuNavigation,
+		MenuInsideBuilding,
 		Exit        
 	}
 
 	public class State
 	{
-		private static eState state = eState.Navigation;
+		private static eState state = eState.Exploring;
 
 		public static eState GetCurrentState()
 		{

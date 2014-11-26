@@ -15,6 +15,9 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectType>GamePlugins:3</UnityProjectType>
+    <UnityBuildTarget>Android:13</UnityBuildTarget>
+    <UnityVersion>4.5.3f3</UnityVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -79,6 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Plugins\Pixelplacement\iTween\iTween.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Assets\GyroDroid\GyroDroid-minimal-README.txt" />
     <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
     <None Include="Assets\JSON\readme.txt" />
@@ -127,13 +132,6 @@
     <None Include="Assets\UniWeb\FAQ.txt" />
     <None Include="Assets\UniWeb\README.txt" />
     <None Include="Assets\UniWeb\TODO.txt" />
-    <None Include="Assets\Plugins\Mono.Data.dll" />
-    <None Include="Assets\Plugins\Mono.Data.Sqlite.dll" />
-    <None Include="Assets\Plugins\Mono.Data.SqliteClient.dll" />
-    <None Include="Assets\Plugins\System.Configuration.dll" />
-    <None Include="Assets\Plugins\System.Data.dll" />
-    <None Include="Assets\Plugins\System.EnterpriseServices.dll" />
-    <None Include="Assets\Plugins\System.Security.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

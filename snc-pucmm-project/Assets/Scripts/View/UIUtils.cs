@@ -104,26 +104,40 @@ namespace SncPucmm.View
 
         public static float getXDistance(float longitude)
         {
-            var componentAxeX = Distance(ORIGEN_LAT, ORIGEN_LON, ORIGEN_LAT, longitude);
-
-            if (componentAxeX >= totalMetrosAncho)
-                componentAxeX -= totalMetrosAncho;
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                return longitude;
+            }
             else
-                componentAxeX = -(totalMetrosAncho - componentAxeX);
-            
-            return (float)componentAxeX;
+            {
+                var componentAxeX = Distance(ORIGEN_LAT, ORIGEN_LON, ORIGEN_LAT, longitude);
+
+                if (componentAxeX >= totalMetrosAncho)
+                    componentAxeX -= totalMetrosAncho;
+                else
+                    componentAxeX = -(totalMetrosAncho - componentAxeX);
+
+                return (float)componentAxeX;
+            }
         }
 
         public static float getZDistance(float latitude)
         {
-            var componentAxeZ = Distance(ORIGEN_LAT, ORIGEN_LON, latitude, ORIGEN_LON);
-
-            if (componentAxeZ >= totalMetrosLargo)
-                componentAxeZ = -(componentAxeZ - totalMetrosLargo);
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                return latitude;
+            }
             else
-                componentAxeZ = totalMetrosLargo - componentAxeZ;
-            
-            return (float)componentAxeZ;
+            {
+                var componentAxeZ = Distance(ORIGEN_LAT, ORIGEN_LON, latitude, ORIGEN_LON);
+
+                if (componentAxeZ >= totalMetrosLargo)
+                    componentAxeZ = -(componentAxeZ - totalMetrosLargo);
+                else
+                    componentAxeZ = totalMetrosLargo - componentAxeZ;
+
+                return (float)componentAxeZ;
+            }
         }
 
         public static float getDirectDistance(float x1, float y1, float x2, float y2)
@@ -254,22 +268,61 @@ namespace SncPucmm.View
 
         public static Transform ShowEntireBuilding(string buildingAbbreviation)
         {
-            var edificio = UIUtils.Find("/PUCMM/Model3D/" + buildingAbbreviation);
+            var edificio = UIUtils.Find("/PUCMM/Model3D/" + buildingAbbreviation).transform;
 
-            var plantas = edificio.transform.FindChild("Plantas");
-            foreach (Transform planta in plantas) { planta.gameObject.SetActive(true); }
+            var plantas = edificio.FindChild("Plantas");
+            if (plantas != null)
+            {
+                foreach (Transform planta in plantas) { planta.gameObject.SetActive(true); }
+            }
 
-            var planos = edificio.transform.FindChild("Planos");
-            foreach (Transform plano in planos) { plano.gameObject.SetActive(false); }
+            var planos = edificio.FindChild("Planos");
+            if (planos != null)
+            {
+                foreach (Transform plano in planos) { plano.gameObject.SetActive(false); }
+            }
 
-            var caminos = edificio.transform.FindChild("Caminos");
-            foreach (Transform plano in caminos) { plano.gameObject.SetActive(false); }
+            var caminos = edificio.FindChild("Caminos");
+            if (caminos != null)
+            {
+                foreach (Transform plano in caminos) { plano.gameObject.SetActive(false); }
+            }
 
-            edificio.transform.FindChild("Otros").gameObject.SetActive(true);
-            edificio.transform.FindChild("Columnas").gameObject.SetActive(true);
+            var otros = edificio.FindChild("Otros");
+            if (otros != null)
+            {
+                otros.gameObject.SetActive(true);
+            }
+
+            var columnas = edificio.FindChild("Columnas");
+            if (columnas != null) 
+            { 
+                columnas.gameObject.SetActive(true); 
+            }
+
             edificio.transform.FindChild("Text").gameObject.SetActive(true);
 
             return edificio.transform;
+        }
+
+        public static void ShowAllBuildingExterior(List<PathDataDijkstra> nodeList)
+        {
+            List<string> buildingsName = new List<string>();
+            foreach (var path in nodeList)
+            {
+                if (path.EndNode.IsInsideBuilding)
+                {
+                    if (!buildingsName.Contains(path.EndNode.BuildingName))
+                    {
+                        buildingsName.Add(path.EndNode.BuildingName);
+                    }
+                }
+            }
+
+            foreach (var building in buildingsName)
+            {
+                ShowEntireBuilding(building);
+            }
         }
     }
 }
