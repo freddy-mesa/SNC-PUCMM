@@ -2,21 +2,24 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name="layout" content="main">
+		<meta name="layout" content="sbadmin">
 		<g:set var="entityName" value="${message(code: 'tour.label', default: 'Tour')}" />
 		<title><g:message code="default.edit.label" args="[entityName]" /></title>
 	</head>
 	<body>
-		<a href="#edit-tour" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
-		</div>
-		<div id="edit-tour" class="content scaffold-edit" role="main">
-			<h1><g:message code="default.edit.label" args="[entityName]" /></h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Editar: ${tourInstance.nombreTour}</h1>
+        </div>
+    </div>
+    <div>
+        <div class="panel panel-default ">
+            <div class="panel-heading">
+                Datos del Tour
+            </div>
+            <div class="panel-body">
+
+                <div class="row">
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
@@ -27,15 +30,23 @@
 				</g:eachError>
 			</ul>
 			</g:hasErrors>
-			<g:form url="[resource:tourInstance, action:'update']" method="PUT" >
+			<g:form url="[resource:tourInstance, action:'update']" method="PUT" class="form-group col-lg-6">
 				<g:hiddenField name="version" value="${tourInstance?.version}" />
 				<fieldset class="form">
 					<g:render template="form"/>
 				</fieldset>
 				<fieldset class="buttons">
-					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
+					<g:actionSubmit class="btn btn-primary" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
 				</fieldset>
 			</g:form>
 		</div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function() {
+                $("select").addClass("input-sm")
+            });
+        </script>
 	</body>
 </html>

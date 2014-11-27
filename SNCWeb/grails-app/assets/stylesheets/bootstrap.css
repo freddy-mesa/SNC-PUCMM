@@ -2504,7 +2504,7 @@ select.input-sm {
 }
 textarea.input-sm,
 select[multiple].input-sm {
-  height: auto;
+  height: auto
 }
 .input-lg,
 .form-horizontal .form-group-lg .form-control {

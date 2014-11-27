@@ -25,6 +25,7 @@ class TourController {
     }
 
     def create() {
+        session.setAttribute("puntosReunion", null)
         respond new Tour(params)
     }
 
@@ -144,63 +145,65 @@ class TourController {
         def tours = Tour.list()
         def usuarioTours = UsuarioTour.list()
 
-        tours.each {
-            JSONObject tour = new JSONObject();
-            JSONObject punto
-            JSONArray puntos = new JSONArray();
+        if(tours.size() > 0){
+            tours.each {
+                JSONObject tour = new JSONObject();
+                JSONObject punto
+                JSONArray puntos = new JSONArray();
 
-            tour.put("id", it.id)
-            tour.put("idUsuarioCreador", it.creador.id)
-            tour.put("nombreTour", it.nombreTour)
-            tour.put("fechaCreacion", it.fechaCreacion.format("dd/MM/yyyy HH:mm:ss"))
-            tour.put("fechaInicio", it.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
-            if(tour.fechaFin)
-                tour.put("fechaFin", it.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
+                tour.put("id", it.id)
+                tour.put("idUsuarioCreador", it.creador.id)
+                tour.put("nombreTour", it.nombreTour)
+                tour.put("fechaCreacion", it.fechaCreacion.format("dd/MM/yyyy HH:mm:ss"))
+                tour.put("fechaInicio", it.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
+                if(tour.fechaFin)
+                    tour.put("fechaFin", it.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
 
-            def puntosReunion = PuntoReunionTour.findAllByTour(it)
-            puntosReunion.each { pr ->
-                punto = new JSONObject();
-                punto.put("id", pr.id)
-                punto.put("idNodo", pr.nodo.id)
-                punto.put("idTour", pr.tour.id)
-                punto.put("secuencia", pr.secuenciaPuntoReunion)
-                puntos.put(punto)
+                def puntosReunion = PuntoReunionTour.findAllByTour(it)
+                puntosReunion.each { pr ->
+                    punto = new JSONObject();
+                    punto.put("id", pr.id)
+                    punto.put("idNodo", pr.nodo.id)
+                    punto.put("idTour", pr.tour.id)
+                    punto.put("secuencia", pr.secuenciaPuntoReunion)
+                    puntos.put(punto)
+                }
+                tour.put("PuntosReunion", puntos)
+                jsonTours.put(tour)
             }
-            tour.put("PuntosReunion", puntos)
-            jsonTours.put(tour)
-        }
 
-        usuarioTours.each { ut ->
-            JSONObject userTour = new JSONObject();
-            JSONObject detalle
-            JSONArray detallesUT = new JSONArray();
-            userTour.put("id", ut.id)
-            userTour.put("idUsuario", ut.usuario.id)
-            userTour.put("idTour", ut.tour.id)
-            userTour.put("estado", ut.estado)
-            if(ut.fechaInicio)
-                userTour.put("fechaInicio", ut.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
-            if(ut.fechaFin)
-                userTour.put("fechaFin", ut.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
+            usuarioTours.each { ut ->
+                JSONObject userTour = new JSONObject();
+                JSONObject detalle
+                JSONArray detallesUT = new JSONArray();
+                userTour.put("id", ut.id)
+                userTour.put("idUsuario", ut.usuario.id)
+                userTour.put("idTour", ut.tour.id)
+                userTour.put("estado", ut.estado)
+                if(ut.fechaInicio)
+                    userTour.put("fechaInicio", ut.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
+                if(ut.fechaFin)
+                    userTour.put("fechaFin", ut.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
 
-            def detallesUsuarioTour = DetalleUsuarioTour.findAllByUsuarioTour(ut)
-            detallesUsuarioTour.each { dut ->
-                detalle = new JSONObject()
-                detalle.put("id", dut.id)
-                detalle.put("idPuntoReunionTour", dut.puntoReunionTour.id)
-                if(dut.fechaInicio)
-                    detalle.put("fechaInicio", dut.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
-                if(dut.fechaFin)
-                    detalle.put("fechaFin", dut.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
-                if(dut.fechaLlegada)
-                    detalle.put("fechaLlegada", dut.fechaLlegada.format("dd/MM/yyyy HH:mm:ss"))
-                detallesUT.put(detalle)
+                def detallesUsuarioTour = DetalleUsuarioTour.findAllByUsuarioTour(ut)
+                detallesUsuarioTour.each { dut ->
+                    detalle = new JSONObject()
+                    detalle.put("id", dut.id)
+                    detalle.put("idPuntoReunionTour", dut.puntoReunionTour.id)
+                    if(dut.fechaInicio)
+                        detalle.put("fechaInicio", dut.fechaInicio.format("dd/MM/yyyy HH:mm:ss"))
+                    if(dut.fechaFin)
+                        detalle.put("fechaFin", dut.fechaFin.format("dd/MM/yyyy HH:mm:ss"))
+                    if(dut.fechaLlegada)
+                        detalle.put("fechaLlegada", dut.fechaLlegada.format("dd/MM/yyyy HH:mm:ss"))
+                    detallesUT.put(detalle)
+                }
+                userTour.put("DetalleUsuarioTourList", detallesUT)
+                jsonUsuarioTour.put(userTour)
             }
-            userTour.put("DetalleUsuarioTourList", detallesUT)
-            jsonUsuarioTour.put(userTour)
+            jsonObject.put("Tours", jsonTours)
+            jsonObject.put("UsuariosTours", jsonUsuarioTour)
         }
-        jsonObject.put("Tours", jsonTours)
-        jsonObject.put("UsuariosTours", jsonUsuarioTour)
         render jsonObject as JSON
     }
 
@@ -252,8 +255,31 @@ class TourController {
         redirect(action: "index")
     }
 
-    def puntosreunion(Tour tourInstance) {
-        respond new PuntoReunionTour(params), model: [tour: tourInstance.id , puntosReunion: PuntoReunionTour.findAllByTour(tourInstance)]
+//    def puntosreunion(Tour tourInstance) {
+//        respond new PuntoReunionTour(params), model: [tour: tourInstance.id , puntosReunion: PuntoReunionTour.findAllByTour(tourInstance)]
+//    }
+
+
+    def puntosreunion() {
+        print("Entró")
+        def puntosReunion = (Set<PuntoReunionTour>)session.getAttribute("puntosReunion")
+        if(!puntosReunion){
+            puntosReunion = [] as Set<PuntoReunionTour>
+        }
+
+        def puntoslist = params.list("puntoreuniontour")
+        if(puntoslist){
+            puntoslist.each {
+                puntosReunion.add(new PuntoReunionTour(nodo: Nodo.findById(it), secuenciaPuntoReunion: 1))
+            }
+        }
+
+        print(puntosReunion.size())
+        puntosReunion.each {
+            print(it.nodo.nombre)
+        }
+        session.setAttribute("puntosReunion", puntosReunion)
+        [puntosReunion: puntosReunion]
     }
 
     @Transactional
@@ -271,5 +297,26 @@ class TourController {
         }
         puntoReunionTour.save(flush: true)
         redirect(action: "puntosreunion", id : params.tour)
+    }
+    def puntosreunionremover() {
+        print("Entró")
+        def puntosReunion = (Set<PuntoReunionTour>)session.getAttribute("puntosReunion")
+        if(!puntosReunion){
+            puntosReunion = [] as Set<PuntoReunionTour>
+        }
+
+        def puntoslist = params.list("puntosreuniontour")
+        if(puntoslist){
+            puntoslist.each {
+                print("Weyyyyy!: " + it)
+                puntosReunion.removeAll { j ->
+                    if(j.nodo.nombre == it){
+                        return true
+                    }
+                }
+            }
+        }
+        session.setAttribute("puntosReunion", puntosReunion)
+        respond(view: 'puntosreunion', model:[puntosReunion: puntosReunion])
     }
 }
