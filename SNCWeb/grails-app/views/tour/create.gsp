@@ -66,18 +66,11 @@
                                     <div>&nbsp;</div>
                                     <g:submitToRemote url="[action:'puntosreunionremover']" update="puntosReunion"  name="remover" class="btn btn-info"  value="&lt&lt Remover" />
                                 </div>
-
-
                                     <div id="puntosReunion" class="col-md-3">
-                                        <div>
-                                            <g:select multiple="true" id="puntosreuniontour" name="puntoreuniontour" from="${puntosReunion}" optionValue="${{it.nodo.nombre}}"/>
-                                        </div>
+                                        <select multiple></select>
                                     </div>
-
-
                         </div>
                     </div>
-
                 </div>
             <fieldset>
                 <g:submitButton name="create" class="btn btn-primary btn-lg" value="Crear" />

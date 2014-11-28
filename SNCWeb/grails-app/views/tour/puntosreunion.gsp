@@ -1,7 +1,7 @@
-<%@ page import="sncpucmm.PuntoReunionTour" %>
+<%@ page import="sncpucmm.Nodo" %>
 
 <div>
-    <g:select multiple="true" id="puntosreuniontour" name="puntosreuniontour" from="${puntosReunion}" optionValue="${{it.nodo.nombre}}"/>
+    <g:select multiple="true" id="puntosreuniontour" name="puntosreuniontour" from="${puntosReunion}" optionKey="id" optionValue="${{it.nombre}}"/>
 </div>
 <script>
     $(document).ready(function() {

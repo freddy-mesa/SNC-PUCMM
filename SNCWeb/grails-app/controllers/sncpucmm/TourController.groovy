@@ -9,10 +9,11 @@ import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
-@Secured("permitAll")
+@Secured("ROLE_ADMIN")
 class TourController {
 
     def springSecurityService
+    def facebookContext
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
@@ -29,12 +30,57 @@ class TourController {
         respond new Tour(params)
     }
 
+    def actualizartour(Tour tourInstance){
+        if (tourInstance == null) {
+            notFound()
+            return
+        }
+
+        if (tourInstance.hasErrors()) {
+            respond tourInstance.errors, view: 'edit'
+            return
+        }
+
+        tourInstance.save flush: true
+
+        def puntosReunion = (Set<Nodo>)session.getAttribute("puntosReunion")
+        if(!puntosReunion){
+            puntosReunion = [] as Set<Nodo>
+        }
+
+        def tours = PuntoReunionTour.findAllByTour(tourInstance)
+        tours.each {
+            it.delete(flush: true)
+        }
+
+        int i = 1
+        puntosReunion.each {
+            print(it.nombre)
+           // tours.each {
+                //if()
+            //    it.delete(flush: true)
+                new PuntoReunionTour(tour: tourInstance, nodo: it, secuenciaPuntoReunion: i).save(flush: true)
+           // }
+
+            i++
+        }
+
+        request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'default.updated.message', args: [message(code: 'Tour.label', default: 'Tour'), tourInstance.id])
+                redirect tourInstance
+            }
+            '*' { respond tourInstance, [status: OK] }
+        }
+    }
+
     @Transactional
     def save(Tour tourInstance) {
         if (tourInstance == null) {
             notFound()
             return
         }
+
 
         if (tourInstance.hasErrors()) {
             respond tourInstance.errors, view: 'create'
@@ -44,7 +90,18 @@ class TourController {
         tourInstance.creador = (Usuario)springSecurityService.getCurrentUser();
         tourInstance.fechaCreacion = new Date();
 
-        tourInstance.save flush: true
+        tourInstance = tourInstance.save flush: true
+
+        def puntosReunion = (Set<Nodo>)session.getAttribute("puntosReunion")
+        if(!puntosReunion){
+            puntosReunion = [] as Set<Nodo>
+        }
+
+        int i = 1
+        puntosReunion.each {
+            new PuntoReunionTour(tour: tourInstance, nodo: it, secuenciaPuntoReunion: i).save(flush: true)
+            i++
+        }
 
         request.withFormat {
             form multipartForm {
@@ -82,11 +139,18 @@ class TourController {
     }
 
     def edit(Tour tourInstance) {
-        respond tourInstance
+        def puntosReunion = PuntoReunionTour.findAllByTour(tourInstance)
+        def nodos = [] as Set<Nodo>
+
+        puntosReunion.each {
+            nodos.add(it.nodo)
+        }
+        session.setAttribute("puntosReunion", nodos)
+        respond tourInstance, model: [puntosReunion: nodos]
     }
 
     @Transactional
-    def update(Tour tourInstance) {
+    def update() {
         if (tourInstance == null) {
             notFound()
             return
@@ -98,6 +162,22 @@ class TourController {
         }
 
         tourInstance.save flush: true
+
+        def puntosReunion = (Set<Nodo>)session.getAttribute("puntosReunion")
+        if(!puntosReunion){
+            puntosReunion = [] as Set<Nodo>
+        }
+
+        def tours = PuntoReunionTour.findAllByTour(tourInstance)
+        tours.each {
+            it.delete(flush: true)
+        }
+
+        int i = 1
+        puntosReunion.each {
+            new PuntoReunionTour(tour: tourInstance, nodo: it, secuenciaPuntoReunion: i).save(flush: true)
+            i++
+        }
 
         request.withFormat {
             form multipartForm {
@@ -261,22 +341,16 @@ class TourController {
 
 
     def puntosreunion() {
-        print("Entró")
-        def puntosReunion = (Set<PuntoReunionTour>)session.getAttribute("puntosReunion")
+        def puntosReunion = (Set<Nodo>)session.getAttribute("puntosReunion")
         if(!puntosReunion){
-            puntosReunion = [] as Set<PuntoReunionTour>
+            puntosReunion = [] as Set<Nodo>
         }
 
         def puntoslist = params.list("puntoreuniontour")
         if(puntoslist){
             puntoslist.each {
-                puntosReunion.add(new PuntoReunionTour(nodo: Nodo.findById(it), secuenciaPuntoReunion: 1))
+                puntosReunion.add(Nodo.findById(it))
             }
-        }
-
-        print(puntosReunion.size())
-        puntosReunion.each {
-            print(it.nodo.nombre)
         }
         session.setAttribute("puntosReunion", puntosReunion)
         [puntosReunion: puntosReunion]
@@ -299,24 +373,29 @@ class TourController {
         redirect(action: "puntosreunion", id : params.tour)
     }
     def puntosreunionremover() {
-        print("Entró")
-        def puntosReunion = (Set<PuntoReunionTour>)session.getAttribute("puntosReunion")
+        def puntosReunion = (Set<Nodo>)session.getAttribute("puntosReunion")
         if(!puntosReunion){
-            puntosReunion = [] as Set<PuntoReunionTour>
+            puntosReunion = [] as Set<Nodo>
         }
 
-        def puntoslist = params.list("puntosreuniontour")
+        def puntoslist = (Set<Nodo>)params.list("puntosreuniontour")
         if(puntoslist){
             puntoslist.each {
-                print("Weyyyyy!: " + it)
-                puntosReunion.removeAll { j ->
-                    if(j.nodo.nombre == it){
-                        return true
+                for(int i = 0; i < puntosReunion.size(); i++){
+                    if (puntosReunion[i].id == Integer.parseInt(it)){
+                        puntosReunion = puntosReunion.minus(puntosReunion[i])
+                        break
                     }
                 }
             }
         }
         session.setAttribute("puntosReunion", puntosReunion)
-        respond(view: 'puntosreunion', model:[puntosReunion: puntosReunion])
+        render(view: 'puntosreunion', model:[puntosReunion: puntosReunion])
     }
+
+    def facebooktest(){
+        print (facebookContext.app.id)
+    }
+
+
 }

@@ -102,4 +102,8 @@ class UsuarioController {
             '*'{ render status: NOT_FOUND }
         }
     }
+
+    def facebooktest(){
+
+    }
 }
