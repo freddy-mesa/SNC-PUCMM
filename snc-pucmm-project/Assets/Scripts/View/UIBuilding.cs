@@ -56,9 +56,20 @@ namespace SncPucmm.View
 
         void OnTriggerEnter(Collider objectCollider)
         {
-            if (UICamaraControl.Vista_3era_Persona)
+            if (objectCollider.tag == "Character" && State.GetCurrentState() == eState.Exploring)
             {
-                Camera.main.transform.position = UICamaraControl.lastPosition;
+                if (this.GetComponent<ModelObject>().ContainsInsideNodes)
+                {
+                    UIUtils.ShowInsidePlaneBuilding(this.name, "Planta1");
+                }
+            }
+        }
+
+        void OnTriggerExit(Collider objectCollider)
+        {
+            if (objectCollider.tag == "Character" && State.GetCurrentState() == eState.Exploring)
+            {
+                UIUtils.ShowEntireBuilding(this.name);
             }
         }
     }

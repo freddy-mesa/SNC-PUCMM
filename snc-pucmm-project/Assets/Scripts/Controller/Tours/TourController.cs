@@ -20,13 +20,15 @@ namespace SncPucmm.Controller.Tours
 
         bool isEndingSectionTour;
         bool isStartingSectionTour;
-        private List<DetalleUsuarioTour> detalleUsuarioTourList;
+        public bool isTourActive;
+        List<DetalleUsuarioTour> detalleUsuarioTourList;
 
         #endregion
 
         #region Propiedades
 
-        public List<DetalleUsuarioTour> DetalleUsuarioTourList { get { return detalleUsuarioTourList; } }
+        public List<SectionTourData> SectionTourDataList { get { return sectionTourDataList; } }
+        public int CurrentSectionIndex { get { return currentIndex; } }
 
         #endregion
 
@@ -42,6 +44,8 @@ namespace SncPucmm.Controller.Tours
             : this()
         {
             this.detalleUsuarioTourList = detalleUsuarioTourList;
+            this.isTourActive = false;
+            currentIndex = 0;
         }
 
         #endregion
@@ -60,10 +64,11 @@ namespace SncPucmm.Controller.Tours
             currentSectionTourData = sectionTourDataList[currentIndex];
         }
 
-        public bool UpdateSectionTour()
+        public bool UpdateSectionTour(out bool isEndTour)
         {
-            bool isTourEnd = false;
+            isEndTour = false;
             string nodeName;
+
             if (IsUserCollidingBuilding(out nodeName))
             {
                 if (!isStartingSectionTour && currentSectionTourData.Desde == nodeName)
@@ -94,14 +99,16 @@ namespace SncPucmm.Controller.Tours
                 ResetValues();
                 if (CanChangeToNextSectionTour())
                 {
-                    isTourEnd = true;
+                    isEndTour = true;
                 }
+
+                return true;
             }
 
-            return isTourEnd;
+            return false;
         }
 
-        private bool IsUserCollidingBuilding(out string buildingName)
+        public bool IsUserCollidingBuilding(out string buildingName)
         {
             if (UICharacter.isCollidingWithBuilding)
             {

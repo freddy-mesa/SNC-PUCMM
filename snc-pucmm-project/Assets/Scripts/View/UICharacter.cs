@@ -11,6 +11,9 @@ namespace SncPucmm.View
         public static bool isCollidingWithBuilding { get; set; }
         public static string BuildingColliding { get; set; }
 
+        public float metersBetweenNodesAlternativeRoute = 25;
+        public float metersBetweenUserAndNodesToBeVisited = 15;
+
         void Start()
         {
             isCollidingWithBuilding = false;
@@ -19,48 +22,86 @@ namespace SncPucmm.View
 
         void Update()
         {
-            if (UIGPS.GPSEnterAccessControl && Application.platform == RuntimePlatform.Android)
+            var currentUserPlanePosX = UIUtils.getXDistance(UIGPS.Longitude);
+            var currentUserPlanePosZ = UIUtils.getZDistance(UIGPS.Latitude);
+            var accuracy = Mathf.Clamp(UIGPS.Accuracy, 4f, 30f);
+
+            this.transform.position = new Vector3(currentUserPlanePosX, 1f, currentUserPlanePosZ);
+
+            this.transform.FindChild("Range").localScale = new Vector3(
+                (accuracy / 1.5f), 0.1f, (accuracy / 1.5f)
+            );
+
+            //Si hay un recorrido
+            if (State.GetCurrentState() == eState.MenuNavigation)
             {
-                var currentUserPlanePosX = UIUtils.getXDistance(UIGPS.Longitude);
-                var currentUserPlanePosZ = UIUtils.getZDistance(UIGPS.Latitude);
-                var accuracy = Mathf.Clamp(UIGPS.Accuracy, 4f, 30f);
+                var menuNavigation = MenuManager.GetInstance().GetCurrentMenu() as MenuNavigation;
 
-                this.transform.position = new Vector3(currentUserPlanePosX, 0.1f, currentUserPlanePosZ);
-
-                this.transform.FindChild("Range").localScale = new Vector3(
-                    (accuracy / 1.5f), 0.1f, (accuracy / 1.5f)
-                );
-
-                //Si hay un recorrido y no es un tour
-                if (!ModelPoolManager.GetInstance().Contains("tourCtrl") && State.GetCurrentState().Equals(eState.MenuNavigation))
+                if (!menuNavigation.isFreeModeActive)
                 {
+                    var path = menuNavigation.directionPath[menuNavigation.currentDirectionPath];
+                    bool control = false;
 
-                    //Verificar si el usuario se esta lejando del proximo nodo
-                    var menuNavigation = MenuManager.GetInstance().GetCurrentMenu() as MenuNavigation;
+                    var nodeStartPosX = menuNavigation.directionPath[menuNavigation.currentDirectionPath].StartNode.Longitude;
+                    var nodeStartPosZ = menuNavigation.directionPath[menuNavigation.currentDirectionPath].StartNode.Latitude;
+                    float resultantUserToStartNode = UIUtils.getDirectDistance(currentUserPlanePosX, currentUserPlanePosZ, nodeStartPosX, nodeStartPosZ);
 
-                    var nodeStartPosX = UIUtils.getXDistance(menuNavigation.directionPath[menuNavigation.currentDirectionPath].EndNode.Longitude);
-                    var nodeStartPosZ = UIUtils.getZDistance(menuNavigation.directionPath[menuNavigation.currentDirectionPath].EndNode.Latitude);
-                    float resultantNodeStart = UIUtils.getDirectDistance(currentUserPlanePosX, currentUserPlanePosZ, nodeStartPosX, nodeStartPosZ);
+                    var nodeEndPosX = menuNavigation.directionPath[menuNavigation.currentDirectionPath].EndNode.Longitude;
+                    var nodeEndPosZ = menuNavigation.directionPath[menuNavigation.currentDirectionPath].EndNode.Latitude;
+                    float resultantUserToEndNode = UIUtils.getDirectDistance(currentUserPlanePosX, currentUserPlanePosZ, nodeEndPosX, nodeEndPosZ);
 
-                    var nodeEndPosX = UIUtils.getXDistance(menuNavigation.directionPath[menuNavigation.currentDirectionPath].EndNode.Longitude);
-                    var nodeEndPosZ = UIUtils.getZDistance(menuNavigation.directionPath[menuNavigation.currentDirectionPath].EndNode.Latitude);
-                    float resultantNodeEnd = UIUtils.getDirectDistance(currentUserPlanePosX, currentUserPlanePosZ, nodeEndPosX, nodeEndPosZ);
-
-                    var meters = 50f;
-
-                    //Si tanto el nodo inicial como el final estan a una distancia de 50 metros crar una nueva ruta
-                    if (resultantNodeStart >= meters && resultantNodeEnd >= meters)
+                    if (path.StartNode.Visited && path.EndNode.Visited)
                     {
-                        //Recuperar destino
-                        var idNodoDestino = menuNavigation.directionPath[menuNavigation.directionPath.Count - 1].EndNode.IdNode;
+                        //Ir al proximo path
+                        if (++menuNavigation.currentDirectionPath < menuNavigation.directionPath.Count)
+                        {
+                            var pathNext = menuNavigation.directionPath[menuNavigation.currentDirectionPath];
+                            menuNavigation.ShowDirectionMenu(pathNext);
+                            menuNavigation.ShowNavigationDirection(pathNext);
+                        }
+                        else
+                        {
+                            //Ha finalizado un recorrido
+                            menuNavigation.currentDirectionPath = menuNavigation.directionPath.Count - 1;
+                        }
 
-                        //Eliminar antigua ruta
-                        menuNavigation = null;
-                        MenuManager.GetInstance().RemoveCurrentMenu();
+                        control = true;
+                    }
+                    else
+                    {
+                        if (!path.StartNode.Visited && resultantUserToStartNode <= metersBetweenUserAndNodesToBeVisited)
+                        {
+                            path.StartNode.Visited = true;
+                            control = true;
+                        }
 
-                        //Crear una nueva ruta
-                        var navigationCtrl = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
-                        navigationCtrl.StartNavigation(idNodoDestino);
+                        if (!path.EndNode.Visited && resultantUserToEndNode <= metersBetweenUserAndNodesToBeVisited)
+                        {
+                            path.EndNode.Visited = true;
+                            control = true;
+                        }
+                    }
+
+                    //Busqueda de Ruta Alterna si no es un tour
+                    if (!ModelPoolManager.GetInstance().Contains("tourCtrl") && !control)
+                    {
+                        //Verificar si el usuario se esta lejando de los nodos de un path                   
+                        //Si tanto el nodo inicial como el final estan a una distancia X en metros, crear una nueva ruta
+                        if (resultantUserToStartNode >= metersBetweenNodesAlternativeRoute && resultantUserToEndNode >= metersBetweenNodesAlternativeRoute)
+                        {
+                            UINotification.StartNotificationRecalcularRuta = true;
+
+                            //Recuperar nodo destino
+                            var destinoName = menuNavigation.directionPath[menuNavigation.directionPath.Count - 1].EndNode.Name;
+
+                            //Eliminar antigua ruta
+                            menuNavigation = null;
+                            MenuManager.GetInstance().RemoveCurrentMenu();
+
+                            //Recalcular la ruta
+                            var navigationCtrl = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
+                            navigationCtrl.StartNavigation(destinoName);
+                        }
                     }
                 }
             }
@@ -74,8 +115,6 @@ namespace SncPucmm.View
                 var modelNode = objectCollider.GetComponent<ModelObject>().ObjectTag as ModelNode;
 
                 BuildingColliding = modelNode.name;
-
-
             }
         }
 

@@ -164,7 +164,7 @@ namespace SncPucmm.Controller.GUI
         public void Update()
         {
             UIUtils.ShowInsidePlaneBuilding(modelNode.abreviacion, "Planta" + currentFloor);
-            State.ChangeState(eState.Navigation);
+            State.ChangeState(eState.MenuInsideBuilding);
         }
 
         #endregion

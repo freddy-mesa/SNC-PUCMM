@@ -91,7 +91,7 @@ namespace SncPucmm.View
 
 		IEnumerator Transition()
 		{
-			float t = 0.0f, transitionDuration = 2.5f;
+			float t = 0.0f, transitionDuration = 0.5f;
 			Vector3 startingPos = Camera.main.transform.position;
 			while (t < 1.0f)
 			{

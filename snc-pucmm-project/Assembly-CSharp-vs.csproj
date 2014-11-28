@@ -255,6 +255,7 @@
      <Compile Include="Assets\Scripts\Controller\GUI\MenuInsideBuilding.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\MenuMain.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\MenuNavigation.cs" />
+     <Compile Include="Assets\Scripts\Controller\GUI\MenuSignIn.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\MenuTourSelection.cs" />
      <Compile Include="Assets\Scripts\Controller\GUI\MenuUsuarioTourSelection.cs" />
      <Compile Include="Assets\Scripts\Controller\MenuManager.cs" />
@@ -297,6 +298,7 @@
      <Compile Include="Assets\Scripts\View\UIKeyboard.cs" />
      <Compile Include="Assets\Scripts\View\UIModel.cs" />
      <Compile Include="Assets\Scripts\View\UIMovement.cs" />
+     <Compile Include="Assets\Scripts\View\UINotification.cs" />
      <Compile Include="Assets\Scripts\View\UIResolution.cs" />
      <Compile Include="Assets\Scripts\View\UIScrollViewControl.cs" />
      <Compile Include="Assets\Scripts\View\UITextBoxControl.cs" />

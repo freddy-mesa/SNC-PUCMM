@@ -15,6 +15,9 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectType>Editor:5</UnityProjectType>
+    <UnityBuildTarget>Android:13</UnityBuildTarget>
+    <UnityVersion>4.5.3f3</UnityVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -204,6 +207,8 @@
     <Compile Include="Assets\NGUI\Scripts\Editor\UIWidgetContainerEditor.cs" />
     <Compile Include="Assets\NGUI\Scripts\Editor\UIWidgetInspector.cs" />
     <Compile Include="Assets\NGUI\Scripts\Editor\UIWrapContentEditor.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Assets\GyroDroid\GyroDroid-minimal-README.txt" />
     <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
     <None Include="Assets\JSON\readme.txt" />
@@ -252,9 +257,6 @@
     <None Include="Assets\UniWeb\FAQ.txt" />
     <None Include="Assets\UniWeb\README.txt" />
     <None Include="Assets\UniWeb\TODO.txt" />
-    <None Include="Assets\UnityVS\Editor\SyntaxTree.VisualStudio.Unity.Bridge.dll" />
-    <None Include="Assets\UnityVS\Editor\SyntaxTree.VisualStudio.Unity.Messaging.dll" />
-    <None Include="Assets\UnityVS\Editor\UnityVS.VersionSpecific.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

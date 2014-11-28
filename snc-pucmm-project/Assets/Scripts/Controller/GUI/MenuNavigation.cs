@@ -18,10 +18,13 @@ namespace SncPucmm.Controller.GUI
 		List<Button> buttonList;
 		public List<PathDataDijkstra> directionPath;
 		public int currentDirectionPath;
+		public int currentPathFreeMode;
 
 		bool isBackButtonActive;
 		bool isNextButtonActive;
 		string tourName;
+
+		public bool isFreeModeActive;
 
 		#endregion
 
@@ -30,7 +33,7 @@ namespace SncPucmm.Controller.GUI
 		public MenuNavigation()
 		{
 			isBackButtonActive = false;
-			isNextButtonActive = true;
+			isNextButtonActive = false;
 		}
 
 		public MenuNavigation(string name, List<PathDataDijkstra> nodesDirectionPath) 
@@ -39,7 +42,7 @@ namespace SncPucmm.Controller.GUI
 			this.name = name;
 			this.directionPath = nodesDirectionPath;
 
-			currentDirectionPath = 0;
+			currentDirectionPath = currentPathFreeMode = 0;
 			
 			Initializer();
 		}
@@ -50,7 +53,7 @@ namespace SncPucmm.Controller.GUI
 			this.name = name;
 			this.directionPath = nodesDirectionPath;
 			this.tourName = tourName;
-			this.currentDirectionPath = currentPathIndex;
+			this.currentDirectionPath = currentPathFreeMode = currentPathIndex;
 
 			Initializer();
 		}
@@ -79,12 +82,13 @@ namespace SncPucmm.Controller.GUI
 			buttonExit.OnTouchEvent += new OnTouchEventHandler(OnTouchExit);
 			buttonList.Add(buttonExit);
 
+			Button buttonFree = new Button("ButtonFreeMode");
+			buttonFree.OnTouchEvent += new OnTouchEventHandler(OnTouchFreeMode);
+			buttonList.Add(buttonFree);
+
 			Button buttonOk = new Button("ButtonOk");
 			buttonOk.OnTouchEvent += new OnTouchEventHandler(OnTouchExit);
 			buttonList.Add(buttonOk);
-
-			UIUtils.FindGUI("MenuNavigation/" + buttonList[0].Name).SetActive(false);
-			UIUtils.FindGUI("MenuNavigation/" + buttonList[1].Name).SetActive(true);
 
 			var tourBar = UIUtils.FindGUI("MenuNavigation/NameTourBar"); 
 			if (State.GetCurrentState() == eState.Tour)
@@ -98,83 +102,146 @@ namespace SncPucmm.Controller.GUI
 				tourBar.SetActive(false);
 			}
 
-			UIUtils.FindGUI("MenuNavigation/TourNotification").SetActive(false);
+			//UIUtils.FindGUI("MenuNavigation/NotificationSeccionTourCompletada").SetActive(false);
 
 			ShowDirectionMenu(directionPath[currentDirectionPath]);
 			ShowNavigationDirection(directionPath[currentDirectionPath]);
 		}
 
+		private void OnTouchFreeMode(object sender, TouchEventArgs e)
+		{
+			isFreeModeActive = true;
+			currentPathFreeMode = currentDirectionPath;
+			UIUtils.FindGUI("MenuNavigation/FreeMode").SetActive(true);
+
+			if (currentPathFreeMode <= 0)
+			{
+				UIUtils.FindGUI("MenuNavigation/FreeMode/" + buttonList[0].Name).SetActive(false);
+				isBackButtonActive = false;
+			}
+			else
+			{
+				UIUtils.FindGUI("MenuNavigation/FreeMode/" + buttonList[0].Name).SetActive(true);
+				isBackButtonActive = true;
+			}
+
+			if (currentPathFreeMode + 1 >= directionPath.Count)
+			{
+				UIUtils.FindGUI("MenuNavigation/FreeMode/" + buttonList[1].Name).SetActive(false);
+				isNextButtonActive = false;
+			}
+			else
+			{
+				UIUtils.FindGUI("MenuNavigation/FreeMode/" + buttonList[1].Name).SetActive(true);
+				isNextButtonActive = true;
+			}
+		}
+
 		public void OnTouchDirectionBack(object sender, TouchEventArgs e)
 		{
-			currentDirectionPath--;
+			currentPathFreeMode--;
 
-			if (currentDirectionPath <= 0)
+			if (currentPathFreeMode <= 0)
 			{
-				currentDirectionPath = 0;
-				UIUtils.FindGUI("MenuNavigation/" + buttonList[0].Name).SetActive(false);
+				currentPathFreeMode = 0;
+				UIUtils.FindGUI("MenuNavigation/FreeMode/" + buttonList[0].Name).SetActive(false);
 				isBackButtonActive = false;
 			}
 
 			if (!isNextButtonActive)
 			{
-				UIUtils.FindGUI("MenuNavigation/" + buttonList[1].Name).SetActive(true);
+				UIUtils.FindGUI("MenuNavigation/FreeMode/" + buttonList[1].Name).SetActive(true);
 				isNextButtonActive = true;
 			}
 
-			ShowDirectionMenu(directionPath[currentDirectionPath]);
-			ShowNavigationDirection(directionPath[currentDirectionPath]);
+			ShowDirectionMenu(directionPath[currentPathFreeMode]);
+			ShowNavigationDirection(directionPath[currentPathFreeMode]);
+			MoveCameraToNode();
 		}
 
 		public void OnTouchDirectionNext(object sender, TouchEventArgs e)
 		{
-			currentDirectionPath++;
+			currentPathFreeMode++;
 
-			if (currentDirectionPath + 1 >= directionPath.Count)
+			if (currentPathFreeMode + 1 >= directionPath.Count)
 			{
-				currentDirectionPath = directionPath.Count - 1;
-				UIUtils.FindGUI("MenuNavigation/" + buttonList[1].Name).SetActive(false);
+				currentPathFreeMode = directionPath.Count - 1;
+				UIUtils.FindGUI("MenuNavigation/FreeMode/" + buttonList[1].Name).SetActive(false);
 				isNextButtonActive = false;
 			}
 
 			if (!isBackButtonActive)
 			{
-				UIUtils.FindGUI("MenuNavigation/" + buttonList[0].Name).SetActive(true);
+				UIUtils.FindGUI("MenuNavigation/FreeMode/" + buttonList[0].Name).SetActive(true);
 				isBackButtonActive = true;
 			}
 
-			ShowDirectionMenu(directionPath[currentDirectionPath]);
-			ShowNavigationDirection(directionPath[currentDirectionPath]);
+			ShowDirectionMenu(directionPath[currentPathFreeMode]);
+			ShowNavigationDirection(directionPath[currentPathFreeMode]);
+			MoveCameraToNode();
 		}
 
 		public void OnTouchResume(object sender, TouchEventArgs e) 
 		{
-			PathDataDijkstra path = directionPath[currentDirectionPath];
+			UIUtils.FindGUI("MenuNavigation/FreeMode").SetActive(false);
+			isFreeModeActive = false;
+			ShowDirectionMenu(directionPath[currentDirectionPath]);
+			ShowNavigationDirection(directionPath[currentDirectionPath]);
+			MoveCameraToUser();
+		}
 
-			float nodePosX = UIUtils.getXDistance(path.StartNode.Longitude) - 50f;
-			float nodePosZ = UIUtils.getZDistance(path.StartNode.Latitude);
+		public void OnTouchExit(object sender, TouchEventArgs e) 
+		{
+			UIUtils.ShowAllBuildingExterior(directionPath);
+			UIUtils.DestroyChilds("/PUCMM/Directions", false);
+			MenuManager.GetInstance().RemoveCurrentMenu();
+		}
+
+		private void MoveCameraToNode()
+		{
+			PathDataDijkstra path = directionPath[currentPathFreeMode];
+
+			float nodePosX = path.StartNode.Longitude - 40f;
+			float nodePosZ = path.StartNode.Latitude;
 
 			Transform camera = UIUtils.Find("/Vista3erPersona").camera.transform;
 			camera.eulerAngles = new Vector3(camera.eulerAngles.x, 90, 0f);
-			camera.position = new Vector3(camera.position.x, 30f,camera.position.z);
+			camera.position = new Vector3(camera.position.x, 30f, camera.position.z);
 
 			UICamaraControl.targetTransitionPosition = new Vector3(nodePosX, camera.position.y, nodePosZ);
 			UICamaraControl.isTransitionAnimated = true;
 		}
 
-		public void OnTouchExit(object sender, TouchEventArgs e) 
+		private void MoveCameraToUser()
 		{
-			UIUtils.DestroyChilds("/PUCMM/Directions", false);
-			MenuManager.GetInstance().RemoveCurrentMenu();
+			float userPosX = UIUtils.getXDistance(UIGPS.Longitude) - 40f;
+			float userPosZ = UIUtils.getZDistance(UIGPS.Latitude);
+
+			Transform camera = UIUtils.Find("/Vista3erPersona").camera.transform;
+			camera.eulerAngles = new Vector3(camera.eulerAngles.x, 90, 0f);
+			camera.position = new Vector3(camera.position.x, 30f, camera.position.z);
+
+			UICamaraControl.targetTransitionPosition = new Vector3(userPosX, camera.position.y, userPosZ);
+			UICamaraControl.isTransitionAnimated = true;
 		}
 
-		private void ShowDirectionMenu(PathDataDijkstra path)
+		public void ShowDirectionMenu(PathDataDijkstra path)
 		{
-			String labelText = String.Format("{0:F2} metros desde {1} hacia {2}. Metros Recorridos: {3:F2} metros", path.DistanceToNeighbor, path.StartNode.Name, path.EndNode.Name, path.DistancePathed);
+			string labelText = string.Empty;
+			if (Application.platform == RuntimePlatform.WindowsEditor)
+			{
+				labelText = string.Format("{0:F2} metros desde {1} hacia {2}. Metros Recorridos: {3:F2} metros", path.DistanceToNeighbor, path.StartNode.Name, path.EndNode.Name, path.DistancePathed);
+			}
+			else
+			{
+				labelText = string.Format("{0:F2} metros hasta la interseccion. Metros Recorridos: {1:F2} metros", path.DistanceToNeighbor, path.DistancePathed);
+			}
+
 			UILabel label = UIUtils.FindGUI("MenuNavigation/StatusBar/Label").GetComponent<UILabel>();
 			label.text = UIUtils.FormatStringLabel(labelText, ' ', 20);
 		}
 
-		private void ShowNavigationDirection(PathDataDijkstra path)
+		public void ShowNavigationDirection(PathDataDijkstra path)
 		{
 			UIUtils.EnableInsideFloorCaminosBuilding(directionPath);
 

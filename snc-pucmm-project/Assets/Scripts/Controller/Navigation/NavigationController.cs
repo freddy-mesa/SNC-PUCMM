@@ -37,21 +37,9 @@ namespace SncPucmm.Controller.Navigation
         }
 
         public void StartNavigation(string destinationName)
-        {           
-            //List<PathData> bestPath = GetBestPathData(destinationName);
-            List<PathDataDijkstra> bestPath = graph.Dijkstra("Aulas 4", destinationName);
-
-            //Mostrar el menu de direciones
-            MenuNavigation menuNavigation = new MenuNavigation("MenuNavigation", bestPath);
-            MenuManager.GetInstance().AddMenu(menuNavigation);
-
-            State.ChangeState(eState.MenuNavigation);
-        }
-
-        public void StartNavigation(int destinationIdNode)
         {
-            //List<PathData> bestPath = GetBestPathData(destinationName);
-            List<PathDataDijkstra> bestPath = graph.Dijkstra(11, destinationIdNode);
+            List<PathDataDijkstra> bestPath = GetBestPathData(destinationName);
+            //List<PathDataDijkstra> bestPath = graph.Dijkstra("Aulas 3", destinationName);
 
             //Mostrar el menu de direciones
             MenuNavigation menuNavigation = new MenuNavigation("MenuNavigation", bestPath);
@@ -67,12 +55,13 @@ namespace SncPucmm.Controller.Navigation
             List<PathDataDijkstra> tourPath = new List<PathDataDijkstra>();
             bool isSelectCurrentIndexSectionTour = false;
             int indexCurrentTourPathData = 0;
+            string startTourNode = string.Empty;
 
             using (var sqlService = new SQLiteService())
             {
                 for (int i = 0; i < detalleUsuarioTourList.Count; ++i)
                 {
-                    if (i + 1 != detalleUsuarioTourList.Count)
+                    if (i + 1 != detalleUsuarioTourList.Count && !detalleUsuarioTourList[i + 1].fechaFin.HasValue)
                     {
                         //Buscar en la base de dato el desde y el hasta
                         string desde = string.Empty, hasta = string.Empty;
@@ -104,21 +93,25 @@ namespace SncPucmm.Controller.Navigation
                             IdPuntoReuionNodoHasta = detalleUsuarioTourList[i + 1].idPuntoReunionTour.Value,
                         });
 
-                        if (!isSelectCurrentIndexSectionTour && !detalleUsuarioTourList[i].fechaInicio.HasValue)
+                        if (!isSelectCurrentIndexSectionTour)
                         {
                             isSelectCurrentIndexSectionTour = true;
-                            tourController.SetStartSectionTour(i);
+                            //tourController.SetStartSectionTour(i);
 
                             indexCurrentTourPathData = tourPath.FindIndex(path => path.StartNode.Name == desde);
+                            startTourNode = desde;
                         }
                     }
                 }
             }
 
+            var userPath = GetBestPathData(startTourNode);
+            userPath.AddRange(tourPath);
+
             ModelPoolManager.GetInstance().Add("tourCtrl", tourController);
 
             //Mostrar el menu de direciones
-            MenuNavigation menuNavigation = new MenuNavigation("MenuNavigation", tourPath, indexCurrentTourPathData, tourName);
+            MenuNavigation menuNavigation = new MenuNavigation("MenuNavigation", userPath, indexCurrentTourPathData, tourName);
             MenuManager.GetInstance().AddMenu(menuNavigation);
 
             State.ChangeState(eState.MenuNavigation);
@@ -126,35 +119,30 @@ namespace SncPucmm.Controller.Navigation
 
         private List<PathDataDijkstra> GetBestPathData(string destinationName)
         {
-            List<NodeDijkstra> startNodeList = findClosestNodes();
-
+            List<NodeDijkstra> startNodeList = findClosestNodes();          
+            
             List<PathDataDijkstra> bestPath = null;
             float minDistance = float.MaxValue;
 
             foreach (NodeDijkstra startNode in startNodeList)
             {
                 var dataPath = graph.Dijkstra(startNode.Name, destinationName);
+                var user = GetUsuarioPosition(dataPath[0].StartNode);
 
-                if (dataPath[dataPath.Count - 1].DistancePathed < minDistance)
+                if (dataPath[dataPath.Count - 1].DistancePathed + user.DistancePathed < minDistance)
                 {
                     bestPath = dataPath;
-                    minDistance = dataPath[dataPath.Count - 1].DistancePathed;
+                    minDistance = dataPath[dataPath.Count - 1].DistancePathed + user.DistancePathed;
                 }
             }
 
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                var path = new List<PathDataDijkstra>();
+            var path = new List<PathDataDijkstra>();
+            path.Add( GetUsuarioPosition(bestPath[0].StartNode));
+            path.AddRange(bestPath);
 
-                path.Add(GetUsuarioPosition(bestPath[0].StartNode));
-                path.AddRange(bestPath);
+            ProcessBestDataPath(ref path);
 
-                return path;
-            }
-            else
-            {
-                return bestPath;
-            }
+            return path;
         }
 
         private List<NodeDijkstra> findClosestNodes()
@@ -163,20 +151,22 @@ namespace SncPucmm.Controller.Navigation
             float currentUserPosX = UIUtils.getXDistance(UIGPS.Longitude);
             float currentUserPosZ = UIUtils.getZDistance(UIGPS.Latitude);
 
-            float meters = 0f;
+            float meters = 5f;
 
             List<NodeDijkstra> nodeList = null;
 
             do {
 
-                //Añade 25 metros
-                meters += 25f;
-
                 //Los nodos mas cercanos en un area segun los metros
                 nodeList = graph.Nodes.FindAll(node =>
                 {
-                    float nodePosX = UIUtils.getXDistance(node.Longitude);
-                    float nodePosY = UIUtils.getZDistance(node.Latitude);
+                    if (node.IsInsideBuilding)
+                    {
+                        return false;
+                    }
+
+                    float nodePosX = node.Longitude;
+                    float nodePosY = node.Latitude;
 
                     //Distancia entre un nodo y el usuario
                     float resultant = UIUtils.getDirectDistance(currentUserPosX, currentUserPosZ, nodePosX, nodePosY);
@@ -189,6 +179,8 @@ namespace SncPucmm.Controller.Navigation
                     return false;
                 });
 
+                meters += 5f;
+
             } while (nodeList != null && nodeList.Count == 0);
 
             return nodeList;
@@ -197,11 +189,13 @@ namespace SncPucmm.Controller.Navigation
         private PathDataDijkstra GetUsuarioPosition(NodeDijkstra startNavigationNode)
         {
             PathDataDijkstra userPos = new PathDataDijkstra();
-            userPos.StartNode = new NodeDijkstra() { Latitude = UIGPS.Latitude, Longitude = UIGPS.Longitude, Name = "User Node" };
+            var userLatitude = UIUtils.getZDistance(UIGPS.Latitude);
+            var userLongitude = UIUtils.getXDistance(UIGPS.Longitude);
+            userPos.StartNode = new NodeDijkstra() { Latitude = userLatitude, Longitude = userLongitude, Name = "User Position" };
             userPos.EndNode = startNavigationNode;
 
-            float adjacent = UIUtils.getXDistance(UIGPS.Longitude) - UIUtils.getXDistance(startNavigationNode.Longitude); //x1 - x2
-            float opposite = UIUtils.getZDistance(UIGPS.Latitude) - UIUtils.getZDistance(startNavigationNode.Latitude);   //y1 - y2
+            float adjacent = userLongitude - startNavigationNode.Longitude; //x1 - x2
+            float opposite = userLatitude - startNavigationNode.Latitude;   //y1 - y2
 
             float distance = Mathf.Sqrt(Mathf.Pow(adjacent, 2) + Mathf.Pow(opposite, 2));
 
@@ -209,6 +203,16 @@ namespace SncPucmm.Controller.Navigation
             userPos.DistancePathed = distance;
 
             return userPos;
+        }
+
+        private void ProcessBestDataPath(ref List<PathDataDijkstra> pathList)
+        {
+            var lastDistance =  pathList[0].DistancePathed;
+
+            for (int i = 1; i < pathList.Count; ++i)
+            {
+                pathList[i].DistancePathed += lastDistance;
+            }
         }
 
         #endregion

@@ -18,6 +18,10 @@ namespace SncPucmm.View
 		static float altitude;
 		static float accuracy;
 
+		public float Latitud;
+		public float Longitud;
+		public float Precision;
+
 		float planeAxeZ;
 		float planeAxeX;
 
@@ -62,11 +66,19 @@ namespace SncPucmm.View
 
 		void Update()
 		{
-
-			if (GPSEnterAccessControl)
+			if (Application.platform == RuntimePlatform.Android)
 			{
-				GPSEnterAccessControl = false;
-				StartCoroutine(UpdateGPS());
+				if (GPSEnterAccessControl)
+				{
+					GPSEnterAccessControl = false;
+					StartCoroutine(UpdateGPS());
+				}
+			}
+			else
+			{
+				latitude = Latitud;
+				longitude = Longitud;
+				accuracy = Precision;
 			}			
 
 			lblAltitude.text = "Altitude: " + altitude.ToString();
@@ -80,17 +92,14 @@ namespace SncPucmm.View
 
 		IEnumerator UpdateGPS()
 		{
-			if (Application.platform == RuntimePlatform.Android)
-			{
-				latitude = gpsActivityJavaClass.CallStatic<float>("GetLatitude");
-				longitude = gpsActivityJavaClass.CallStatic<float>("GetLongitude");
-				altitude = gpsActivityJavaClass.CallStatic<float>("GetAltitude");
-				accuracy = gpsActivityJavaClass.CallStatic<float>("GetAccuracy");
+			
+			latitude = gpsActivityJavaClass.CallStatic<float>("GetLatitude");
+			longitude = gpsActivityJavaClass.CallStatic<float>("GetLongitude");
+			altitude = gpsActivityJavaClass.CallStatic<float>("GetAltitude");
+			accuracy = gpsActivityJavaClass.CallStatic<float>("GetAccuracy");
 
-				planeAxeX = UIUtils.getXDistance(longitude);
-				planeAxeZ = UIUtils.getZDistance(latitude);
-
-			}
+			planeAxeX = UIUtils.getXDistance(longitude);
+			planeAxeZ = UIUtils.getZDistance(latitude);
 
 			StartCoroutine(CountDown());
 

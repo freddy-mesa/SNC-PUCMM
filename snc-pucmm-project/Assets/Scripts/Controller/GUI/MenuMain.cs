@@ -94,7 +94,7 @@ namespace SncPucmm.Controller.GUI
 			if (sidebar.transform.localPosition.x > -130)
 			{
 				position = -0.60f;
-				State.ChangeState(eState.Navigation);
+				State.ChangeState(eState.Exploring);
 			}
 			else
 			{
@@ -216,7 +216,7 @@ namespace SncPucmm.Controller.GUI
 
 			UIUtils.ActivateCameraLabels(false);
 
-			State.ChangeState(eState.Navigation);
+			State.ChangeState(eState.Exploring);
 
 		}
 
