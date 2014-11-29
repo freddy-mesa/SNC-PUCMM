@@ -1,3 +1,4 @@
+import grails.converters.JSON
 import sncpucmm.TipoUsuario
 import sncpucmm.Usuario
 import sncpucmm.UsuarioTipoUsuario

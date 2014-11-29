@@ -2,7 +2,7 @@ package sncpucmm
 
 class UsuarioTour {
 
-    Usuario usuario
+    UsuarioFacebook usuario
     Tour tour
     String estado
     Date fechaInicio

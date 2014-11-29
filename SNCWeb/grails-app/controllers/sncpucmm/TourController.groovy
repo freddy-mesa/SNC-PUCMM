@@ -296,7 +296,7 @@ class TourController {
 
             if(usuarioTour.get("request") == "create"){
                 UsuarioTour newUsuarioTour = new UsuarioTour(
-                        usuario: Usuario.findById(usuarioTour.get("idUsuario")),
+                        usuario: UsuarioFacebook.findById(usuarioTour.get("idUsuario")),
                         tour: Tour.findById(usuarioTour.get("idTour")),
                         estado: usuarioTour.get("estado"),
                         fechaInicio: Date.parse("dd/MM/yyyy HH:mm:ss", usuarioTour.get("fechaInicio")),
@@ -392,10 +392,4 @@ class TourController {
         session.setAttribute("puntosReunion", puntosReunion)
         render(view: 'puntosreunion', model:[puntosReunion: puntosReunion])
     }
-
-    def facebooktest(){
-        print (facebookContext.app.id)
-    }
-
-
 }

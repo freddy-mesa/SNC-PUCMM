@@ -8,7 +8,6 @@ class Usuario {
     String password
     String name
     String lastname
-    CuentaFacebook cuentaFacebook
     boolean enabled = true
     boolean accountExpired
     boolean accountLocked
@@ -19,7 +18,6 @@ class Usuario {
     static constraints = {
         username blank: false, unique: true
         password blank: false
-        cuentaFacebook nullable: true
     }
 
     static mapping = {

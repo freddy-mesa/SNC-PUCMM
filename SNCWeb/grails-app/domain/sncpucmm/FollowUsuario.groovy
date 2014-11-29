@@ -2,8 +2,8 @@ package sncpucmm
 
 class FollowUsuario {
 
-    Usuario follower
-    Usuario followed
+    UsuarioFacebook follower
+    UsuarioFacebook followed
     String estadoSolicitud
     Date fechaRegistroSolicitud
     Date fechaRespuestaSolicitud
