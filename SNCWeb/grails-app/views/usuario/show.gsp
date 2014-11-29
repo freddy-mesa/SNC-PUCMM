@@ -32,15 +32,6 @@
 				</li>
 				</g:if>
 
-				<g:if test="${usuarioInstance?.cuentaFacebook}">
-				<li class="fieldcontain">
-					<span id="cuentaFacebook-label" class="property-label"><g:message code="usuario.cuentaFacebook.label" default="Cuenta Facebook" /></span>
-					
-						<span class="property-value" aria-labelledby="cuentaFacebook-label"><g:link controller="cuentaFacebook" action="show" id="${usuarioInstance?.cuentaFacebook?.id}">${usuarioInstance?.cuentaFacebook?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
 				<g:if test="${usuarioInstance?.accountExpired}">
 				<li class="fieldcontain">
 					<span id="accountExpired-label" class="property-label"><g:message code="usuario.accountExpired.label" default="Account Expired" /></span>
@@ -67,25 +58,7 @@
 					
 				</li>
 				</g:if>
-			
-				<g:if test="${usuarioInstance?.lastname}">
-				<li class="fieldcontain">
-					<span id="lastname-label" class="property-label"><g:message code="usuario.lastname.label" default="Lastname" /></span>
-					
-						<span class="property-value" aria-labelledby="lastname-label"><g:fieldValue bean="${usuarioInstance}" field="lastname"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${usuarioInstance?.name}">
-				<li class="fieldcontain">
-					<span id="name-label" class="property-label"><g:message code="usuario.name.label" default="Name" /></span>
-					
-						<span class="property-value" aria-labelledby="name-label"><g:fieldValue bean="${usuarioInstance}" field="name"/></span>
-					
-				</li>
-				</g:if>
-			
+
 				<g:if test="${usuarioInstance?.passwordExpired}">
 				<li class="fieldcontain">
 					<span id="passwordExpired-label" class="property-label"><g:message code="usuario.passwordExpired.label" default="Password Expired" /></span>

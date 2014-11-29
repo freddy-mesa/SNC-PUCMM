@@ -106,7 +106,7 @@ class UsuarioController {
         }
     }
 
-    def crearUsuario(){
+    def crear(){
         JSONObject usuario = request.JSON
 
         def usuarioSearch = Usuario.findById(usuario.get("id"))

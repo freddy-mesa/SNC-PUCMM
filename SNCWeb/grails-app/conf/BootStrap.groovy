@@ -11,8 +11,8 @@ class BootStrap {
         def tipoUsuario = new TipoUsuario(authority: "ROLE_USUARIO", description: "Usuario del sistema.").save(failOnError: true);
 
         //Creando usuarios
-        def admin = new Usuario(username: "admin", password: "admin", name: "admin", lastname: "admin", accountExpired: false, accountLocked: false, passwordExpired: false).save(failOnError: true);
-        def usuario = new Usuario(username: "usuario", password: "usuario", name: "usuario", lastname: "usuario", accountExpired: false, accountLocked: false, passwordExpired: false).save(failOnError: true);
+        def admin = new Usuario(username: "admin", password: "admin", accountExpired: false, accountLocked: false, passwordExpired: false).save(failOnError: true);
+        def usuario = new Usuario(username: "usuario", password: "usuario", accountExpired: false, accountLocked: false, passwordExpired: false).save(failOnError: true);
 
         //Asignando usuarios a su tipo.
         UsuarioTipoUsuario.create(admin, tipoAdmin, true);

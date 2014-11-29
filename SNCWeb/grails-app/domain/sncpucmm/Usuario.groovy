@@ -6,8 +6,6 @@ class Usuario {
 
     String username
     String password
-    String name
-    String lastname
     boolean enabled = true
     boolean accountExpired
     boolean accountLocked
