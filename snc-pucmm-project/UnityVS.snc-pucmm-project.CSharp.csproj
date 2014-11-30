@@ -51,6 +51,9 @@
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="IFacebook">
+      <HintPath>Assets\Facebook\Scripts\IFacebook.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Data">
       <HintPath>Assets\Plugins\Mono.Data.dll</HintPath>
     </Reference>
@@ -89,6 +92,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Facebook\Scripts\AndroidFacebook.cs" />
+    <Compile Include="Assets\Facebook\Scripts\AndroidFacebookLoader.cs" />
+    <Compile Include="Assets\Facebook\Scripts\CanvasFacebookLoader.cs" />
+    <Compile Include="Assets\Facebook\Scripts\EditorFacebook.cs" />
+    <Compile Include="Assets\Facebook\Scripts\EditorFacebookAccessToken.cs" />
+    <Compile Include="Assets\Facebook\Scripts\EditorFacebookLoader.cs" />
+    <Compile Include="Assets\Facebook\Scripts\FB.cs" />
+    <Compile Include="Assets\Facebook\Scripts\FBAppRequestsFilterGroup.cs" />
+    <Compile Include="Assets\Facebook\Scripts\FBScreen.cs" />
+    <Compile Include="Assets\Facebook\Scripts\FBSettings.cs" />
+    <Compile Include="Assets\Facebook\Scripts\IOSFacebook.cs" />
+    <Compile Include="Assets\Facebook\Scripts\IOSFacebookLoader.cs" />
+    <Compile Include="Assets\Facebook\Scripts\NativeDialogModes.cs" />
     <Compile Include="Assets\GyroDroid\SampleScripts\LightControl.cs" />
     <Compile Include="Assets\GyroDroid\SampleScripts\MagneticFieldCamera.cs" />
     <Compile Include="Assets\GyroDroid\SampleScripts\MinimalSensorCamera.cs" />
@@ -286,20 +302,25 @@
     <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
     <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\Button.cs" />
+    <Compile Include="Assets\Scripts\Controller\Control\CheckBox.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\Control.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\EventHandler.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\IButton.cs" />
+    <Compile Include="Assets\Scripts\Controller\Control\ICheckBox.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\IMenu.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\IScrollView.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\ITextBox.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\ScrollView.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\TextBox.cs" />
+    <Compile Include="Assets\Scripts\Controller\Facebook\FacebookController.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuBuilding.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuInsideBuilding.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuMain.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuNavigation.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuSignIn.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuTourSelection.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\MenuSendFollowingRequest.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\MenuUsuarioSettings.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuUsuarioTourSelection.cs" />
     <Compile Include="Assets\Scripts\Controller\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Controller\ModelPoolManager.cs" />
@@ -320,7 +341,6 @@
     <Compile Include="Assets\Scripts\Model\Domain\Ubicacion.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\Usuario.cs" />
     <Compile Include="Assets\Scripts\Model\Domain\UsuarioTour.cs" />
-    <Compile Include="Assets\Scripts\Model\Domain\Videollamada.cs" />
     <Compile Include="Assets\Scripts\Model\IJson.cs" />
     <Compile Include="Assets\Scripts\Model\ModelNode.cs" />
     <Compile Include="Assets\Scripts\Model\ModelObject.cs" />
@@ -335,6 +355,7 @@
     <Compile Include="Assets\Scripts\View\UICamaraControl.cs" />
     <Compile Include="Assets\Scripts\View\UICamino.cs" />
     <Compile Include="Assets\Scripts\View\UICharacter.cs" />
+    <Compile Include="Assets\Scripts\View\UICheckboxControl.cs" />
     <Compile Include="Assets\Scripts\View\UIDirections.cs" />
     <Compile Include="Assets\Scripts\View\UIGPS.cs" />
     <Compile Include="Assets\Scripts\View\UIInsideBuilding.cs" />

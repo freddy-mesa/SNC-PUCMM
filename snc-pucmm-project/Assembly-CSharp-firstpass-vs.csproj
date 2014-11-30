@@ -95,6 +95,9 @@
      <None Include="Assets\GyroDroid\ReadMe-4.0.txt" />
      <None Include="Assets\Plugins\Android\classes\build.xml" />
      <None Include="Assets\NGUI\Examples\Resources\Localization.txt" />
+ <Reference Include="IFacebook">
+ <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Facebook/Scripts/IFacebook.dll</HintPath>
+ </Reference>
  <Reference Include="Mono.Data">
  <HintPath>C:/Users/Freddy Mesa/Proyecto Grado/SNC-PUCMM/snc-pucmm-project/Assets/Plugins/Mono.Data.dll</HintPath>
  </Reference>

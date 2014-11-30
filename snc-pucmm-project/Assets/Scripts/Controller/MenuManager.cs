@@ -87,30 +87,16 @@ namespace SncPucmm.Controller
 			return _menuList[_menuList.Count - 1];
 		}
 
-		public IMenu GetPrevioudMenu()
+		private IMenu GetPrevioudMenu()
 		{
 			return _menuList[_menuList.Count - 2];
-		}
-
-		/// <summary>
-		/// No menu left.
-		/// </summary>
-		/// <returns><c>true</c>, if no menu left, <c>false</c> otherwise.</returns>
-		public bool NoMenuLeft()
-		{
-			if(_menuList.Count == 1)
-				return true;
-
-			//Active Last Menu
-			ActivateCurrentMenu(true);
-			return false;
 		}
 
 		/// <summary>
 		/// Activates the current menu.
 		/// </summary>
 		/// <param name="activate">If set to <c>true</c> activate.</param>
-		public void ActivateCurrentMenu(bool activate)
+		private void ActivateCurrentMenu(bool activate)
 		{
 			var menu = UIUtils.FindGUI(GetCurrentMenu().GetMenuName());
 			menu.SetActive(activate);

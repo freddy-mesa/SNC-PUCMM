@@ -10,6 +10,8 @@ namespace SncPucmm.View
     class UINotification : MonoBehaviour
     {
         public static bool StartNotificationRecalcularRuta;
+        public static bool StartNotificationLoading;
+        public static bool StartNotificationNoInternet;
 
         void Start()
         {
@@ -23,6 +25,16 @@ namespace SncPucmm.View
                 StartNotificationRecalcularRuta = false;
                 UIUtils.FindGUI("MenuNavigation/NotificationRecalcularRuta").SetActive(true);
                 StartCoroutine(ShowNotificationRecalcularRuta());
+            }
+
+            if (StartNotificationLoading)
+            {
+
+            }
+
+            if (StartNotificationNoInternet)
+            {
+                StartNotificationNoInternet = false;
             }
         }
 

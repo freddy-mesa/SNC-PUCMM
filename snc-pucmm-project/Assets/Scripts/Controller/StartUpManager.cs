@@ -11,6 +11,7 @@ using System.Text;
 using UnityEngine;
 using SncPucmm.View;
 using SncPucmm.Controller.Tours;
+using SncPucmm.Controller.Facebook;
 
 namespace SncPucmm.Controller
 {

@@ -91,7 +91,8 @@ namespace SncPucmm.Database
 			{
 				if (Application.platform == RuntimePlatform.WindowsEditor)
 				{
-					DropAllModelTables();
+					//DropAllModelTables();
+					DropAllTables();
 				}
 
 				InitializeDataBase();
@@ -200,12 +201,11 @@ namespace SncPucmm.Database
 				new Dictionary<string, string>
 				{
 					{"id","integer"},
+					{"idUsuarioFacebook","integer"},
 					{"nombre","text"},
 					{"apellido", "text"},
-					{"contrasena","text"},
-					{"usuario","text"},
-					{"idTipoUsuario", "integer"},
-					{"idCuentaUsuario","integer"}
+					{"email","text"},
+					{"genero","text"}					
 				},
 				new Dictionary<string, string[]> { },
 				new Dictionary<string, string[]> { }
@@ -256,7 +256,7 @@ namespace SncPucmm.Database
 				new Dictionary<string, string[]> { }
 			));
 
-			CreateTableQuery(
+			sqlBuilder.Append(CreateTableQuery(
 				"DetalleUsuarioTour",
 				new Dictionary<string, string>
 				{
@@ -269,7 +269,7 @@ namespace SncPucmm.Database
 				},
 				new Dictionary<string, string[]> { },
 				new Dictionary<string, string[]> { }
-			);
+			));
 
 			sqlBuilder.Append(CreateTableQuery(
 				"UsuarioLocalizacion",
@@ -1267,9 +1267,9 @@ namespace SncPucmm.Database
 			#endregion
 		}
 
-		public IDataReader SelectQuery(string sqlQuery) 
+		public SqliteDataReader SelectQuery(string sqlQuery) 
 		{
-			IDataReader reader = null;
+			SqliteDataReader reader = null;
 			try
 			{
 				using (var _databaseCommand = _databaseConnection.CreateCommand())
@@ -1277,7 +1277,7 @@ namespace SncPucmm.Database
 					_databaseCommand.CommandText = sqlQuery; // fill the command
 
 					reader = _databaseCommand.ExecuteReader(); // execute command which returns a reader
-					Debug.Log("Query Executed: " + sqlQuery);
+					//Debug.Log("Query Executed: " + sqlQuery);
 				}
 			}
 			catch (SqliteException e)
@@ -1301,7 +1301,7 @@ namespace SncPucmm.Database
 
 						transaction.Commit();
 
-						Debug.Log("Query Executed: " + sqlQuery);
+						//Debug.Log("Query Executed: " + sqlQuery);
 					}
 				}
 				
@@ -1351,6 +1351,24 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("DROP TABLE CoordenadaNodo;");
 			sqlBuilder.Append("DROP TABLE Nodo;");
 			sqlBuilder.Append("DROP TABLE Ubicacion;");
+
+			TransactionalQuery(sqlBuilder.ToString());
+		}
+
+		private void DropAllTables()
+		{
+			StringBuilder sqlBuilder = new StringBuilder();
+
+			sqlBuilder.Append("DROP TABLE Neighbor;");
+			sqlBuilder.Append("DROP TABLE CoordenadaNodo;");
+			sqlBuilder.Append("DROP TABLE Nodo;");
+			sqlBuilder.Append("DROP TABLE Ubicacion;");
+			sqlBuilder.Append("DROP TABLE Usuario;");
+			sqlBuilder.Append("DROP TABLE Tour;");
+			sqlBuilder.Append("DROP TABLE PuntoReunionTour;");
+			sqlBuilder.Append("DROP TABLE UsuarioTour;");
+			sqlBuilder.Append("DROP TABLE DetalleUsuarioTour;");
+			sqlBuilder.Append("DROP TABLE UsuarioLocalizacion;");
 
 			TransactionalQuery(sqlBuilder.ToString());
 		}

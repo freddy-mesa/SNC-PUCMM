@@ -10,6 +10,7 @@ using SncPucmm.Database;
 using SncPucmm.View;
 using SncPucmm.Model.Domain;
 using SncPucmm.Model;
+using SncPucmm.Controller.Facebook;
 
 namespace SncPucmm.Controller.GUI
 {
@@ -57,16 +58,16 @@ namespace SncPucmm.Controller.GUI
 			ButtonCambioVista.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonCambioVista);
 			buttonList.Add(ButtonCambioVista);
 
-			var ButtonSeguridad = new Button("ButtonSeguridad");
-			ButtonSeguridad.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonSeguridad);
+			var ButtonSeguridad = new Button("ButtonBuscarAmigos");
+			ButtonSeguridad.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonBuscarAmigos);
 			buttonList.Add(ButtonSeguridad);
 
 			var ButtonTours = new Button("ButtonTours");
 			ButtonTours.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonTours);
 			buttonList.Add(ButtonTours);
 
-			var ButtonLogout = new Button("ButtonLogout");
-			ButtonLogout.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonLogout);
+			var ButtonLogout = new Button("ButtonSignOut");
+			ButtonLogout.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonSignOut);
 			buttonList.Add(ButtonLogout);
 
 			textBoxList = new List<TextBox>();
@@ -78,6 +79,8 @@ namespace SncPucmm.Controller.GUI
 			treeView = new ScrollView("TreeView");
 			treeView.OnChangeEvent += new OnChangeEventHandler(OnChangeScrollTreeView);
 			treeView.OnCloseEvent += new OnCloseEventHandler(OnCloseScrollTreeView);
+
+			this.Update();
 		}
 
 		private void OnTouchButtonMain(object sender, TouchEventArgs e)
@@ -109,26 +112,40 @@ namespace SncPucmm.Controller.GUI
 
 		#region Sidebar
 
-		private void OnTouchButtonLogout(object sender, TouchEventArgs e)
+		private void OnTouchButtonSignOut(object sender, TouchEventArgs e)
 		{
-			
+			OpenCloseMainMenu();
+			FacebookController.Logout();
+			ModelPoolManager.GetInstance().Remove("Usuario");
+			this.Update();
 		}
 
 		private void OnTouchButtonTours(object sender, TouchEventArgs e)
 		{
+			OpenCloseMainMenu();
 			UIUtils.ActivateCameraLabels(false);
 			MenuManager.GetInstance().AddMenu(new MenuTourSelection("MenuTourSelection"));
 			State.ChangeState(eState.Tour);
 		}
 
-		private void OnTouchButtonSeguridad(object sender, TouchEventArgs e)
+		private void OnTouchButtonBuscarAmigos(object sender, TouchEventArgs e)
 		{
-
+			OpenCloseMainMenu();
+			//MenuManager.GetInstance().AddMenu(new MenuUsuarioFollowing("MenuUsuarioFollowing"));
 		}
 
 		private void OnTouchButtonUsuario(object sender, TouchEventArgs e)
 		{
+			OpenCloseMainMenu();
 
+			if (FB.IsLoggedIn && ModelPoolManager.GetInstance().Contains("Usuario"))
+			{
+				MenuManager.GetInstance().AddMenu(new MenuUsuarioSettings("MenuUsuarioSettings"));
+			}
+			else
+			{
+				MenuManager.GetInstance().AddMenu(new MenuSignIn("MenuSignIn"));
+			}
 		}
 
 		private void OnTouchButtonCambioVista(object sender, TouchEventArgs e)
@@ -350,7 +367,30 @@ namespace SncPucmm.Controller.GUI
 
 		public void Update()
 		{
-			
+			var sidebar = UIUtils.FindGUI("MenuMain/Sidebar").transform;
+
+			if (FB.IsLoggedIn)
+			{
+				var buttonUsuario = sidebar.FindChild("ButtonUsuario").transform;
+				buttonUsuario.FindChild("NoLogeado").gameObject.SetActive(false);
+				buttonUsuario.FindChild("Logeado").gameObject.SetActive(true);
+
+				sidebar.FindChild("ButtonTours").gameObject.SetActive(true);
+				sidebar.FindChild("ButtonBuscarAmigos").gameObject.SetActive(true);
+				sidebar.FindChild("ButtonSignOut").gameObject.SetActive(true);
+			}
+			else
+			{
+				var buttonUsuario = sidebar.FindChild("ButtonUsuario").transform;
+				buttonUsuario.FindChild("NoLogeado").gameObject.SetActive(true);
+				buttonUsuario.FindChild("Logeado").gameObject.SetActive(false);
+
+				sidebar.FindChild("ButtonTours").gameObject.SetActive(false);
+				sidebar.FindChild("ButtonBuscarAmigos").gameObject.SetActive(false);
+				sidebar.FindChild("ButtonSignOut").gameObject.SetActive(false);
+			}
+
+			State.ChangeState(eState.MenuMain);
 		}
 
 		public List<Button> GetButtonList()

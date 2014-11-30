@@ -10,12 +10,11 @@ namespace SncPucmm.Model.Domain
         #region Atributos
 
         public int? idUsuario;
+        public long? idUsuarioFacebook;
         public string nombre;
         public string apellido;
-        public string contrasena;
-        public string usuario;
-        public int? idTipoUsuario;
-        public int? idCuentaFacebook;
+        public string email;
+        public string gender;
 
         #endregion
 
@@ -44,19 +43,15 @@ namespace SncPucmm.Model.Domain
                     string key = (string)json.keys[i];
 
                     if (key == "id")
-                        this.idUsuario = (int)json.list[i].n;
-                    else if (key == "nombre")
+                        this.idUsuarioFacebook = Convert.ToInt64(json.list[i].str);
+                    else if (key == "first_name")
                         this.nombre = json.list[i].str;
-                    else if (key == "apellido")
+                    else if (key == "last_name")
                         this.apellido = json.list[i].str;
-                    else if (key == "contrasena")
-                        this.contrasena = json.list[i].str;
-                    else if (key == "contrasena")
-                        this.usuario = json.list[i].str;
-                    else if (key == "idTipoUsuario")
-                        this.idTipoUsuario = Convert.ToInt32(json.list[i].n);
-                    else
-                        this.idCuentaFacebook = Convert.ToInt32(json.list[i].n);
+                    else if (key == "email")
+                        this.email = json.list[i].str;
+                    else if (key == "gender")
+                        this.gender = json.list[i].str;
                 }
             }
         }
@@ -64,28 +59,24 @@ namespace SncPucmm.Model.Domain
         public JSONObject ToJson()
         {
             JSONObject json = new JSONObject();
-            
-            if(idUsuario.HasValue)
-                json.AddField("id", idUsuario.Value);
+
+            if (idUsuarioFacebook.HasValue)
+                json.AddField("idUsuarioFacebook", idUsuarioFacebook.Value);
             if(nombre != null)
-                json.AddField("nombre", nombre);
+                json.AddField("first_name", nombre);
             if(apellido != null)
-                json.AddField("apellido", apellido);
-            if(usuario != null)
-                json.AddField("usuario", usuario);
-            if(contrasena != null)
-                json.AddField("contrasena", contrasena);
-            if (idTipoUsuario.HasValue)
-                json.AddField("idTipoUsuario", idTipoUsuario.Value);
-            if (idCuentaFacebook.HasValue)
-                json.AddField("idCuentaFacebook", idCuentaFacebook.Value);
+                json.AddField("last_name", apellido);
+            if (email != null)
+                json.AddField("email", email);
+            if (gender != null)
+                json.AddField("gender", gender);
             
             return json;
         }
 
         public override string ToString()
         {
-            return String.Format("Usuario [idUsuario: {0}, Usuario: {1}]", idUsuario.HasValue ? idUsuario.Value.ToString() : string.Empty, usuario);
+            return String.Format("Usuario [idUsuarioFacebook: {0}, Email: {1}]", idUsuarioFacebook.HasValue ? idUsuarioFacebook.Value.ToString() : string.Empty, email);
         }
 
         #endregion

@@ -1,4 +1,6 @@
 ﻿using SncPucmm.Controller.Control;
+using SncPucmm.Controller.Facebook;
+using SncPucmm.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,32 +34,31 @@ namespace SncPucmm.Controller.GUI
         {
             buttonList = new List<Button>();
 
-            var buttonIniciarSesion = new Button("ButtonSignIn");
-            buttonIniciarSesion.OnTouchEvent += new OnTouchEventHandler(OnTouchSingInButton);
-            buttonList.Add(buttonIniciarSesion);
-
-            var buttonSignInFacebook = new Button("ButtonSignInFacebook");
+            var buttonSignInFacebook = new Button("ButtonSignIn");
             buttonSignInFacebook.OnTouchEvent += new OnTouchEventHandler(OnTouchSignInFacebookButton);
             buttonList.Add(buttonSignInFacebook);
 
-            var buttonExit = new Button("ButtonSignInFacebook");
+            var buttonExit = new Button("ButtonExit");
             buttonExit.OnTouchEvent += new OnTouchEventHandler(OnTouchExitButton);
             buttonList.Add(buttonExit);
         }
 
         private void OnTouchExitButton(object sender, TouchEventArgs e)
         {
-            throw new NotImplementedException();
+            MenuManager.GetInstance().RemoveCurrentMenu();
         }
 
         private void OnTouchSignInFacebookButton(object sender, TouchEventArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        private void OnTouchSingInButton(object sender, TouchEventArgs e)
-        {
-            throw new NotImplementedException();
+            if (FB.IsInitialized)
+            {
+                FacebookController.Login();
+                MenuManager.GetInstance().RemoveCurrentMenu();
+            }
+            else
+            {
+                UINotification.StartNotificationNoInternet = true;
+            }
         }
 
         public string GetMenuName()
