@@ -13,7 +13,7 @@ namespace SncPucmm.Model.Domain
         public long? idUsuarioFacebook;
         public string nombre;
         public string apellido;
-        public string email;
+        public string email = string.Empty;
         public string gender;
 
         #endregion

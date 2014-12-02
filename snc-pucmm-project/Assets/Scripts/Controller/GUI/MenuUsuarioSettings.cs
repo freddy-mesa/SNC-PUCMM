@@ -1,4 +1,5 @@
 ﻿using SncPucmm.Controller.Control;
+using SncPucmm.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,12 +73,20 @@ namespace SncPucmm.Controller.GUI
 
         private void OnToucnPendingFollowingButton(object sender, TouchEventArgs e)
         {
-            
+            MenuManager.GetInstance().AddMenu(new MenuReceiveFollowingRequest("MenuReceiveFollowingRequest"));
+            GetPendingFriendRequest();
         }
 
         private void OnToucnSendFollowingButton(object sender, TouchEventArgs e)
         {
             MenuManager.GetInstance().AddMenu(new MenuSendFollowingRequest("MenuSendFollowingRequest"));
+        }
+
+        private void GetPendingFriendRequest()
+        {
+            //UINotification.StartNotificationLoading = true;
+            var idUser = Convert.ToInt64("10152587482388668");
+            WebService.Instance.GetUserFriendsPendingToFollow(idUser);
         }
 
         private void OnToucnSaveButton(object sender, TouchEventArgs e)

@@ -2,7 +2,7 @@ package sncpucmm
 
 class LocalizacionUsuario {
 
-    Usuario usuario
+    UsuarioFacebook usuario
     Nodo nodo
     Date fechaLocalizacion
 

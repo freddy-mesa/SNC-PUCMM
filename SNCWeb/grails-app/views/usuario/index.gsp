@@ -29,8 +29,6 @@
 
                                 <th>Username</th>
 
-                                <th>Cuenta Facebook</th>
-
                                 <th>Habilidado</th>
 
                             </tr>
@@ -40,8 +38,6 @@
                                 <tr class="${(i % 2) == 0 ? 'even gradeA' : 'odd gradeA'}">
 
                                     <td><g:link action="show" id="${usuarioInstance.id}">${fieldValue(bean: usuarioInstance, field: "username")}</g:link></td>
-
-                                    <td>${fieldValue(bean: usuarioInstance, field: "cuentaFacebook")}</td>
 
                                     <td><g:formatBoolean boolean="${usuarioInstance.enabled}" /></td>
 

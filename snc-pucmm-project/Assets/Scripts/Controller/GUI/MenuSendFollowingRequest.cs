@@ -39,9 +39,36 @@ namespace SncPucmm.Controller.GUI
             buttonExit.OnTouchEvent += new OnTouchEventHandler(OnTouchExitButton);
             buttonList.Add(buttonExit);
 
+            var buttonSend = new Button("ButtonSend");
+            buttonSend.OnTouchEvent += new OnTouchEventHandler(OnTouchSendButton);
+            buttonList.Add(buttonSend);
+
             checkBoxList = new List<CheckBox>();
 
+            UIUtils.DestroyChilds("MenuSendFollowingRequest/ScrollView", true);
             GetUserFriendList();
+        }
+
+        private void OnTouchSendButton(object sender, TouchEventArgs e)
+        {
+           //Seleccionar los CheckBox selecionados para enviar
+            List<long> userToSendFollowingRequest  = new List<long>();
+            foreach (var checkBox in checkBoxList)
+            {
+                if (checkBox.active)
+                {
+                    long idUsuarioFacebook = Convert.ToInt64(checkBox.ObjectTag.GetType().GetProperty("idUsuario").GetValue(checkBox.ObjectTag, null));
+                    userToSendFollowingRequest.Add(idUsuarioFacebook);
+                }
+            }
+
+            if (userToSendFollowingRequest.Count > 0) 
+            {
+                long UserId = Convert.ToInt64(FB.UserId);
+                WebService.Instance.SendFollowingRequest(UserId, userToSendFollowingRequest);
+
+                MenuManager.GetInstance().RemoveCurrentMenu();
+            }
         }
 
         private void OnTouchExitButton(object sender, TouchEventArgs e)

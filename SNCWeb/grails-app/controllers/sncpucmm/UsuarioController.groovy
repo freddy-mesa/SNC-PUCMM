@@ -1,6 +1,9 @@
 package sncpucmm
 
+import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
+import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -101,5 +104,85 @@ class UsuarioController {
             }
             '*'{ render status: NOT_FOUND }
         }
+    }
+
+    @Secured(['permitAll'])
+    def crear(){
+        println "crear -> " + params.id
+        def usuarioSearch = UsuarioFacebook.findByFacebookId(new Long(params.id))
+
+        if(!usuarioSearch){
+            new UsuarioFacebook(
+                facebookId: new Long(params.id),
+                fistname: params.fist_name,
+                lastname: params.last_name,
+                gender: params.gender,
+                email: params.email
+            ).save(flush: true, failOnError: true)
+        }
+    }
+
+    //Recibe una petición de following
+    @Secured(['permitAll'])
+    def followRequest(){
+        println "followRequest -> " + params.json
+        JSONObject request = new JSONObject(params.json)
+        JSONArray users = new JSONArray(request.get("usuarios").toString())
+
+        def usuario = UsuarioFacebook.findByFacebookId(new Long(request.getString("id")))
+
+        users.each {
+            def followed = UsuarioFacebook.findByFacebookId(new Long(it))
+            new FollowUsuario(follower: usuario, followed: followed, estadoSolicitud: "pending", fechaRegistroSolicitud: new Date()).save(flush: true, failOnError: true)
+        }
+    }
+
+    //Recibe la respuesta de solicitud de una petición de following.
+    @Secured(['permitAll'])
+    def followResponse(){
+        println "followResponse -> " + params.followed + " " + params.status + " " + params.follower
+        def followUsuario = FollowUsuario.findByFollowerAndFollowed(UsuarioFacebook.findByFacebookId(new Long(params.follower)), UsuarioFacebook.findByFacebookId(new Long(params.followed)))
+        //println followUsuario
+        if(params.status == "denied"){
+            followUsuario.delete(flush:true)
+        }
+        else if (params.status == "accepted"){
+            followUsuario.estadoSolicitud = "accepted"
+            followUsuario.save(flush: true)
+        }
+    }
+
+    @Secured(['permitAll'])
+    def notifyRequest(){
+        println "Send Notifications to " + params.id
+        def list = FollowUsuario.findAllByFollowedAndEstadoSolicitud(UsuarioFacebook.findByFacebookId(new Long(params.id)), "pending")
+        //println list
+        JSONArray requests = new JSONArray()
+        //println "Lista: "
+        list.each {
+            //println "Followed: " + it.followed.facebookId + " Follower: " + it.follower.facebookId
+            JSONObject request = new JSONObject()
+            request.put("id", it.follower.facebookId.toString())
+            request.put("name", it.follower.fistname + " " + it.follower.lastname)
+            requests.add(request)
+        }
+        render requests as JSON
+    }
+
+    //Usuarios a los que un usuario sigue.
+    @Secured(['permitAll'])
+    def following(){
+        println "Get following (Accept or Pending) friend: -> " + params.id
+        def following = (Set<FollowUsuario>)FollowUsuario.findAllByFollowerAndEstadoSolicitud(UsuarioFacebook.findByFacebookId(new Long(params.id)), "accepted")
+        def followingPending = (Set<FollowUsuario>)FollowUsuario.findAllByFollowerAndEstadoSolicitud(UsuarioFacebook.findByFacebookId(new Long(params.id)), "pending")
+        following.addAll(followingPending)
+        //println "Following Size: " + following.size()
+        JSONArray list = new JSONArray()
+        following.each {
+            JSONObject user = new JSONObject()
+            user.put("id", it.followed.facebookId.toString())
+            list.add(user)
+        }
+        render list as JSON
     }
 }

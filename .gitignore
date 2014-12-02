@@ -60,6 +60,7 @@ hs_err_pid*
 /web-app/plugins
 # "temporary" build files
 /SNCWeb/target
+/SNCWeb/.idea/workspace.xml
 
 
 #Maven

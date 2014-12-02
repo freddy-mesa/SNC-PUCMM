@@ -52,7 +52,7 @@ namespace SncPucmm.Controller.Facebook
             {
                 //Login correcto
                 lastResponse = "Login was successful!";
-                WebService.Instance.GetUsuario();
+                WebService.Instance.GetUsuario(Convert.ToInt64(FB.UserId));
                 MenuManager.GetInstance().GetCurrentMenu().Update();
             }
 

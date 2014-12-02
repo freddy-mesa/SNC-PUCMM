@@ -285,6 +285,19 @@ namespace SncPucmm.Database
 				new Dictionary<string, string[]> { }
 			));
 
+			sqlBuilder.Append(CreateTableQuery(
+				"UserFollowingNotification",
+				new Dictionary<string, string>
+				{
+					{"id","integer"},
+					{"idUsuarioFacebook","text"},
+					{"idFollower","text"},
+					{"nombre","text"}
+				},
+				new Dictionary<string, string[]> { },
+				new Dictionary<string, string[]> { }
+			));
+
 			TransactionalQuery(sqlBuilder.ToString());
 		}
 
@@ -1369,6 +1382,7 @@ namespace SncPucmm.Database
 			sqlBuilder.Append("DROP TABLE UsuarioTour;");
 			sqlBuilder.Append("DROP TABLE DetalleUsuarioTour;");
 			sqlBuilder.Append("DROP TABLE UsuarioLocalizacion;");
+			sqlBuilder.Append("DROP TABLE UserFollowingNotification;");
 
 			TransactionalQuery(sqlBuilder.ToString());
 		}
