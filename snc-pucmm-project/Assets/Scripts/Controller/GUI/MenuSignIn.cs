@@ -1,5 +1,4 @@
 ﻿using SncPucmm.Controller.Control;
-using SncPucmm.Controller.Facebook;
 using SncPucmm.View;
 using System;
 using System.Collections.Generic;
@@ -57,6 +56,17 @@ namespace SncPucmm.Controller.GUI
             }
             else
             {
+                //FacebookController.Init();
+
+                //if (FB.IsInitialized)
+                //{
+                //    FacebookController.Login();
+                //}
+                //else
+                //{
+                //    UINotification.StartNotificationNoInternet = true;
+                //}
+
                 UINotification.StartNotificationNoInternet = true;
             }
         }

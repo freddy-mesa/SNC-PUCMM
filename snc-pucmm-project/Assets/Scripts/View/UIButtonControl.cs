@@ -16,7 +16,7 @@ namespace SncPucmm.View
 		/// </summary>
 		public void OnClick()
 		{
-			if (!isMoving && !isZooming && !isRotating)
+			if (!isMoving && !isZooming && !isRotating && !isButtonTapped)
 			{
 				isButtonTapped = true;
 

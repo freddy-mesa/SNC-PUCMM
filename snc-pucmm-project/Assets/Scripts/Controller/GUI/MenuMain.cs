@@ -10,18 +10,16 @@ using SncPucmm.Database;
 using SncPucmm.View;
 using SncPucmm.Model.Domain;
 using SncPucmm.Model;
-using SncPucmm.Controller.Facebook;
 
 namespace SncPucmm.Controller.GUI
 {
-	class MenuMain : IMenu, ITextBox, IButton, IScrollView
+	class MenuMain : IMenu, IButton, IScrollView
 	{
 		#region Atributos
 
 		private string name;
 
 		List<Button> buttonList;
-		List<TextBox> textBoxList;
 		ScrollView treeView;
 
 		#endregion
@@ -70,17 +68,67 @@ namespace SncPucmm.Controller.GUI
 			ButtonLogout.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonSignOut);
 			buttonList.Add(ButtonLogout);
 
-			textBoxList = new List<TextBox>();
+			var ButtonFind = new Button("ButtonFind");
+			ButtonFind.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonFind);
+			buttonList.Add(ButtonFind);
 
-			var searchTextBox = new TextBox("SearchBox");
-			searchTextBox.OnChangeEvent += new OnChangeEventHandler(OnChangeSearchTextBox);
-			textBoxList.Add(searchTextBox);
+			var ButtonClearText = new Button("ButtonClearText");
+			ButtonClearText.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonClearText);
+			buttonList.Add(ButtonClearText);
+
+			var ButtonLocateMe = new Button("ButtonLocateMe");
+			ButtonLocateMe.OnTouchEvent += new OnTouchEventHandler(OnTouchButtonLocateMe);
+			buttonList.Add(ButtonLocateMe);
 
 			treeView = new ScrollView("TreeView");
 			treeView.OnChangeEvent += new OnChangeEventHandler(OnChangeScrollTreeView);
 			treeView.OnCloseEvent += new OnCloseEventHandler(OnCloseScrollTreeView);
 
 			this.Update();
+		}
+
+		private void OnTouchButtonClearText(object sender, TouchEventArgs e)
+		{
+			ClearSearchBoxText();	
+		}
+
+		private void ClearSearchBoxText()
+		{
+			var bar = UIUtils.FindGUI(name + "/Bar").transform;
+			bar.FindChild("ButtonFind").gameObject.SetActive(true);
+
+			bar.FindChild("ButtonClearText").gameObject.SetActive(false);
+			
+			var searchBox = bar.FindChild("SearchBox");
+			searchBox.GetComponent<UIInput>().value = "";
+			searchBox.gameObject.SetActive(false);
+
+			UIUtils.DestroyChilds(name + "/TreeView/ScrollView", true);
+			
+			UIUtils.FindGUI(name + "/ButtonLocateMe").SetActive(true);
+			UIUtils.ActivateCameraLabels(true);
+		}
+
+		private void OnTouchButtonLocateMe(object sender, TouchEventArgs e)
+		{
+			UIUtils.MoveCameraToUser();
+		}
+
+		private void OnTouchButtonFind(object sender, TouchEventArgs e)
+		{
+			var bar = UIUtils.FindGUI(name + "/Bar").transform;
+
+			bar.FindChild("ButtonFind").gameObject.SetActive(false);
+			bar.FindChild("ButtonClearText").gameObject.SetActive(true);
+
+			var searchbox = bar.FindChild("SearchBox").gameObject;
+			searchbox.SetActive(true);
+
+			var scrollView = UIUtils.FindGUI(name + "/TreeView/ScrollView");
+			scrollView.GetComponent<UIScrollViewControl>().SetTextSearch(searchbox.transform);
+
+			UIUtils.ActivateCameraLabels(false);
+			UIUtils.FindGUI(name + "/ButtonLocateMe").SetActive(false);
 		}
 
 		private void OnTouchButtonMain(object sender, TouchEventArgs e)
@@ -96,12 +144,12 @@ namespace SncPucmm.Controller.GUI
 
 			if (sidebar.transform.localPosition.x > -130)
 			{
-				position = -0.60f;
+				position = -0.61f;
 				State.ChangeState(eState.Exploring);
 			}
 			else
 			{
-				position = 0.60f;
+				position = 0.61f;
 				State.ChangeState(eState.MenuMain);
 			}
 
@@ -131,7 +179,8 @@ namespace SncPucmm.Controller.GUI
 		private void OnTouchButtonBuscarAmigos(object sender, TouchEventArgs e)
 		{
 			OpenCloseMainMenu();
-			//MenuManager.GetInstance().AddMenu(new MenuUsuarioFollowing("MenuUsuarioFollowing"));
+			MenuManager.GetInstance().AddMenu(new MenuFindFriendSelection("MenuFindFriendSelection"));
+			WebService.Instance.GetFriends();
 		}
 
 		private void OnTouchButtonUsuario(object sender, TouchEventArgs e)
@@ -174,14 +223,6 @@ namespace SncPucmm.Controller.GUI
 			OpenMenuBuilding(node);
 		}
 
-		private void OnChangeSearchTextBox(object sender, ChangeEventArgs e)
-		{
-			var text = e.Mensaje as String;
-			var textBox = sender as TextBox;
-
-			textBox.Text = text;
-		}
-
 		private void OpenMenuBuilding(ModelNode node)
 		{
 			UIUtils.ActivateCameraLabels(false);
@@ -200,13 +241,6 @@ namespace SncPucmm.Controller.GUI
 			var localizacion = (ModelNode) button.ObjectTag;
 
 			treeView.OnClose(null);
-
-			var textBox = UIUtils.FindGUI("MenuMain/Bar/SearchBox").GetComponent<UITextBoxControl>();
-
-			if (textBox.GetUIKeyBoard() != null)
-			{
-				textBox.GetUIKeyBoard().Close();
-			}
 
 			OpenMenuBuilding(localizacion);
 		}
@@ -228,9 +262,6 @@ namespace SncPucmm.Controller.GUI
 
 			DeleteScrollTreeViewItem();
 
-			//Activando el ScrollTreeView
-			UIUtils.FindGUI("MenuMain/TreeView/ScrollView").SetActive(false);
-
 			UIUtils.ActivateCameraLabels(false);
 
 			State.ChangeState(eState.Exploring);
@@ -240,7 +271,7 @@ namespace SncPucmm.Controller.GUI
 		private void OpenScrollTreeView(string searchText, Transform Parent, GameObject Template)
 		{
 			//Activando el ScrollTreeView
-			UIUtils.FindGUI("MenuMain/TreeView/ScrollView").SetActive(true);
+			//UIUtils.FindGUI("MenuMain/TreeView/ScrollView").SetActive(true);
 			
 			UIUtils.ActivateCameraLabels(false);
 
@@ -249,9 +280,10 @@ namespace SncPucmm.Controller.GUI
 			//Obteniendo de la Base de datos
 			using (var sqlService = new SQLiteService())
 			{
+				
 				var sql = "SELECT nombre, idUbicacion, idNodo, edificio " +
 						"FROM Nodo " +
-						"WHERE idUbicacion is not null and nombre LIKE '%" + searchText + "%' " +
+						"WHERE idUbicacion is not null and nombre not like '%Nodo%' and nombre LIKE '%" + searchText + "%' " +
 						"ORDER BY idUbicacion, idNodo";
 
 				using (var reader = sqlService.SelectQuery(sql))
@@ -260,10 +292,10 @@ namespace SncPucmm.Controller.GUI
 					{
 						var lugar = new
 						{
-							nombre = reader["nombre"],
-							ubicacion = reader["idUbicacion"],
-							node = reader["idNodo"],
-							edificio = reader["edificio"]
+							nombre = Convert.ToString(reader["nombre"]),
+							ubicacion = Convert.ToString(reader["idUbicacion"]),
+							node = Convert.ToString(reader["idNodo"]),
+							edificio = Convert.ToString(reader["edificio"])
 						};
 
 						textList.Add(lugar);
@@ -276,6 +308,12 @@ namespace SncPucmm.Controller.GUI
 
 			//Eliminando los item del tree view de la lista de botones de MenuMain
 			DeleteScrollTreeViewItem();
+
+			Parent.GetComponent<UIScrollView>().ResetPosition();
+			Parent.GetComponent<UIPanel>().clipOffset = new Vector2(2, -4.5f);
+			Parent.localPosition = new Vector3(Parent.localPosition.x, 95.5f, Parent.localPosition.z);
+
+			string edificioName = string.Empty;
 
 			//Agregando los hijos al Tree View List
 			for (int i = 0; i < textList.Count; i++)
@@ -304,23 +342,25 @@ namespace SncPucmm.Controller.GUI
 				var nombre = Convert.ToString(textList[i].GetType().GetProperty("nombre").GetValue(textList[i], null));
 				var ubicacion = Convert.ToInt32(textList[i].GetType().GetProperty("ubicacion").GetValue(textList[i], null));
 				var node = Convert.ToInt32(textList[i].GetType().GetProperty("node").GetValue(textList[i], null));
-				var edificio = Convert.ToInt32(textList[i].GetType().GetProperty("edificio").GetValue(textList[i], null));
+				int edificio;
+				int.TryParse(Convert.ToString(textList[i].GetType().GetProperty("edificio").GetValue(textList[i], null)), out edificio);
 
 				//Si son iguales la localizacion es un nombre de un edificio
-				if (ubicacion == edificio)
+				if (edificio != 0)
 				{
 					itemText.text = nombre;
+					edificioName = nombre;
 				}
 				//De lo contrario esta dentro del edificio
 				else
 				{
 					//Se agrega un padding de 5 espacios
-					itemText.text = nombre.PadLeft(5, ' ');
+					itemText.text = edificioName + " - " + nombre;
 				}
 
 				var button = new Button(item.name);
 				button.OnTouchEvent += new OnTouchEventHandler(OnTouchScrollTreeViewItem);
-				button.ObjectTag = new ModelNode() { idNodo = node, idUbicacion = ubicacion, name = nombre };
+				button.ObjectTag = new ModelNode() { idNodo = node, idUbicacion = ubicacion, name = nombre, isBuilding = (edificio != 0 ? true : false) };
 
 				buttonList.Add(button);
 				treeView.ButtonCount++;
@@ -358,7 +398,7 @@ namespace SncPucmm.Controller.GUI
 
 		#endregion
 
-		#region Implement Methods
+		#region Implementados
 
 		public string GetMenuName()
 		{
@@ -390,17 +430,14 @@ namespace SncPucmm.Controller.GUI
 				sidebar.FindChild("ButtonSignOut").gameObject.SetActive(false);
 			}
 
+			ClearSearchBoxText();
+
 			State.ChangeState(eState.MenuMain);
 		}
 
 		public List<Button> GetButtonList()
 		{
 			return buttonList;
-		}
-
-		public List<TextBox> GetTextBoxList()
-		{
-			return textBoxList;
 		}
 
 		public ScrollView GetScrollView()
@@ -418,7 +455,7 @@ namespace SncPucmm.Controller.GUI
 		{
 			this.buttonList = null;
 			this.name = null;
-			this.textBoxList = null;
+			this.treeView = null;
 		}
 
 		#endregion

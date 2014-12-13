@@ -4,6 +4,7 @@ class Usuario {
 
     transient springSecurityService
 
+    UsuarioFacebook usuarioFacebook
     String username
     String password
     boolean enabled = true
@@ -16,6 +17,7 @@ class Usuario {
     static constraints = {
         username blank: false, unique: true
         password blank: false
+        usuarioFacebook nullable: true
     }
 
     static mapping = {

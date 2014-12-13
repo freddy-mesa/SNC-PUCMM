@@ -15,6 +15,7 @@ namespace SncPucmm.Model.Domain
         public string apellido;
         public string email = string.Empty;
         public string gender;
+        public bool? isTourCreator;
 
         #endregion
 
@@ -52,6 +53,8 @@ namespace SncPucmm.Model.Domain
                         this.email = json.list[i].str;
                     else if (key == "gender")
                         this.gender = json.list[i].str;
+                    else if (key == "tourCreator")
+                        this.isTourCreator = Convert.ToBoolean(json.list[i].n);
                 }
             }
         }

@@ -7,14 +7,12 @@ using System.Text;
 
 namespace SncPucmm.Controller.GUI
 {
-    class MenuUsuarioSettings : IMenu, ICheckBox, IButton
+    class MenuUsuarioSettings : IMenu, IButton
     {
         #region Atributos
 
         string name;
         List<Button> buttonList;
-        List<CheckBox> checkboxList;
-
         #endregion
 
         #region Constructor
@@ -40,24 +38,30 @@ namespace SncPucmm.Controller.GUI
             var buttonSendFollowing = new Button("ButtonSendFollowingRequest");
             buttonSendFollowing.OnTouchEvent += new OnTouchEventHandler(OnToucnSendFollowingButton);
             buttonList.Add(buttonSendFollowing);
-            
-            var buttonSave = new Button("ButtonSave");
-            buttonSave.OnTouchEvent += new OnTouchEventHandler(OnToucnSaveButton);
-            buttonList.Add(buttonSave);
+
+            var buttonReceiveShareLocation = new Button("ButtonReceiveShareLocationRequest");
+            buttonReceiveShareLocation.OnTouchEvent += new OnTouchEventHandler(OnToucnReceiveShareLocationButton);
+            buttonList.Add(buttonReceiveShareLocation);
+
+            var buttonSendShareLocation = new Button("ButtonSendShareLocationRequest");
+            buttonSendShareLocation.OnTouchEvent += new OnTouchEventHandler(OnToucnSendShareLocationButton);
+            buttonList.Add(buttonSendShareLocation);
 
             var buttonExit = new Button("ButtonExit");
             buttonExit.OnTouchEvent += new OnTouchEventHandler(OnToucnExitButton);
             buttonList.Add(buttonExit);
+        }
 
-            checkboxList = new List<CheckBox>();
+        private void OnToucnSendShareLocationButton(object sender, TouchEventArgs e)
+        {
+            MenuManager.GetInstance().AddMenu(new MenuShareLocationFriendSelection("MenuShareLocationFriendSelection"));
+        }
 
-            var chkPreferencia1 = new CheckBox("CheckBoxPreferencia1");
-            chkPreferencia1.OnChangeEvent += new OnChangeEventHandler(OnChangeCheckBox);
-            checkboxList.Add(chkPreferencia1);
-
-            var chkPreferencia2 = new CheckBox("CheckBoxPreferencia2");
-            chkPreferencia2.OnChangeEvent += new OnChangeEventHandler(OnChangeCheckBox);
-            checkboxList.Add(chkPreferencia2);
+        private void OnToucnReceiveShareLocationButton(object sender, TouchEventArgs e)
+        {
+            MenuManager.GetInstance().AddMenu(new MenuReceiveShareLocationRequest("MenuReceiveShareLocationRequest"));
+            UINotification.StartNotificationLoading = true;
+            WebService.Instance.GetFriends();
         }
 
         private void OnToucnExitButton(object sender, TouchEventArgs e)
@@ -71,27 +75,16 @@ namespace SncPucmm.Controller.GUI
             selectedCheckBox.active = !selectedCheckBox.active;
         }
 
-        private void OnToucnPendingFollowingButton(object sender, TouchEventArgs e)
-        {
-            MenuManager.GetInstance().AddMenu(new MenuReceiveFollowingRequest("MenuReceiveFollowingRequest"));
-            GetPendingFriendRequest();
-        }
-
         private void OnToucnSendFollowingButton(object sender, TouchEventArgs e)
         {
             MenuManager.GetInstance().AddMenu(new MenuSendFollowingRequest("MenuSendFollowingRequest"));
         }
 
-        private void GetPendingFriendRequest()
+        private void OnToucnPendingFollowingButton(object sender, TouchEventArgs e)
         {
-            //UINotification.StartNotificationLoading = true;
-            var idUser = Convert.ToInt64("10152587482388668");
-            WebService.Instance.GetUserFriendsPendingToFollow(idUser);
-        }
-
-        private void OnToucnSaveButton(object sender, TouchEventArgs e)
-        {
-            throw new NotImplementedException();
+            MenuManager.GetInstance().AddMenu(new MenuReceiveFollowingRequest("MenuReceiveFollowingRequest"));
+            UINotification.StartNotificationLoading = true;
+            WebService.Instance.GetUserFriendsPendingToFollow();
         }
 
         #region Implemented
@@ -104,11 +97,6 @@ namespace SncPucmm.Controller.GUI
         public void Update()
         {
             
-        }
-
-        public List<CheckBox> GetCheckBoxList()
-        {
-            return this.checkboxList;
         }
 
         public List<Button> GetButtonList()

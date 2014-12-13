@@ -79,9 +79,9 @@ namespace SncPucmm.View
 
                     if (State.GetCurrentState() == eState.Exploring)
                     {
-                        if (this is UIModel && !isMoving && !isRotating && !isZooming)
+                        if (this is UIModel && !isMoving && !isRotating && !isZooming && !isButtonTapped)
                         {
-                            if (Input.GetTouch(i).phase == TouchPhase.Stationary && !isButtonTapped)
+                            if (!isModelTapped && Input.GetTouch(i).phase == TouchPhase.Stationary)
                             {
                                 ray = Camera.main.ScreenPointToRay(objectPosition);
                                 if (Physics.Raycast(ray, out rayHitInfo))
@@ -90,11 +90,11 @@ namespace SncPucmm.View
                                     if (locationObject != null && locationObject.tag.Equals("Building"))
                                     {
                                         locationTapped = locationObject.GetComponent<ModelObject>().Id;
-                                        isButtonTapped = true;
+                                        isModelTapped = true;
                                     }
                                 }
                             }
-                            else if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                            else if (isModelTapped && Input.GetTouch(i).phase == TouchPhase.Ended)
                             {
                                 ray = Camera.main.ScreenPointToRay(objectPosition);
                                 if (Physics.Raycast(ray, out rayHitInfo))
@@ -113,9 +113,9 @@ namespace SncPucmm.View
                     }
                     else if (State.GetCurrentState() == eState.MenuInsideBuilding)
                     {
-                        if (this is UIInsideBuilding && !isMoving && !isRotating && !isZooming)
+                        if (this is UIInsideBuilding && !isMoving && !isRotating && !isZooming && !isButtonTapped)
                         {
-                            if (Input.GetTouch(i).phase == TouchPhase.Stationary && !isButtonTapped)
+                            if (!isModelTapped && Input.GetTouch(i).phase == TouchPhase.Stationary)
                             {
                                 ray = Camera.main.ScreenPointToRay(objectPosition);
                                 if (Physics.Raycast(ray, out rayHitInfo))
@@ -124,11 +124,11 @@ namespace SncPucmm.View
                                     if (locationObject != null && locationObject.tag.Equals("InsideBuilding"))
                                     {
                                         insideLocationTapped = locationObject.name;
-                                        isButtonTapped = true;
+                                        isModelTapped = true;
                                     }
                                 }
                             }
-                            else if (Input.GetTouch(i).phase == TouchPhase.Ended)
+                            else if (isModelTapped && Input.GetTouch(i).phase == TouchPhase.Ended)
                             {
                                 ray = Camera.main.ScreenPointToRay(objectPosition);
                                 if (Physics.Raycast(ray, out rayHitInfo))
@@ -146,7 +146,7 @@ namespace SncPucmm.View
             }
             else
             {
-                isMoving = isRotating = isZooming = isButtonTapped = false;
+                isMoving = isRotating = isZooming = isButtonTapped = isModelTapped = false;
                 locationTapped = 0;
                 insideLocationTapped = "";
             }

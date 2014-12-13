@@ -1,4 +1,5 @@
-﻿using SncPucmm.Model;
+﻿using SncPucmm.Database;
+using SncPucmm.Model;
 using SncPucmm.Model.Domain;
 using SncPucmm.View;
 using System;
@@ -81,6 +82,15 @@ namespace SncPucmm.Controller.Tours
                     });
 
                     detalleUsuarioTour.fechaInicio = DateTime.Now;
+
+                    using (var sqlService = new SQLiteService())
+                    {
+                        sqlService.TransactionalQuery(
+                            "UPDATE DetalleUsuarioTour SET " +
+                            "fechaInicio = '" + detalleUsuarioTour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") + "' " +
+                            "WHERE id = " + detalleUsuarioTour.idDetalleUsuarioTour
+                        );
+                    }
                 }
                 else if (!isEndingSectionTour && currentSectionTourData.Hasta == nodeName)
                 {
@@ -90,7 +100,16 @@ namespace SncPucmm.Controller.Tours
                         return detalle.idPuntoReunionTour == currentSectionTourData.IdPuntoReuionNodoHasta;
                     });
 
-                    detalleUsuarioTour.fechaFin = DateTime.Now;
+                    detalleUsuarioTour.fechaLlegada = DateTime.Now;
+
+                    using (var sqlService = new SQLiteService())
+                    {
+                        sqlService.TransactionalQuery(
+                            "UPDATE DetalleUsuarioTour SET " +
+                            "fechaLlegada = '" + detalleUsuarioTour.fechaLlegada.Value.ToString("dd/MM/yyyy HH:mm:ss") + "' " +
+                            "WHERE id = " + detalleUsuarioTour.idDetalleUsuarioTour
+                        );
+                    }
                 }
             }
 

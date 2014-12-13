@@ -116,20 +116,16 @@ namespace SncPucmm.Controller.GUI
 
 		private void Process(Tour tour, out UsuarioTour usuarioTour, out List<DetalleUsuarioTour> detalleUsuarioTourList)
 		{
-			//var user =  ModelPoolManager.GetInstance().GetValue("Usuario") as Usuario;
-
-			//Del tour seleccionado verificar si el usuario esta suscrito
-			//var result = SQLiteService.GetInstance().Query(true,
-			//    "SELECT * FROM UsuarioTour "+
-			//    "WHERE idUsuario = "+ user.idUsuario +" AND idTour = " + tour.idTour
-			//);
-
 			UsuarioTour userTour = null;
 			List<DetalleUsuarioTour> detailsList = new List<DetalleUsuarioTour>();
 
 			using (var sqlService = new SQLiteService())
 			{
-				using (var resultUsuarioTour = sqlService.SelectQuery("SELECT * FROM UsuarioTour WHERE idTour = " + tour.idTour))
+				var user = ModelPoolManager.GetInstance().GetValue("Usuario") as Usuario;
+
+				//Del tour seleccionado verificar si el usuario esta suscrito
+				var sqlQuery = "SELECT * FROM UsuarioTour WHERE idUsuario = "+ user.idUsuario +" AND idTour = " + tour.idTour;
+				using (var resultUsuarioTour = sqlService.SelectQuery(sqlQuery))
 				{
 					//El UsuarioTour ya ha sido creado
 					if (resultUsuarioTour.Read())
@@ -161,6 +157,7 @@ namespace SncPucmm.Controller.GUI
 
 						userTour = new UsuarioTour()
 						{
+							idUsuario = user.idUsuario,
 							idUsuarioTour = Convert.ToInt32(resultUsuarioTour["id"]),
 							idTour = Convert.ToInt32(resultUsuarioTour["idTour"]),
 							estado = Convert.ToString(resultUsuarioTour["estado"]),
@@ -249,33 +246,33 @@ namespace SncPucmm.Controller.GUI
 						//Creacion del UsuarioTour
 
 						//Insertando en la base de datos
-						//SQLiteService.GetInstance().Query(false, 
-						//    "INSERT INTO UsuarioTour (id, idTour, idUsuario, request) "+
-						//    "VALUES ("+ idUsuarioTour +","+ tour.idTour +","+ user.idUsuario +",'create')"
-						//);
-
 						sqlService.TransactionalQuery(
-							"INSERT INTO UsuarioTour (id, idTour, fechaInicio, request) " +
-							"VALUES (" + idUsuarioTour + "," + tour.idTour + ",'" + fechaInicio.ToString("dd/MM/yyyy HH:mm:ss") + "','create')"
+							"INSERT INTO UsuarioTour (id, idTour, idUsuario, fechaInicio, request) " +
+							"VALUES (" + idUsuarioTour + "," + tour.idTour + "," + user.idUsuario + ",'" + fechaInicio.ToString("dd/MM/yyyy HH:mm:ss") + "','create')"
 						);
 
-						//Creacion del objeto de UsuarioTour
-						//userTour = new UsuarioTour()
-						//{
-						//    idUsuarioTour = idUsuarioTour,
-						//    fechaInicio = fechaInicio,
-						//    idTour = tour.idTour,
-						//    estado = "activo",
-						//    idUsuario = user.idUsuario,
-						//};
+						//sqlService.TransactionalQuery(
+						//    "INSERT INTO UsuarioTour (id, idTour, fechaInicio, request) " +
+						//    "VALUES (" + idUsuarioTour + "," + tour.idTour + ",'" + fechaInicio.ToString("dd/MM/yyyy HH:mm:ss") + "','create')"
+						//);
 
+						//Creacion del objeto de UsuarioTour
 						userTour = new UsuarioTour()
 						{
 							idUsuarioTour = idUsuarioTour,
 							fechaInicio = fechaInicio,
 							idTour = tour.idTour,
 							estado = "activo",
+							idUsuario = user.idUsuario,
 						};
+
+						//userTour = new UsuarioTour()
+						//{
+						//    idUsuarioTour = idUsuarioTour,
+						//    fechaInicio = fechaInicio,
+						//    idTour = tour.idTour,
+						//    estado = "activo",
+						//};
 
 						#endregion
 

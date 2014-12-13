@@ -1,5 +1,4 @@
 ﻿using SncPucmm.Controller.Control;
-using SncPucmm.Controller.Facebook;
 using SncPucmm.View;
 using System;
 using System.Collections.Generic;
@@ -64,8 +63,7 @@ namespace SncPucmm.Controller.GUI
 
             if (userToSendFollowingRequest.Count > 0) 
             {
-                long UserId = Convert.ToInt64(FB.UserId);
-                WebService.Instance.SendFollowingRequest(UserId, userToSendFollowingRequest);
+                WebService.Instance.SendFollowingRequest(userToSendFollowingRequest);
 
                 MenuManager.GetInstance().RemoveCurrentMenu();
             }

@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: LabelAccuracy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400002}
   - 114: {fileID: 11400002}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: LabelPosZ
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400004}
   - 114: {fileID: 11400004}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: LabelAltitude
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400006}
   - 114: {fileID: 11400006}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: LabelLatitude
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400008}
   - 114: {fileID: 11400008}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: LabelLongitude
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400010}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: CameraLabels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400012}
   - 114: {fileID: 11400010}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: LabelPosX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -56.9999886, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400008}
@@ -233,7 +233,7 @@ MonoBehaviour:
   mPivot: 4
   mWidth: 174
   mHeight: 22
-  mDepth: 2
+  mDepth: -1
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
@@ -295,7 +295,7 @@ MonoBehaviour:
   mPivot: 4
   mWidth: 166
   mHeight: 22
-  mDepth: 2
+  mDepth: -1
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
@@ -357,7 +357,7 @@ MonoBehaviour:
   mPivot: 4
   mWidth: 174
   mHeight: 22
-  mDepth: 2
+  mDepth: -1
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
@@ -419,7 +419,7 @@ MonoBehaviour:
   mPivot: 4
   mWidth: 174
   mHeight: 22
-  mDepth: 2
+  mDepth: -1
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
@@ -481,7 +481,7 @@ MonoBehaviour:
   mPivot: 4
   mWidth: 174
   mHeight: 22
-  mDepth: 2
+  mDepth: -1
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
@@ -543,7 +543,7 @@ MonoBehaviour:
   mPivot: 4
   mWidth: 166
   mHeight: 22
-  mDepth: 1
+  mDepth: -1
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0

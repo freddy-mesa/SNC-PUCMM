@@ -27,7 +27,7 @@
     <OutputPath>Temp\UnityVS_bin\Debug\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DEBUG;TRACE;UNITY_4_5_3;UNITY_4_5;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_4_5_3;UNITY_4_5;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <OutputPath>Temp\UnityVS_bin\Release\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>TRACE;UNITY_4_5_3;UNITY_4_5;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE</DefineConstants>
+    <DefineConstants>TRACE;UNITY_4_5_3;UNITY_4_5;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -315,12 +315,18 @@
     <Compile Include="Assets\Scripts\Controller\Control\ITextBox.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\ScrollView.cs" />
     <Compile Include="Assets\Scripts\Controller\Control\TextBox.cs" />
-    <Compile Include="Assets\Scripts\Controller\Facebook\FacebookController.cs" />
+    <Compile Include="Assets\Scripts\Controller\FacebookController.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\MenuAcceptanceFollowingRequest.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuBuilding.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\MenuFindFriendSelection.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\MenuFindFriend.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuInsideBuilding.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuMain.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuNavigation.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuReceiveFollowingRequest.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\MenuReceiveShareLocationRequest.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\MenuShareLocationFriendSelection.cs" />
+    <Compile Include="Assets\Scripts\Controller\GUI\MenuSendShareLocationRequest.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuSendFollowingRequest.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuSignIn.cs" />
     <Compile Include="Assets\Scripts\Controller\GUI\MenuTourSelection.cs" />
@@ -369,7 +375,6 @@
     <Compile Include="Assets\Scripts\View\UINotification.cs" />
     <Compile Include="Assets\Scripts\View\UIResolution.cs" />
     <Compile Include="Assets\Scripts\View\UIScrollViewControl.cs" />
-    <Compile Include="Assets\Scripts\View\UITextBoxControl.cs" />
     <Compile Include="Assets\Scripts\View\UITouch.cs" />
     <Compile Include="Assets\Scripts\View\UITour.cs" />
     <Compile Include="Assets\Scripts\View\UIUtils.cs" />
@@ -449,6 +454,9 @@
     <None Include="Assets\Plugins\Android\classes\AndroidManifest.xml" />
     <None Include="Assets\Plugins\Android\classes\build.xml" />
     <None Include="Assets\Plugins\Android\facebook\AndroidManifest.xml" />
+    <None Include="Assets\Plugins\Android\facebook\bin\AndroidManifest.xml" />
+    <None Include="Assets\Plugins\Android\facebook\bin\proguard.txt" />
+    <None Include="Assets\Plugins\Android\facebook\bin\R.txt" />
     <None Include="Assets\Plugins\Android\facebook\build.xml" />
     <None Include="Assets\Plugins\Android\facebook\proguard-project.txt" />
     <None Include="Assets\Plugins\Android\facebook\res\drawable\com_facebook_button_blue.xml" />

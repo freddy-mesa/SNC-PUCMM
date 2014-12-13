@@ -1,6 +1,7 @@
 ﻿using SncPucmm.Controller;
 using SncPucmm.Controller.GUI;
 using SncPucmm.Controller.Navigation;
+using SncPucmm.Database;
 using SncPucmm.Model;
 using UnityEngine;
 
@@ -115,6 +116,14 @@ namespace SncPucmm.View
                 var modelNode = objectCollider.GetComponent<ModelObject>().ObjectTag as ModelNode;
 
                 BuildingColliding = modelNode.name;
+
+                if (FB.IsLoggedIn)
+                {
+                    using (var sqlite = new SQLiteService())
+                    {
+                        sqlite.UpdateUserLocation(modelNode.idNodo);
+                    }
+                }
             }
         }
 

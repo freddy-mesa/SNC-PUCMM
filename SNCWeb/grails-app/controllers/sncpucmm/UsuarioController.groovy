@@ -1,5 +1,6 @@
 package sncpucmm
 
+import com.google.gson.JsonArray
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import org.codehaus.groovy.grails.web.json.JSONArray
@@ -153,7 +154,7 @@ class UsuarioController {
     }
 
     @Secured(['permitAll'])
-    def notifyRequest(){
+    def notifyFollowingRequest(){
         println "Send Notifications to " + params.id
         def list = FollowUsuario.findAllByFollowedAndEstadoSolicitud(UsuarioFacebook.findByFacebookId(new Long(params.id)), "pending")
         //println list
@@ -173,10 +174,14 @@ class UsuarioController {
     @Secured(['permitAll'])
     def following(){
         println "Get following (Accept or Pending) friend: -> " + params.id
-        def following = (Set<FollowUsuario>)FollowUsuario.findAllByFollowerAndEstadoSolicitud(UsuarioFacebook.findByFacebookId(new Long(params.id)), "accepted")
-        def followingPending = (Set<FollowUsuario>)FollowUsuario.findAllByFollowerAndEstadoSolicitud(UsuarioFacebook.findByFacebookId(new Long(params.id)), "pending")
-        following.addAll(followingPending)
-        //println "Following Size: " + following.size()
+        def usuario = UsuarioFacebook.findByFacebookId(new Long(params.id))
+        def followedAccepted = (Set<FollowUsuario>)FollowUsuario.findAllWhere(follower: usuario, estadoSolicitud:  "accepted")
+        def followedPending = (Set<FollowUsuario>)FollowUsuario.findAllWhere(follower: usuario,estadoSolicitud:  "pending")
+        def followerAccepted = (Set<FollowUsuario>)FollowUsuario.findAllWhere(followed: usuario, estadoSolicitud:  "accepted")
+        def followerPending = (Set<FollowUsuario>)FollowUsuario.findAllWhere(followed: usuario,estadoSolicitud:  "pending")
+
+        def following = followedAccepted + followedPending + followerAccepted + followerPending
+
         JSONArray list = new JSONArray()
         following.each {
             JSONObject user = new JSONObject()
@@ -184,5 +189,77 @@ class UsuarioController {
             list.add(user)
         }
         render list as JSON
+    }
+
+    @Secured(['permitAll'])
+    def friends(){
+        def usuario = UsuarioFacebook.findByFacebookId(new Long(params.id))
+        JSONArray list = new JSONArray()
+
+        def follower = FollowUsuario.findAllWhere(followed: usuario, estadoSolicitud: "accepted")
+        follower.each {it ->
+            def user = LocalizacionUsuario.findByUsuario(it.follower)
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("id",user.usuario.facebookId.toString())
+            jsonObject.put("nombre",user.usuario.fistname + " " + user.usuario.lastname)
+            jsonObject.put("ubicacion",user.nodo.ubicacion.abreviacion)
+            jsonObject.put("fecha",user.fechaLocalizacion)
+
+            list.add(jsonObject)
+        }
+
+        def followed = FollowUsuario.findAllWhere(follower: usuario, estadoSolicitud: "accepted")
+        followed.each {it ->
+            def user = LocalizacionUsuario.findByUsuario(it.followed)
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("id",user.usuario.facebookId.toString())
+            jsonObject.put("nombre",user.usuario.fistname + " " + user.usuario.lastname)
+            jsonObject.put("ubicacion",user.nodo.ubicacion.abreviacion)
+            jsonObject.put("fecha",user.fechaLocalizacion)
+
+            list.add(jsonObject)
+        }
+
+        render list as JSON
+    }
+
+    @Secured(['permitAll'])
+    def notifySharedLocationRequest() {
+        def usuario = UsuarioFacebook.findByFacebookId(new Long(params.id))
+
+        def list = CompartirUsuario.findAllByReceiverAndCompartido(usuario, false)
+        JSONArray json = new JSONArray()
+        list.each {
+            it.compartido = true
+            it.save(failOnError: true, flush: true)
+
+            JSONObject jsonObject = new JSONObject()
+            jsonObject.put("sender", it.sender.facebookId.toString())
+            jsonObject.put("mensaje", it.compartirUbicacion.mensaje)
+            jsonObject.put("nodo", it.compartirUbicacion.nodo.id)
+            json.add(jsonObject)
+        }
+
+        render json as JSON
+    }
+
+    @Secured(['permitAll'])
+    def sharedLocationRequest() {
+        def sender = UsuarioFacebook.findByFacebookId(new Long(params.id))
+
+        JSONObject jsonObject = new JSONObject(params.json)
+        JSONArray array = new JSONArray(jsonObject.getString("friends"))
+
+        def mensaje = jsonObject.getString("message")
+        def nodo = jsonObject.getInt("idNodo")
+
+        array.each {
+            def compartirUbicacion = new CompartirUbicacion(mensaje: mensaje, nodo: Nodo.findById(nodo)).save(flush: true, failOnError: true)
+
+            def receiver = UsuarioFacebook.findByFacebookId(new Long(params.id))
+            new CompartirUsuario(sender: sender, receiver: receiver, compartirUbicacion: compartirUbicacion).save(flush: true, failOnError: true)
+        }
     }
 }

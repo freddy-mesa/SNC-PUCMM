@@ -1,4 +1,5 @@
-﻿using SncPucmm.Model;
+﻿using SncPucmm.Database;
+using SncPucmm.Model;
 using SncPucmm.Model.Navigation;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,18 @@ namespace SncPucmm.View
 {
     public class UIUtils
     {
+
         const float ORIGEN_LAT = 19.448918f;
         const float ORIGEN_LON = -70.687180f;
         const float totalMetrosAncho = (950 / 2);
         const float totalMetrosLargo = (1150 / 2);
+
+        public static int notificationPendingFollowCount;
+
+        static UIUtils()
+        {
+            notificationPendingFollowCount = 0;
+        }
 
         public static String FormatStringLabel(String stringToFormat, char delimitor, int lengthToSplit) 
         {
@@ -323,6 +332,143 @@ namespace SncPucmm.View
             {
                 ShowEntireBuilding(building);
             }
+        }
+
+        public static void MoveCameraToUser()
+        {
+            float userPosX = UIUtils.getXDistance(UIGPS.Longitude) - 40f;
+            float userPosZ = UIUtils.getZDistance(UIGPS.Latitude);
+
+            Transform camera = UIUtils.Find("/Vista3erPersona").camera.transform;
+            camera.eulerAngles = new Vector3(camera.eulerAngles.x, 90, 0f);
+            camera.position = new Vector3(camera.position.x, 30f, camera.position.z);
+
+            UICamaraControl.targetTransitionPosition = new Vector3(userPosX, camera.position.y, userPosZ);
+            UICamaraControl.isTransitionAnimated = true;
+        }
+
+        public static void PushFollowingNotification(bool active)
+        {
+            var gui = UIUtils.Find("/GUI").transform;
+            var notificationButtonMain = gui.FindChild("MenuMain").FindChild("Bar").FindChild("ButtonMain").FindChild("Notification");
+            var notificationButtonUsuario = gui.FindChild("MenuMain").FindChild("Sidebar").FindChild("ButtonUsuario").FindChild("Logeado").FindChild("Notification");
+            var notificationButtonPendingFollowing = gui.FindChild("MenuUsuarioSettings").FindChild("ButtonPendingFollowingRequest").FindChild("Notification");
+
+            if (active)
+            {
+                using (var sqlite = new SQLiteService())
+                {
+                    int notificationCount = 0;
+
+                    var query = "SELECT COUNT(id) as count FROM UserFollowingNotification";
+                    using (var reader = sqlite.SelectQuery(query))
+                    {
+                        while (reader.Read())
+                        {
+                            notificationCount = Convert.ToInt32(reader["count"]);
+                        }
+                    }
+
+                    if (notificationCount == 0)
+                    {
+                        active = false;
+                    }
+                    else
+                    {
+                        notificationPendingFollowCount = notificationCount;
+                        //Main Button
+                        notificationButtonMain.gameObject.SetActive(true);
+                        notificationButtonMain.FindChild("Label").GetComponent<UILabel>().text = notificationCount.ToString();
+
+                        //SideBar
+                        notificationButtonUsuario.FindChild("Label").GetComponent<UILabel>().text = notificationCount.ToString();
+                        notificationButtonUsuario.gameObject.SetActive(true);
+
+
+                        //MenuUsuario
+                        notificationButtonPendingFollowing.FindChild("Label").GetComponent<UILabel>().text = notificationCount.ToString();
+                        notificationButtonPendingFollowing.gameObject.SetActive(true);
+                    }
+                }
+            }
+
+            if (!active)
+            {
+                //Main Button
+                notificationButtonMain.FindChild("Label").GetComponent<UILabel>().text = "";
+                notificationButtonMain.gameObject.SetActive(false);
+
+                //SideBar
+                notificationButtonUsuario.FindChild("Label").GetComponent<UILabel>().text = "";
+                notificationButtonUsuario.gameObject.SetActive(false);
+
+
+                //MenuUsuario
+                notificationButtonPendingFollowing.FindChild("Label").GetComponent<UILabel>().text = "";
+                notificationButtonPendingFollowing.gameObject.SetActive(false);
+            }
+        }
+
+        public static void PushSharedLocationNotification(bool active)
+        {
+        //    var gui = UIUtils.Find("/GUI").transform;
+        //    var notificationButtonMain = gui.FindChild("MenuMain").FindChild("Bar").FindChild("ButtonMain").FindChild("Notification");
+        //    var notificationButtonUsuario = gui.FindChild("MenuMain").FindChild("Sidebar").FindChild("ButtonUsuario").FindChild("Logeado").FindChild("Notification");
+        //    var notificationButtonPendingFollowing = gui.FindChild("MenuUsuarioSettings").FindChild("ButtonPendingFollowingRequest").FindChild("Notification");
+
+        //    if (active)
+        //    {
+        //        using (var sqlite = new SQLiteService())
+        //        {
+        //            int notificationCount = 0;
+
+        //            var query = "SELECT COUNT(id) as count FROM UserFollowingNotification";
+        //            using (var reader = sqlite.SelectQuery(query))
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    notificationCount = Convert.ToInt32(reader["count"]);
+        //                }
+        //            }
+
+        //            if (notificationCount == 0)
+        //            {
+        //                active = false;
+        //            }
+        //            else
+        //            {
+        //                notificationPendingFollowCount = notificationCount;
+        //                //Main Button
+        //                notificationButtonMain.gameObject.SetActive(true);
+        //                notificationButtonMain.FindChild("Label").GetComponent<UILabel>().text = notificationCount.ToString();
+
+        //                //SideBar
+        //                notificationButtonUsuario.FindChild("Label").GetComponent<UILabel>().text = notificationCount.ToString();
+        //                notificationButtonUsuario.gameObject.SetActive(true);
+
+
+        //                //MenuUsuario
+        //                notificationButtonPendingFollowing.FindChild("Label").GetComponent<UILabel>().text = notificationCount.ToString();
+        //                notificationButtonPendingFollowing.gameObject.SetActive(true);
+        //            }
+        //        }
+        //    }
+
+        //    if (!active)
+        //    {
+        //        //Main Button
+        //        notificationButtonMain.FindChild("Label").GetComponent<UILabel>().text = "";
+        //        notificationButtonMain.gameObject.SetActive(false);
+
+        //        //SideBar
+        //        notificationButtonUsuario.FindChild("Label").GetComponent<UILabel>().text = "";
+        //        notificationButtonUsuario.gameObject.SetActive(false);
+
+
+        //        //MenuUsuario
+        //        notificationButtonPendingFollowing.FindChild("Label").GetComponent<UILabel>().text = "";
+        //        notificationButtonPendingFollowing.gameObject.SetActive(false);
+        //    }
         }
     }
 }

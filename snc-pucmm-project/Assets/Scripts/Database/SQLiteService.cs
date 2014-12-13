@@ -32,7 +32,7 @@ namespace SncPucmm.Database
 
 		static SQLiteService()
 		{
-			IsCreatingDatabase = true;
+			IsCreatingDatabase = false;
 		}
 
 		#endregion
@@ -45,6 +45,7 @@ namespace SncPucmm.Database
 
 			if(Application.platform == RuntimePlatform.WindowsEditor)
 			{
+				IsCreatingDatabase = true;
 				connectionString = "URI=file:Assets/StreamingAssets/" + DATABASE_NAME + ";version=3";
 			}
 			else if(Application.platform == RuntimePlatform.Android)
@@ -91,8 +92,8 @@ namespace SncPucmm.Database
 			{
 				if (Application.platform == RuntimePlatform.WindowsEditor)
 				{
-					//DropAllModelTables();
-					DropAllTables();
+					DropAllModelTables();
+					DropAllOtherTables();
 				}
 
 				InitializeDataBase();
@@ -278,8 +279,7 @@ namespace SncPucmm.Database
 					{"id","integer"},
 					{"idNodo","integer"},
 					{"fechaLocalizacion","text"},
-					{"idUsuario","integer"},
-					{"request","text"}
+					{"idUsuario","text"}
 				},
 				new Dictionary<string, string[]> { },
 				new Dictionary<string, string[]> { }
@@ -293,6 +293,21 @@ namespace SncPucmm.Database
 					{"idUsuarioFacebook","text"},
 					{"idFollower","text"},
 					{"nombre","text"}
+				},
+				new Dictionary<string, string[]> { },
+				new Dictionary<string, string[]> { }
+			));
+
+			sqlBuilder.Append(CreateTableQuery(
+				"UserSharedLocationNotification",
+				new Dictionary<string, string>
+				{
+					{"id","integer"},
+					{"idUsuarioFacebook","text"},
+					{"idFriend", "text"},
+					{"nombre", "text"},
+					{"idNodo","integer"},
+					{"mensaje","text"}
 				},
 				new Dictionary<string, string[]> { },
 				new Dictionary<string, string[]> { }
@@ -1314,7 +1329,7 @@ namespace SncPucmm.Database
 
 						transaction.Commit();
 
-						//Debug.Log("Query Executed: " + sqlQuery);
+						Debug.Log("Query Executed: " + sqlQuery);
 					}
 				}
 				
@@ -1368,21 +1383,18 @@ namespace SncPucmm.Database
 			TransactionalQuery(sqlBuilder.ToString());
 		}
 
-		private void DropAllTables()
+		private void DropAllOtherTables()
 		{
 			StringBuilder sqlBuilder = new StringBuilder();
 
-			sqlBuilder.Append("DROP TABLE Neighbor;");
-			sqlBuilder.Append("DROP TABLE CoordenadaNodo;");
-			sqlBuilder.Append("DROP TABLE Nodo;");
-			sqlBuilder.Append("DROP TABLE Ubicacion;");
-			sqlBuilder.Append("DROP TABLE Usuario;");
-			sqlBuilder.Append("DROP TABLE Tour;");
-			sqlBuilder.Append("DROP TABLE PuntoReunionTour;");
-			sqlBuilder.Append("DROP TABLE UsuarioTour;");
-			sqlBuilder.Append("DROP TABLE DetalleUsuarioTour;");
-			sqlBuilder.Append("DROP TABLE UsuarioLocalizacion;");
-			sqlBuilder.Append("DROP TABLE UserFollowingNotification;");
+			sqlBuilder.Append("DROP TABLE IF EXISTS Usuario;");
+			sqlBuilder.Append("DROP TABLE IF EXISTS Tour;");
+			sqlBuilder.Append("DROP TABLE IF EXISTS PuntoReunionTour;");
+			sqlBuilder.Append("DROP TABLE IF EXISTS UsuarioTour;");
+			sqlBuilder.Append("DROP TABLE IF EXISTS DetalleUsuarioTour;");
+			sqlBuilder.Append("DROP TABLE IF EXISTS UsuarioLocalizacion;");
+			sqlBuilder.Append("DROP TABLE IF EXISTS UserFollowingNotification;");
+			sqlBuilder.Append("DROP TABLE IF EXISTS UserSharedLocationNotification;");   
 
 			TransactionalQuery(sqlBuilder.ToString());
 		}
@@ -1695,7 +1707,7 @@ namespace SncPucmm.Database
 					var usuarioLocalizacion = new LocalizacionUsuario()
 					{
 						idNodo = Convert.ToInt32(resultUsuarioLocalizacion["idNodo"]),
-						idUsuario = Convert.ToInt32(resultUsuarioLocalizacion["idUsuario"]),
+						idUsuarioFacebook = Convert.ToString(resultUsuarioLocalizacion["idUsuario"]),
 						fechaLocalizacion = localizationDate
 					};
 
@@ -1709,6 +1721,21 @@ namespace SncPucmm.Database
 			json.AddField("UsuarioLocalizacionList", jsonUsuarioLocalizacionArray);
 
 			return json;
+		}
+
+		public void UpdateUserLocation(int idNodo)
+		{
+			int id = 0;
+			using (var reader = SelectQuery("SELECT MAX(id) as id FROM UsuarioLocalizacion"))
+			{
+				while (reader.Read())
+				{
+					int.TryParse(Convert.ToString(reader["id"]), out id);
+				}
+			}
+
+			TransactionalQuery("INSERT INTO UsuarioLocalizacion VALUES (" + ++id + "," + idNodo + ",'" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "','" + FB.UserId +"')");
+
 		}
 
 		public void Dispose()

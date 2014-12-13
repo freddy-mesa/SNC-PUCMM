@@ -62,7 +62,7 @@ namespace SncPucmm.Controller.GUI
         public void OnTouchNavigationButton(object sender, TouchEventArgs e)
         {
             NavigationController controller = ModelPoolManager.GetInstance().GetValue("navigationCtrl") as NavigationController;
-           controller.StartNavigation(this.modelNode.name);
+            controller.StartNavigation(this.modelNode.name);
         }
 
         public void OnTouchShowInsideButton(object sender, TouchEventArgs e)
@@ -105,7 +105,7 @@ namespace SncPucmm.Controller.GUI
         {
             var label = UIUtils.FindGUI("MenuBuilding/LabelBuildingName");
             var lblBuildingName = label.GetComponent<UILabel>();
-            lblBuildingName.text = UIUtils.FormatStringLabel(modelNode.name, ' ', 20);
+            lblBuildingName.text = modelNode.name;
 
             if (!this.modelNode.isBuilding)
             {

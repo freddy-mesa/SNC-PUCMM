@@ -13,16 +13,16 @@ namespace SncPucmm.View
         #region Atributos
 
         GameObject itemTreeView;
-        UILabel textSearch;
+        Transform searchBox;
+        UIInput textSeach;
 
         private ScrollView treeView;
         private string previousText;
+        private bool isSearchBoxActive;
 
         #endregion
 
         #region Propiedades
-
-        public bool IsEqualToPreviousText { get { return previousText == textSearch.text; } }
 
         #endregion
 
@@ -31,35 +31,56 @@ namespace SncPucmm.View
         void Start()
         {
             itemTreeView = Resources.Load("GUI/TreeViewScrollItem") as GameObject;
-            textSearch = UIUtils.FindGUI("MenuMain/Bar/SearchBox/Label").GetComponent<UILabel>();
-
-            previousText = String.Empty;
         }
 
         new void Update()
         {
-            base.Update();
-
-            if (IsWriting())
+            if (searchBox != null && searchBox.gameObject.activeInHierarchy)
             {
-                if (State.GetCurrentState().Equals(eState.Exploring))
+                if(!isSearchBoxActive)
                 {
-                    State.ChangeState(eState.MenuMain);
+                    if (State.GetCurrentState().Equals(eState.Exploring))
+                    {
+                        isSearchBoxActive = true;
+                        ShowTreeViewList("");
+                        State.ChangeState(eState.MenuMain);
+                    }
+                    else
+                    {
+                        isSearchBoxActive = true;
+                    }
+                    
                 }
 
-                if (!IsEqualToPreviousText)
+                if (textSeach == null)
                 {
-                    ShowTreeViewList(textSearch.text);
-                    previousText = textSearch.text;
+                    textSeach = searchBox.GetComponent<UIInput>();
+                }
+
+                if (textSeach.value != previousText)
+                {
+                    ShowTreeViewList(textSeach.value);
+                    previousText = textSeach.value;
                 }
             }
+
+            if (isSearchBoxActive)
+            {
+                if (!searchBox.gameObject.activeInHierarchy)
+                {
+                    textSeach = null;
+                    isSearchBoxActive = false;
+                }
+            }
+
+            base.Update();
         }
 
         /// <summary>
         /// Show the Tree View List from 
         /// </summary>
         /// <param name="text">Text to search in Database</param>
-        void ShowTreeViewList(string text)
+        public void ShowTreeViewList(string text)
         {
             var obj = new
             {
@@ -72,13 +93,13 @@ namespace SncPucmm.View
             treeView.OnChange(obj);
         }
 
-        /// <summary>
-        /// Verifica si hay algo algo escrito en el Texto del SearchBox
-        /// </summary>
-        /// <returns>true si hay algo escrito, de lo contrario, falso</returns>
-        bool IsWriting()
+
+        public void SetTextSearch(Transform searchBox)
         {
-            return (this.textSearch.text == String.Empty ? false : true);
+            this.searchBox = searchBox;
+            this.textSeach = searchBox.GetComponent<UIInput>();
+            isSearchBoxActive = false;
+            previousText = string.Empty;
         }
 
         #endregion

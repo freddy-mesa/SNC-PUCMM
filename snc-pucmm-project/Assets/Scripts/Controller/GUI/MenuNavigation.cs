@@ -185,9 +185,11 @@ namespace SncPucmm.Controller.GUI
 		{
 			UIUtils.FindGUI("MenuNavigation/FreeMode").SetActive(false);
 			isFreeModeActive = false;
+			
 			ShowDirectionMenu(directionPath[currentDirectionPath]);
 			ShowNavigationDirection(directionPath[currentDirectionPath]);
-			MoveCameraToUser();
+			
+			UIUtils.MoveCameraToUser();
 		}
 
 		public void OnTouchExit(object sender, TouchEventArgs e) 
@@ -209,19 +211,6 @@ namespace SncPucmm.Controller.GUI
 			camera.position = new Vector3(camera.position.x, 30f, camera.position.z);
 
 			UICamaraControl.targetTransitionPosition = new Vector3(nodePosX, camera.position.y, nodePosZ);
-			UICamaraControl.isTransitionAnimated = true;
-		}
-
-		private void MoveCameraToUser()
-		{
-			float userPosX = UIUtils.getXDistance(UIGPS.Longitude) - 40f;
-			float userPosZ = UIUtils.getZDistance(UIGPS.Latitude);
-
-			Transform camera = UIUtils.Find("/Vista3erPersona").camera.transform;
-			camera.eulerAngles = new Vector3(camera.eulerAngles.x, 90, 0f);
-			camera.position = new Vector3(camera.position.x, 30f, camera.position.z);
-
-			UICamaraControl.targetTransitionPosition = new Vector3(userPosX, camera.position.y, userPosZ);
 			UICamaraControl.isTransitionAnimated = true;
 		}
 

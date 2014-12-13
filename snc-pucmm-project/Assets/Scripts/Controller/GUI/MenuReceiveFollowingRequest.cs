@@ -1,5 +1,4 @@
 ﻿using SncPucmm.Controller.Control;
-using SncPucmm.Controller.Facebook;
 using SncPucmm.View;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,8 @@ namespace SncPucmm.Controller.GUI
 
         string name;
         List<Button> buttonList;
+        bool isAcceptanceFollowing;
+        Button selectButton;
 
         #endregion
 
@@ -38,37 +39,9 @@ namespace SncPucmm.Controller.GUI
             buttonExit.OnTouchEvent += new OnTouchEventHandler(OnTouchExitButton);
             buttonList.Add(buttonExit);
 
-            var buttonAccept = new Button("ButtonAccept");
-            buttonAccept.OnTouchEvent += new OnTouchEventHandler(OnTouchAcceptButton);
-            buttonList.Add(buttonAccept);
-
-            var buttonDecline = new Button("ButtonDecline");
-            buttonDecline.OnTouchEvent += new OnTouchEventHandler(OnTouchDeclineButton);
-            buttonList.Add(buttonDecline);
-
             UIUtils.DestroyChilds(name + "/ScrollView", true);
-        }
 
-        private void OnTouchDeclineButton(object sender, TouchEventArgs e)
-        {
-            var obj = (sender as Button).ObjectTag;
-
-            //var idFollowed = Convert.ToInt64(FB.UserId);
-            var idFollowed = Convert.ToInt64("10152587482388668");
-            var idFollower = Convert.ToInt64(obj.GetType().GetProperty("follower").GetValue(obj, null));
-
-            WebService.Instance.SendFollowingAcceptance(idFollowed, idFollower, "denied");
-        }
-
-        private void OnTouchAcceptButton(object sender, TouchEventArgs e)
-        {
-            var obj = (sender as Button).ObjectTag;
-
-            //var idFollowed = Convert.ToInt64(FB.UserId);
-            var idFollowed = Convert.ToInt64("10152587482388668");
-            var idFollower = Convert.ToInt64(obj.GetType().GetProperty("follower").GetValue(obj, null));
-
-            WebService.Instance.SendFollowingAcceptance(idFollowed, idFollower, "accepted");
+            isAcceptanceFollowing = false;
         }
 
         private void OnTouchExitButton(object sender, TouchEventArgs e)
@@ -78,22 +51,13 @@ namespace SncPucmm.Controller.GUI
 
         public void OnTouchButton(object sender, TouchEventArgs e)
         {
+            selectButton = sender as Button;
             var obj = (sender as Button).ObjectTag;
-            var idFollower = Convert.ToInt64(obj.GetType().GetProperty("follower").GetValue(obj, null));
-            var nombre = Convert.ToString(obj.GetType().GetProperty("name").GetValue(obj, null));
-            //var Texture = (Texture2D)(obj.GetType().GetProperty("texture").GetValue(obj, null));
-
-            var acceptance = UIUtils.FindGUI(name).transform.FindChild("NotificationFollowingAcceptance");
-            acceptance.gameObject.SetActive(true);
-
-            //acceptance.FindChild("Image").GetComponent<UITexture>().mainTexture = Texture;
-            acceptance.FindChild("Label").GetComponent<UILabel>().text = nombre;
-
-            buttonList[1].ObjectTag = new { follower = idFollower };
-            buttonList[2].ObjectTag = new { follower = idFollower };
+            isAcceptanceFollowing = true;
+            MenuManager.GetInstance().AddMenu(new MenuAcceptanceFollowingRequest("MenuAcceptanceFollowingRequest", obj));
         }
 
-        #region Implement
+        #region Implementado
 
         public string GetMenuName()
         {
@@ -102,7 +66,33 @@ namespace SncPucmm.Controller.GUI
 
         public void Update()
         {
+            if (isAcceptanceFollowing && MenuAcceptanceFollowingRequest.DeletePendingRequest)
+            {
+                isAcceptanceFollowing = false;
+                var index = Convert.ToInt32(selectButton.ObjectTag.GetType().GetProperty("index").GetValue(selectButton.ObjectTag, null));
+                buttonList.Remove(selectButton);
 
+                RefreshScrollView(index);
+            }
+        }
+
+        private void RefreshScrollView(int index)
+        {
+            var scrollView = UIUtils.FindGUI(name + "/ScrollView").transform;
+
+            int i = 0;
+            foreach (Transform item in scrollView)
+            {
+                if(i++ >= index)
+                {
+                    item.localPosition = new Vector3(item.localPosition.x, item.localPosition.y - 60f, item.localPosition.z);
+                }
+            }
+
+            var itemScrollView = scrollView.GetChild(index);
+            itemScrollView.parent = null;
+
+            GameObject.Destroy(itemScrollView);
         }
 
         public List<Button> GetButtonList()

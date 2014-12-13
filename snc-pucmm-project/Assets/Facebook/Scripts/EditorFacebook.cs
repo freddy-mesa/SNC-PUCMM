@@ -8,7 +8,7 @@ namespace Facebook
     class EditorFacebook : AbstractFacebook, IFacebook
     {
         private AbstractFacebook fb;
-        //private FacebookDelegate loginCallback;
+        private FacebookDelegate loginCallback;
 
         public override int DialogMode
         {
