@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d41887b1546f5c44ab54e7e65aad3bc, type: 3}
+  m_Name: Biblio_Planta3
+  m_EditorClassIdentifier: 
+  combinedMaterialInfo:
+  - atlases:
+    - {fileID: 0}
+    texPropertyNames:
+    - _MainTex
+  materials:
+  - {fileID: 2100000, guid: 4c5daf4479efe854a81e9f50b08ccbe0, type: 2}
+  - {fileID: 2100000, guid: 15b2ca876861b034bb4c238009eba39d, type: 2}
+  - {fileID: 2100000, guid: 85df61bd1a4e42043871f34f9d8c084e, type: 2}
+  prefabUVRects:
+  - serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  - serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  - serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  resultMaterial: {fileID: 2100000, guid: 6a7dcaf44df84404983b019eda543865, type: 2}
+  resultMaterials: []
+  doMultiMaterial: 0
+  fixOutOfBoundsUVs: 0
