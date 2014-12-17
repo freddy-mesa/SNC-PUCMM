@@ -13,6 +13,7 @@ namespace SncPucmm.Controller.GUI
 
         string name;
         List<Button> buttonList;
+        //Button selectButton;
         
         #endregion
 
@@ -46,7 +47,8 @@ namespace SncPucmm.Controller.GUI
 
         public void OnTouchButton(object sender, TouchEventArgs e)
         {
-
+            Button selectButton = sender as Button;
+            MenuManager.GetInstance().AddMenu(new MenuShareLocation("MenuShareLocation", selectButton.ObjectTag));
         }
 
         #region Implementados

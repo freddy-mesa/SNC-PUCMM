@@ -38,7 +38,7 @@ namespace SncPucmm.Controller.GUI
             buttonExit.OnTouchEvent += new OnTouchEventHandler(OnTouchExitButton);
             buttonList.Add(buttonExit);
 
-            var buttonSend = new Button("ButtonSend");
+            var buttonSend = new Button("ButtonSelect");
             buttonSend.OnTouchEvent += new OnTouchEventHandler(OnTouchSendButton);
             buttonList.Add(buttonSend);
 
@@ -63,7 +63,6 @@ namespace SncPucmm.Controller.GUI
 
             if (userToSendFollowingRequest.Count > 0) 
             {
-                MenuManager.GetInstance().RemoveCurrentMenu();
                 MenuManager.GetInstance().AddMenu(new MenuSendShareLocationRequest("MenuSendShareLocationRequest", userToSendFollowingRequest));
             }
         }

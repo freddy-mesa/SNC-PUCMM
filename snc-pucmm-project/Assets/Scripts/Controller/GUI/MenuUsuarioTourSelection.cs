@@ -1,11 +1,13 @@
 ﻿using SncPucmm.Controller;
 using SncPucmm.Controller.Control;
 using SncPucmm.Controller.Navigation;
+using SncPucmm.Controller.Tours;
 using SncPucmm.Database;
 using SncPucmm.Model.Domain;
 using SncPucmm.View;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -18,6 +20,7 @@ namespace Assets.Scripts.Controller.GUI
 
         string name;
         string tourName;
+        int idUsuarioTour;
 
         List<Button> buttonList;
         List<DetalleUsuarioTour> detalleUsuarioTourList;
@@ -32,6 +35,7 @@ namespace Assets.Scripts.Controller.GUI
             this.name = name;
             this.detalleUsuarioTourList = detalleUsuarioTourList;
             this.tourName = tourName;
+            this.idUsuarioTour = usuarioTour.idUsuarioTour.Value;
 
             Initializer();
         }
@@ -60,7 +64,7 @@ namespace Assets.Scripts.Controller.GUI
 
             UIUtils.FindGUI("MenuUsuarioTourSelection/Label").GetComponent<UILabel>().text = tourName;
 
-            CreateScrollView();
+            UpdateCreateScrollView();
         }
 
         private void OnTouchResetButton(object sender, TouchEventArgs e)
@@ -87,11 +91,8 @@ namespace Assets.Scripts.Controller.GUI
                 service.TransactionalQuery(sqlQueryBuilder.ToString());
             }
 
-            //Quitar los hijos del ScrollView
-            UIUtils.DestroyChilds("MenuUsuarioTourSelection/ScrollView", true);
-
             //Poner los hijos actualizados
-            CreateScrollView();
+            UpdateCreateScrollView();
         }
 
         private void OnTouchResumeButton(object sender, TouchEventArgs e)
@@ -109,9 +110,12 @@ namespace Assets.Scripts.Controller.GUI
             MenuManager.GetInstance().RemoveCurrentMenu();
         }
 
-        private void CreateScrollView()
+        private void UpdateCreateScrollView()
         {
             var scrollView = UIUtils.FindGUI("MenuUsuarioTourSelection/ScrollView").transform;
+
+            //Delete ScrollView Childrens
+            UIUtils.DestroyChilds("MenuUsuarioTourSelection/ScrollView", true);
 
             using (var sqlService = new SQLiteService())
             {
@@ -152,7 +156,7 @@ namespace Assets.Scripts.Controller.GUI
 
                     item.FindChild("checkImg").gameObject.SetActive(false);
 
-                    if (detalleUsuarioTourList[i].fechaLlegada.HasValue)
+                    if (detalleUsuarioTourList[i].fechaLlegada.HasValue || (i == 0 && detalleUsuarioTourList[i].fechaInicio.HasValue))
                     {
                         item.FindChild("checkImg").gameObject.SetActive(true);
                     }
@@ -175,7 +179,84 @@ namespace Assets.Scripts.Controller.GUI
         public void Update()
         {
             State.ChangeState(eState.Tour);
-            ModelPoolManager.GetInstance().Remove("tourCtrl");
+
+            
+            using (var sqlService = new SQLiteService())
+            {
+                //Verificar si el tour se completó
+                var tourCtrl = ModelPoolManager.GetInstance().GetValue("tourCtrl") as TourController;
+
+                if (tourCtrl.isEndTour)
+                {
+                    sqlService.TransactionalQuery(
+                        "UPDATE UsuarioTour SET estado = 'finalizado' AND fechaFin = '" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "' WHERE id = " + this.idUsuarioTour
+                    );
+                }
+                else
+                {
+                    sqlService.TransactionalQuery(
+                        "UPDATE UsuarioTour SET estado = 'inconcluso' AND fechaFin = null WHERE id = " + this.idUsuarioTour
+                    );
+                }
+
+                ModelPoolManager.GetInstance().Remove("tourCtrl");
+
+                this.detalleUsuarioTourList.Clear();
+                var sql = "SELECT * FROM DetalleUsuarioTour WHERE idUsuarioTour = " + idUsuarioTour;
+
+                using (var resultDetalleUsuarioTour = sqlService.SelectQuery(sql))
+                {
+                    while (resultDetalleUsuarioTour.Read())
+                    {
+                        DateTime? updatedDate = null, startDate = null, endDate = null;
+                        DateTime temp;
+
+                        var obj = resultDetalleUsuarioTour["fechaInicio"];
+                        if (obj != null)
+                        {
+                            var fechaInicio = Convert.ToString(obj);
+                            if (DateTime.TryParseExact(fechaInicio, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+                            {
+                                startDate = temp;
+                            }
+                        }
+
+                        obj = resultDetalleUsuarioTour["fechaLlegada"];
+                        if (obj != null)
+                        {
+                            var fechaFin = Convert.ToString(obj);
+                            if (DateTime.TryParseExact(fechaFin, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+                            {
+                                endDate = temp;
+                            }
+                        }
+
+                        obj = resultDetalleUsuarioTour["fechaFin"];
+                        if (obj != null)
+                        {
+                            var fechaActualizacion = Convert.ToString(obj);
+                            if (DateTime.TryParseExact(fechaActualizacion, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
+                            {
+                                updatedDate = temp;
+                            }
+                        }
+
+                        this.detalleUsuarioTourList.Add(
+                            new DetalleUsuarioTour()
+                            {
+                                idDetalleUsuarioTour = Convert.ToInt32(resultDetalleUsuarioTour["id"]),
+                                idPuntoReunionTour = Convert.ToInt32(resultDetalleUsuarioTour["idPuntoReunionTour"]),
+                                idUsuarioTour = idUsuarioTour,
+                                fechaInicio = startDate,
+                                fechaLlegada = endDate,
+                                fechaFin = updatedDate
+                            }
+                        );
+                    }
+                }
+            }
+
+            UpdateCreateScrollView();
         }
 
         #endregion

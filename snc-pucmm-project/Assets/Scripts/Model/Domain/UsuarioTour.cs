@@ -15,7 +15,7 @@ namespace SncPucmm.Model.Domain
         public DateTime? fechaInicio;
         public DateTime? fechaFin;
         public int? idTour;
-        public int? idUsuario;
+        public long? idUsuarioFacebook;
         public string request;
 
         #endregion
@@ -55,8 +55,8 @@ namespace SncPucmm.Model.Domain
                         this.fechaFin = temp;
                     else if (key == "idTour")
                         this.idTour = Convert.ToInt32(json.list[i].n);
-                    else if (key == "idUsuario")
-                        this.idUsuario = Convert.ToInt32(json.list[i].n);
+                    else if (key == "idUsuarioFacebook")
+                        this.idUsuarioFacebook = Convert.ToInt64(json.list[i].str);
                     else
                         this.request = json.list[i].str;
                 }
@@ -77,8 +77,8 @@ namespace SncPucmm.Model.Domain
                 json.AddField("fechaFin", fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss"));
             if (idTour.HasValue)
                 json.AddField("idTour", idTour.Value);
-            if (idUsuario.HasValue)
-                json.AddField("idUsuario", idUsuario.Value);
+            if (idUsuarioFacebook.HasValue)
+                json.AddField("idUsuarioFacebook", idUsuarioFacebook.Value.ToString());
             if (request != null)
                 json.AddField("request", request);
 

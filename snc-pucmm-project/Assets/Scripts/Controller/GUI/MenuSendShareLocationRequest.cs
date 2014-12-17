@@ -53,8 +53,9 @@ namespace SncPucmm.Controller.GUI
 
             var ButtonSearchBox = new Button("SearchBox");
             ButtonSearchBox.OnTouchEvent += new OnTouchEventHandler(OnTouchSearchBoxButton);
+            buttonList.Add(ButtonSearchBox);
 
-            scrollView = new ScrollView("TreeView");
+            scrollView = new ScrollView("ScrollView");
             scrollView.OnChangeEvent += new OnChangeEventHandler(OnChangeScrollView);
             scrollView.OnCloseEvent += new OnCloseEventHandler(OnCloseScrollView);
         }
@@ -66,31 +67,24 @@ namespace SncPucmm.Controller.GUI
 
             var searchbox = UIUtils.FindGUI(name + "/SearchBox").transform;
             var scrollViewTranform = UIUtils.FindGUI(name).transform.FindChild("Search").FindChild("ScrollView");
-            scrollViewTranform.GetComponent<UIScrollViewControl>().SetTextSearch(searchbox);
+            var template = Resources.Load("GUI/TreeViewScrollItem") as GameObject;
+
+            scrollViewTranform.GetComponent<UIScrollViewControl>().SetTextSearch(searchbox.transform, template);
         }
 
         private void OnTouchSendButton(object sender, TouchEventArgs e)
         {
             var mensaje = UIUtils.FindGUI(name + "/TextBoxMessage").GetComponent<UIInput>().value;
             WebService.Instance.SendShareLocationRequest(friendList, mensaje, idNodo);
+
+            MenuManager.GetInstance().RemoveCurrentMenu();
             MenuManager.GetInstance().RemoveCurrentMenu();
         }
 
         private void OnTouchExitButton(object sender, TouchEventArgs e)
         {
             MenuManager.GetInstance().RemoveCurrentMenu();
-        }
-
-        private void GetUserFriendList()
-        {
-            UINotification.StartNotificationLoading = true;
-            WebService.Instance.GetUserFriendsForFollow();
-        }
-
-        public void OnChangeCheckBox(object sender, ChangeEventArgs e)
-        {
-            var selectedCheckBox = sender as CheckBox;
-            selectedCheckBox.active = !selectedCheckBox.active;
+            MenuManager.GetInstance().RemoveCurrentMenu();
         }
 
         private void OnTouchClearTextButton(object sender, TouchEventArgs e)
@@ -112,6 +106,7 @@ namespace SncPucmm.Controller.GUI
             UIUtils.FindGUI(name + "/SearchBox").GetComponent<UIInput>().value = text;
 
             scrollView.OnClose(null);
+            UIUtils.FindGUI(name + "/Search").SetActive(false);
         }
 
         private void OnChangeScrollView(object sender, ChangeEventArgs e)
@@ -127,7 +122,7 @@ namespace SncPucmm.Controller.GUI
 
         private void OnCloseScrollView(object sender, CloseEventArgs e)
         {
-            UIUtils.DestroyChilds(name + "/ScrollView", true);
+            UIUtils.DestroyChilds(name + "/Search/ScrollView", true);
             DeleteScrollViewItem();
         }
 
@@ -162,14 +157,14 @@ namespace SncPucmm.Controller.GUI
             }
 
             //Eliminando los hijos del Tree View List
-            UIUtils.DestroyChilds(name + "/ScrollView", true);
+            UIUtils.DestroyChilds(name + "/Search/ScrollView", true);
 
             //Eliminando los item del tree view de la lista de botones de MenuMain
             DeleteScrollViewItem();
 
             Parent.GetComponent<UIScrollView>().ResetPosition();
-            Parent.GetComponent<UIPanel>().clipOffset = new Vector2(2, -4.5f);
-            Parent.localPosition = new Vector3(Parent.localPosition.x, 95.5f, Parent.localPosition.z);
+            Parent.GetComponent<UIPanel>().clipOffset = new Vector2(-2, 4.5f);
+            Parent.localPosition = new Vector3(-8f, 11f, Parent.localPosition.z);
 
             string edificioName = string.Empty;
 

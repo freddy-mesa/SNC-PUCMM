@@ -5,12 +5,12 @@ namespace SncPucmm.Controller
 	public enum eState
 	{
 		Exploring,
-		Security,
 		Tour,
 		MenuMain,
 		MenuBuilding,
 		MenuNavigation,
 		MenuInsideBuilding,
+		Menu,
 		Exit        
 	}
 

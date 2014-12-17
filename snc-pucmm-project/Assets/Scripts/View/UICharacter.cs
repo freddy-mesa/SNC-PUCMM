@@ -12,8 +12,8 @@ namespace SncPucmm.View
         public static bool isCollidingWithBuilding { get; set; }
         public static string BuildingColliding { get; set; }
 
-        public float metersBetweenNodesAlternativeRoute = 25;
-        public float metersBetweenUserAndNodesToBeVisited = 15;
+        public float metersBetweenNodesAlternativeRoute = 75;
+        public float metersBetweenUserAndNodesToBeVisited = 2.5f;
 
         void Start()
         {
@@ -117,12 +117,9 @@ namespace SncPucmm.View
 
                 BuildingColliding = modelNode.name;
 
-                if (FB.IsLoggedIn)
+                using (var sqlite = new SQLiteService())
                 {
-                    using (var sqlite = new SQLiteService())
-                    {
-                        sqlite.UpdateUserLocation(modelNode.idNodo);
-                    }
+                    sqlite.UpdateUserLocation(modelNode.idNodo);
                 }
             }
         }

@@ -125,7 +125,8 @@ namespace SncPucmm.Controller.GUI
 			searchbox.SetActive(true);
 
 			var scrollView = UIUtils.FindGUI(name + "/TreeView/ScrollView");
-			scrollView.GetComponent<UIScrollViewControl>().SetTextSearch(searchbox.transform);
+			var template = Resources.Load("GUI/TreeViewScrollItem") as GameObject;
+			scrollView.GetComponent<UIScrollViewControl>().SetTextSearch(searchbox.transform, template);
 
 			UIUtils.ActivateCameraLabels(false);
 			UIUtils.FindGUI(name + "/ButtonLocateMe").SetActive(false);
@@ -181,6 +182,8 @@ namespace SncPucmm.Controller.GUI
 			OpenCloseMainMenu();
 			MenuManager.GetInstance().AddMenu(new MenuFindFriendSelection("MenuFindFriendSelection"));
 			WebService.Instance.GetFriends();
+
+			State.ChangeState(eState.Menu);
 		}
 
 		private void OnTouchButtonUsuario(object sender, TouchEventArgs e)
@@ -195,6 +198,8 @@ namespace SncPucmm.Controller.GUI
 			{
 				MenuManager.GetInstance().AddMenu(new MenuSignIn("MenuSignIn"));
 			}
+
+			State.ChangeState(eState.Menu);
 		}
 
 		private void OnTouchButtonCambioVista(object sender, TouchEventArgs e)

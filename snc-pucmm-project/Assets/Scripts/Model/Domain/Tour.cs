@@ -15,7 +15,6 @@ namespace SncPucmm.Model.Domain
         public DateTime? fechaCreacion;
         public DateTime? fechaInicio;
         public DateTime? fechaFin;
-        public int? idUsuario;
 
         #endregion
 
@@ -54,8 +53,6 @@ namespace SncPucmm.Model.Domain
                         this.fechaInicio = temp;
                     else if (key == "fechaFin" && DateTime.TryParseExact(json.list[i].str, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out temp))
                         this.fechaFin = temp;
-                    else
-                        this.idUsuario = Convert.ToInt32(json.list[i].n);
                 }
             }
         }
@@ -74,8 +71,6 @@ namespace SncPucmm.Model.Domain
                 json.AddField("fechaInicio", fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss"));
             if (fechaFin.HasValue)
                 json.AddField("fechaFin", fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss"));
-            if (idUsuario.HasValue)
-                json.AddField("idUsuarioCreador", idUsuario.Value);
 
             return json;
         }

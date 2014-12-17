@@ -60,19 +60,24 @@ namespace SncPucmm.Controller.GUI
 
         private void OnTouchDeclineButton(object sender, TouchEventArgs e)
         {
-            var idFollowed = Convert.ToInt64(FB.UserId);
-            WebService.Instance.SendFollowingAcceptance(idFollowed, followerFacebookId, "denied");
+            WebService.Instance.SendFollowingAcceptance(followerFacebookId, "denied");
             DeletePendingRequest = true;
+            Exit();
         }
 
         private void OnTouchAcceptButton(object sender, TouchEventArgs e)
         {
-            var idFollowed = Convert.ToInt64(FB.UserId);
-            WebService.Instance.SendFollowingAcceptance(idFollowed, followerFacebookId, "accepted");
+            WebService.Instance.SendFollowingAcceptance(followerFacebookId, "accepted");
             DeletePendingRequest = true;
+            Exit();
         }
 
         private void OnTouchExitButton(object sender, TouchEventArgs e)
+        {
+            Exit();
+        }
+
+        private void Exit()
         {
             MenuManager.GetInstance().RemoveCurrentMenu();
         }

@@ -22,6 +22,7 @@ namespace SncPucmm.Controller.Tours
         bool isEndingSectionTour;
         bool isStartingSectionTour;
         public bool isTourActive;
+        public bool isEndTour;
         List<DetalleUsuarioTour> detalleUsuarioTourList;
 
         #endregion
@@ -46,6 +47,7 @@ namespace SncPucmm.Controller.Tours
         {
             this.detalleUsuarioTourList = detalleUsuarioTourList;
             this.isTourActive = false;
+            this.isEndTour = false;
             currentIndex = 0;
         }
 
@@ -72,6 +74,7 @@ namespace SncPucmm.Controller.Tours
 
             if (IsUserCollidingBuilding(out nodeName))
             {
+
                 if (!isStartingSectionTour && currentSectionTourData.Desde == nodeName)
                 {
                     isStartingSectionTour = true;
@@ -85,11 +88,25 @@ namespace SncPucmm.Controller.Tours
 
                     using (var sqlService = new SQLiteService())
                     {
-                        sqlService.TransactionalQuery(
-                            "UPDATE DetalleUsuarioTour SET " +
-                            "fechaInicio = '" + detalleUsuarioTour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") + "' " +
-                            "WHERE id = " + detalleUsuarioTour.idDetalleUsuarioTour
-                        );
+                        if (!(currentIndex == 0))
+                        {
+                            sqlService.TransactionalQuery(
+                                "UPDATE DetalleUsuarioTour SET " +
+                                "fechaInicio = '" + detalleUsuarioTour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") + "' " +
+                                "WHERE id = " + detalleUsuarioTour.idDetalleUsuarioTour
+                            );
+                        }
+                        else
+                        {
+                            detalleUsuarioTour.fechaLlegada = detalleUsuarioTour.fechaInicio;
+
+                            sqlService.TransactionalQuery(
+                                "UPDATE DetalleUsuarioTour SET " +
+                                "fechaInicio = '" + detalleUsuarioTour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") + "' AND " +
+                                "fechaLlegada = '" + detalleUsuarioTour.fechaLlegada.Value.ToString("dd/MM/yyyy HH:mm:ss") + "' " +
+                                "WHERE id = " + detalleUsuarioTour.idDetalleUsuarioTour
+                            );
+                        }
                     }
                 }
                 else if (!isEndingSectionTour && currentSectionTourData.Hasta == nodeName)
@@ -104,11 +121,25 @@ namespace SncPucmm.Controller.Tours
 
                     using (var sqlService = new SQLiteService())
                     {
-                        sqlService.TransactionalQuery(
-                            "UPDATE DetalleUsuarioTour SET " +
-                            "fechaLlegada = '" + detalleUsuarioTour.fechaLlegada.Value.ToString("dd/MM/yyyy HH:mm:ss") + "' " +
-                            "WHERE id = " + detalleUsuarioTour.idDetalleUsuarioTour
-                        );
+                        if (!(currentIndex == sectionTourDataList.Count - 1))
+                        {
+                            sqlService.TransactionalQuery(
+                                "UPDATE DetalleUsuarioTour SET " +
+                                "fechaLlegada = '" + detalleUsuarioTour.fechaLlegada.Value.ToString("dd/MM/yyyy HH:mm:ss") + "' " +
+                                "WHERE id = " + detalleUsuarioTour.idDetalleUsuarioTour
+                            );
+                        }
+                        else
+                        {
+                            detalleUsuarioTour.fechaInicio = detalleUsuarioTour.fechaLlegada;
+
+                            sqlService.TransactionalQuery(
+                                "UPDATE DetalleUsuarioTour SET " +
+                                "fechaInicio = '" + detalleUsuarioTour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") + "' AND " +
+                                "fechaLlegada = '" + detalleUsuarioTour.fechaLlegada.Value.ToString("dd/MM/yyyy HH:mm:ss") + "' " +
+                                "WHERE id = " + detalleUsuarioTour.idDetalleUsuarioTour
+                            );
+                        }
                     }
                 }
             }
@@ -116,7 +147,7 @@ namespace SncPucmm.Controller.Tours
             if (isEndingSectionTour && isStartingSectionTour)
             {
                 ResetValues();
-                if (CanChangeToNextSectionTour())
+                if (!CanChangeToNextSectionTour())
                 {
                     isEndTour = true;
                 }

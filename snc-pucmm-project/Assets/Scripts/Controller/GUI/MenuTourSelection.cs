@@ -124,11 +124,11 @@ namespace SncPucmm.Controller.GUI
 				var user = ModelPoolManager.GetInstance().GetValue("Usuario") as Usuario;
 
 				//Del tour seleccionado verificar si el usuario esta suscrito
-				var sqlQuery = "SELECT * FROM UsuarioTour WHERE idUsuario = "+ user.idUsuario +" AND idTour = " + tour.idTour;
+				var sqlQuery = "SELECT * FROM UsuarioTour WHERE idUsuarioFacebook = '"+ user.idUsuarioFacebook +"' AND idTour = " + tour.idTour;
 				using (var resultUsuarioTour = sqlService.SelectQuery(sqlQuery))
 				{
 					//El UsuarioTour ya ha sido creado
-					if (resultUsuarioTour.Read())
+					if (resultUsuarioTour.HasRows == true)
 					{
 						#region Recuperacion UsuarioTour
 
@@ -157,7 +157,7 @@ namespace SncPucmm.Controller.GUI
 
 						userTour = new UsuarioTour()
 						{
-							idUsuario = user.idUsuario,
+							idUsuarioFacebook = user.idUsuarioFacebook,
 							idUsuarioTour = Convert.ToInt32(resultUsuarioTour["id"]),
 							idTour = Convert.ToInt32(resultUsuarioTour["idTour"]),
 							estado = Convert.ToString(resultUsuarioTour["estado"]),
@@ -234,9 +234,9 @@ namespace SncPucmm.Controller.GUI
 
 						using (var result = sqlService.SelectQuery("SELECT MAX(id) as id FROM UsuarioTour"))
 						{
-							if (result.Read())
+							while (result.Read())
 							{
-								idUsuarioTour = Convert.ToInt32(result["id"]);
+								int.TryParse(Convert.ToString(result["id"]), out idUsuarioTour);
 							}
 						}
 
@@ -247,8 +247,8 @@ namespace SncPucmm.Controller.GUI
 
 						//Insertando en la base de datos
 						sqlService.TransactionalQuery(
-							"INSERT INTO UsuarioTour (id, idTour, idUsuario, fechaInicio, request) " +
-							"VALUES (" + idUsuarioTour + "," + tour.idTour + "," + user.idUsuario + ",'" + fechaInicio.ToString("dd/MM/yyyy HH:mm:ss") + "','create')"
+							"INSERT INTO UsuarioTour (id, idTour, idUsuarioFacebook, fechaInicio, request) " +
+							"VALUES (" + idUsuarioTour + "," + tour.idTour + ",'" + user.idUsuarioFacebook + "','" + fechaInicio.ToString("dd/MM/yyyy HH:mm:ss") + "','create')"
 						);
 
 						//sqlService.TransactionalQuery(
@@ -263,7 +263,7 @@ namespace SncPucmm.Controller.GUI
 							fechaInicio = fechaInicio,
 							idTour = tour.idTour,
 							estado = "activo",
-							idUsuario = user.idUsuario,
+							idUsuarioFacebook = user.idUsuarioFacebook
 						};
 
 						//userTour = new UsuarioTour()
@@ -306,7 +306,7 @@ namespace SncPucmm.Controller.GUI
 						{
 							if (result.Read())
 							{
-								idDetalleUsuarioTour = Convert.ToInt32(result["id"]);
+								int.TryParse(Convert.ToString(result["id"]), out idDetalleUsuarioTour);
 							}
 						}
 

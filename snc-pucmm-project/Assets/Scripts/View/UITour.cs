@@ -11,7 +11,6 @@ namespace SncPucmm.View
 {
     class UITour : UITouch
     {
-
         #region Metodos
 
         new void Update()
@@ -41,14 +40,15 @@ namespace SncPucmm.View
 
                     if (isEndTour)
                     {
-                        tourNotification.GetComponent<UILabel>().text = "Ha finalizado el Tour";
+                        tourNotification.transform.FindChild("Info").GetComponent<UILabel>().text = "Ha finalizado el Tour";
+                        tourCtrl.isEndTour = true;
                     }
                     else
                     {
                         string desde = tourCtrl.SectionTourDataList[tourCtrl.CurrentSectionIndex].Desde;
                         string hasta = tourCtrl.SectionTourDataList[tourCtrl.CurrentSectionIndex].Hasta;
 
-                        tourNotification.GetComponent<UILabel>().text = string.Format("Ha recorrido el tour desde {0} hasta {1}", desde, hasta);
+                        tourNotification.transform.FindChild("Info").GetComponent<UILabel>().text = string.Format("Ha recorrido el tour desde {0} hasta {1}", desde, hasta);
                     }
                 }
             }

@@ -83,7 +83,7 @@ namespace SncPucmm.Controller.GUI
             int i = 0;
             foreach (Transform item in scrollView)
             {
-                if(i++ >= index)
+                if(i++ > index)
                 {
                     item.localPosition = new Vector3(item.localPosition.x, item.localPosition.y - 60f, item.localPosition.z);
                 }
@@ -92,7 +92,7 @@ namespace SncPucmm.Controller.GUI
             var itemScrollView = scrollView.GetChild(index);
             itemScrollView.parent = null;
 
-            GameObject.Destroy(itemScrollView);
+            GameObject.Destroy(itemScrollView.gameObject);
         }
 
         public List<Button> GetButtonList()

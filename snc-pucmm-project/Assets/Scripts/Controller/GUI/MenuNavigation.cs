@@ -1,4 +1,5 @@
 ﻿using SncPucmm.Controller.Control;
+using SncPucmm.Controller.Tours;
 using SncPucmm.Model.Navigation;
 using SncPucmm.View;
 using System;
@@ -87,7 +88,7 @@ namespace SncPucmm.Controller.GUI
 			buttonList.Add(buttonFree);
 
 			Button buttonOk = new Button("ButtonOk");
-			buttonOk.OnTouchEvent += new OnTouchEventHandler(OnTouchExit);
+			buttonOk.OnTouchEvent += new OnTouchEventHandler(OnTouchOKButton);
 			buttonList.Add(buttonOk);
 
 			var tourBar = UIUtils.FindGUI("MenuNavigation/NameTourBar"); 
@@ -102,10 +103,22 @@ namespace SncPucmm.Controller.GUI
 				tourBar.SetActive(false);
 			}
 
-			//UIUtils.FindGUI("MenuNavigation/NotificationSeccionTourCompletada").SetActive(false);
-
 			ShowDirectionMenu(directionPath[currentDirectionPath]);
 			ShowNavigationDirection(directionPath[currentDirectionPath]);
+		}
+
+		private void OnTouchOKButton(object sender, TouchEventArgs e)
+		{
+			var tourCtrl = ModelPoolManager.GetInstance().GetValue("tourCtrl") as TourController;
+			if (!tourCtrl.isEndTour)
+			{
+				var tourNotification = UIUtils.FindGUI("MenuNavigation/NotificationSeccionTourCompletada");
+				tourNotification.SetActive(false);
+			}
+			else
+			{
+				Exit();
+			}
 		}
 
 		private void OnTouchFreeMode(object sender, TouchEventArgs e)
@@ -194,6 +207,11 @@ namespace SncPucmm.Controller.GUI
 
 		public void OnTouchExit(object sender, TouchEventArgs e) 
 		{
+			Exit();
+		}
+
+		private void Exit()
+		{
 			UIUtils.ShowAllBuildingExterior(directionPath);
 			UIUtils.DestroyChilds("/PUCMM/Directions", false);
 			MenuManager.GetInstance().RemoveCurrentMenu();
@@ -223,7 +241,7 @@ namespace SncPucmm.Controller.GUI
 			}
 			else
 			{
-				labelText = string.Format("{0:F2} metros hasta la interseccion. Metros Recorridos: {1:F2} metros", path.DistanceToNeighbor, path.DistancePathed);
+				labelText = string.Format("{0:F2} metros hasta la próxima interseccion. Metros Recorridos: {1:F2} metros", path.DistanceToNeighbor, path.DistancePathed - path.DistanceToNeighbor);
 			}
 
 			UILabel label = UIUtils.FindGUI("MenuNavigation/StatusBar/Label").GetComponent<UILabel>();

@@ -32,7 +32,14 @@ namespace SncPucmm.Database
 
 		static SQLiteService()
 		{
-			IsCreatingDatabase = false;
+			if (Application.platform == RuntimePlatform.WindowsEditor)
+			{
+				IsCreatingDatabase = false;
+			}
+			else
+			{
+				IsCreatingDatabase = false;
+			}
 		}
 
 		#endregion
@@ -45,7 +52,6 @@ namespace SncPucmm.Database
 
 			if(Application.platform == RuntimePlatform.WindowsEditor)
 			{
-				IsCreatingDatabase = true;
 				connectionString = "URI=file:Assets/StreamingAssets/" + DATABASE_NAME + ";version=3";
 			}
 			else if(Application.platform == RuntimePlatform.Android)
@@ -202,7 +208,7 @@ namespace SncPucmm.Database
 				new Dictionary<string, string>
 				{
 					{"id","integer"},
-					{"idUsuarioFacebook","integer"},
+					{"idUsuarioFacebook","text"},
 					{"nombre","text"},
 					{"apellido", "text"},
 					{"email","text"},
@@ -220,8 +226,7 @@ namespace SncPucmm.Database
 					{"nombreTour","text"},
 					{"fechaCreacion", "text"},
 					{"fechaInicio","text"},
-					{"fechaFin","text"},
-					{"idUsuario","integer"}
+					{"fechaFin","text"}
 				},
 				new Dictionary<string, string[]> { },
 				new Dictionary<string, string[]> { }
@@ -250,7 +255,7 @@ namespace SncPucmm.Database
 					{"fechaInicio","text"},
 					{"fechaFin","text"},
 					{"idTour","integer"},
-					{"idUsuario","integer"},
+					{"idUsuarioFacebook","text"},
 					{"request","text"}
 				},
 				new Dictionary<string, string[]> { },
@@ -278,8 +283,7 @@ namespace SncPucmm.Database
 				{
 					{"id","integer"},
 					{"idNodo","integer"},
-					{"fechaLocalizacion","text"},
-					{"idUsuario","text"}
+					{"fechaLocalizacion","text"}
 				},
 				new Dictionary<string, string[]> { },
 				new Dictionary<string, string[]> { }
@@ -1495,9 +1499,8 @@ namespace SncPucmm.Database
 						tour.nombreTour +"','" + 
 						(tour.fechaCreacion.HasValue ? tour.fechaCreacion.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"','"+
 						(tour.fechaInicio.HasValue ? tour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"','"+
-						(tour.fechaFin.HasValue ? tour.fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"',"+
-						tour.idUsuario.Value
-					+");");
+						(tour.fechaFin.HasValue ? tour.fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss") : null)
+					+"');");
 
 
 					if (tourJson.HasField("PuntosReunion"))
@@ -1535,7 +1538,7 @@ namespace SncPucmm.Database
 						(usuarioTour.fechaInicio.HasValue ? usuarioTour.fechaInicio.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"','"+ 
 						(usuarioTour.fechaFin.HasValue ? usuarioTour.fechaFin.Value.ToString("dd/MM/yyyy HH:mm:ss") : null) +"',"+
 						usuarioTour.idTour.Value +","+
-						usuarioTour.idUsuario.Value +",'"+
+						usuarioTour.idUsuarioFacebook.Value +",'"+
 						usuarioTour.request
 					+"');");
 
@@ -1606,7 +1609,7 @@ namespace SncPucmm.Database
 						fechaInicio = startDate,
 						fechaFin = endDate,
 						idTour = Convert.ToInt32(resultUsuarioTour["idTour"]),
-						idUsuario = Convert.ToInt32(resultUsuarioTour["idUsuario"]),
+						idUsuarioFacebook = Convert.ToInt64(Convert.ToString(resultUsuarioTour["idUsuarioFacebook"])),
 						request = Convert.ToString(resultUsuarioTour["request"])
 					};
 
@@ -1707,7 +1710,6 @@ namespace SncPucmm.Database
 					var usuarioLocalizacion = new LocalizacionUsuario()
 					{
 						idNodo = Convert.ToInt32(resultUsuarioLocalizacion["idNodo"]),
-						idUsuarioFacebook = Convert.ToString(resultUsuarioLocalizacion["idUsuario"]),
 						fechaLocalizacion = localizationDate
 					};
 
@@ -1734,8 +1736,7 @@ namespace SncPucmm.Database
 				}
 			}
 
-			TransactionalQuery("INSERT INTO UsuarioLocalizacion VALUES (" + ++id + "," + idNodo + ",'" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "','" + FB.UserId +"')");
-
+			TransactionalQuery("INSERT INTO UsuarioLocalizacion VALUES (" + ++id + "," + idNodo + ",'" + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "')");
 		}
 
 		public void Dispose()

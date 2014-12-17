@@ -30,7 +30,7 @@ namespace SncPucmm.View
 
         void Start()
         {
-            itemTreeView = Resources.Load("GUI/TreeViewScrollItem") as GameObject;
+            
         }
 
         new void Update()
@@ -94,12 +94,14 @@ namespace SncPucmm.View
         }
 
 
-        public void SetTextSearch(Transform searchBox)
+        public void SetTextSearch(Transform searchBox, GameObject template)
         {
             this.searchBox = searchBox;
             this.textSeach = searchBox.GetComponent<UIInput>();
             isSearchBoxActive = false;
             previousText = string.Empty;
+
+            itemTreeView = template;
         }
 
         #endregion

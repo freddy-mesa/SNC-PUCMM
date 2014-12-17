@@ -12,7 +12,6 @@ namespace SncPucmm.Model.Domain
         public int? idLocalizacionUsuario;
         public DateTime? fechaLocalizacion;
         public int? idNodo;
-        public string idUsuarioFacebook;
         
         #endregion
 
@@ -31,14 +30,10 @@ namespace SncPucmm.Model.Domain
         {
             JSONObject json = new JSONObject();
 
-            if (idLocalizacionUsuario.HasValue)
-                json.AddField("id", idLocalizacionUsuario.Value);
             if (fechaLocalizacion.HasValue)
                 json.AddField("fechaLocalizacion", fechaLocalizacion.Value.ToString("dd/MM/yyyy HH:mm:ss"));
             if (idNodo.HasValue)
                 json.AddField("idNodo", idNodo.Value);
-            if (idUsuarioFacebook != null)
-                json.AddField("idUsuario", idUsuarioFacebook);
 
             return json;
         }

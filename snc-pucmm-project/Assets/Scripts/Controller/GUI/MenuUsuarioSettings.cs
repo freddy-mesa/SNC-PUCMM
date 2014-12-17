@@ -61,7 +61,7 @@ namespace SncPucmm.Controller.GUI
         {
             MenuManager.GetInstance().AddMenu(new MenuReceiveShareLocationRequest("MenuReceiveShareLocationRequest"));
             UINotification.StartNotificationLoading = true;
-            WebService.Instance.GetFriends();
+            WebService.Instance.GetSharedFriendLocationNotification();
         }
 
         private void OnToucnExitButton(object sender, TouchEventArgs e)

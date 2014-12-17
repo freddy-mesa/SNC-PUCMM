@@ -18,7 +18,8 @@ namespace SncPucmm.Controller
         #region Atributos
 
         private static WebService instance = null;
-        private const string SERVER_URL = "http://localhost:8080/SNCWeb";
+        //private const string SERVER_URL = "http://23.88.105.3:9001";
+        private const string SERVER_URL = "http://localhost:8080/SNCWeb/";
         
         #endregion
 
@@ -128,7 +129,7 @@ namespace SncPucmm.Controller
 
         void Update()
         {
-            if (IsEnterConnectWithFacebook)
+            if (!FB.IsInitialized && IsEnterConnectWithFacebook)
             {
                 IsEnterConnectWithFacebook = false;
                 StartCoroutine(ConnectWithFacebook());
@@ -140,11 +141,11 @@ namespace SncPucmm.Controller
             //    StartCoroutine(UpdateModelService());
             //}
 
-            //if (FB.IsInitialized && FB.IsLoggedIn && IsEnterToUpdateTours)
-            //{
-            //    IsEnterToUpdateTours = false;
-            //    StartCoroutine(UpdateToursService());
-            //}
+            if (FB.IsInitialized && FB.IsLoggedIn && IsEnterToUpdateTours)
+            {
+                IsEnterToUpdateTours = false;
+                StartCoroutine(UpdateToursService());
+            }
 
             if (FB.IsInitialized && FB.IsLoggedIn && IsEnterSharedLocationNotification)
             {
@@ -168,7 +169,7 @@ namespace SncPucmm.Controller
 
             //Obtener la ultima actualizacion del servidor
             yield return WebService.GET(
-                SERVER_URL + "/model/update", 
+                SERVER_URL + "/nodo/actualizar", 
                 (status, response) => 
                 {
                     if (status) responseJson = response;
@@ -210,6 +211,8 @@ namespace SncPucmm.Controller
 
         private IEnumerator UpdateToursService()
         {
+            yield return new WaitForSeconds(1f);
+
             JSONObject json;
 
             using (var sqlite = new SQLiteService())
@@ -229,15 +232,15 @@ namespace SncPucmm.Controller
                 {
                     if (status) 
                     {
+                        Debug.Log("Peticion updateSubscriber -> " + response);
+
                         json = new JSONObject(response);
 
-                        Debug.Log("Peticion de UpdateTours al WebService: " + json.ToString());
-
                         //Hacer un update a la base de datos
-                        using (var sqlService = new SQLiteService())
-                        {
-                            sqlService.UpdateTours(json);
-                        } 
+                        //using (var sqlService = new SQLiteService())
+                        //{
+                        //    sqlService.UpdateTours(json);
+                        //} 
                     }
                     
                 }
@@ -341,7 +344,7 @@ namespace SncPucmm.Controller
 
                             id++;
                             sqliteService.TransactionalQuery(
-                                "INSERT INTO Usuario VALUES (" + id + "," + user.idUsuarioFacebook + ",'" + user.nombre + "','" + user.apellido + "','" + user.email + "','" + user.gender + "');"
+                                "INSERT INTO Usuario VALUES (" + id + ",'" + user.idUsuarioFacebook + "','" + user.nombre + "','" + user.apellido + "','" + user.email + "','" + user.gender + "');"
                             );
                         }
                     }
@@ -384,6 +387,8 @@ namespace SncPucmm.Controller
             form.AddField("last_name", user.apellido);
             form.AddField("gender", user.gender);
             form.AddField("email", user.email);
+
+            Debug.Log(form.ToString());
 
             yield return WebService.POST(SERVER_URL + "/usuario/crear", form, (status, response) => { });
         }
@@ -440,6 +445,11 @@ namespace SncPucmm.Controller
                         }
 
                         usuarioFriendsFacebook.Add(id, name);
+
+                        //if (Application.platform == RuntimePlatform.WindowsEditor)
+                        //{
+                        //    StartCoroutine(SendUserFacebookId(new Usuario() { idUsuarioFacebook = id, apellido = item.GetField("last_name").str, nombre = item.GetField("fist_name").str }));
+                        //}
                     }
                 }
 
@@ -552,8 +562,16 @@ namespace SncPucmm.Controller
 
         public IEnumerator ReceiveFollowingRequest()
         {
-            var idUser = FB.UserId;
-
+            var idUser = "";
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                idUser = "10152587482388668";
+            }
+            else
+            {
+                idUser = FB.UserId;
+            }
+            
             WWWForm form = new WWWForm();
             form.AddField("id", idUser);
 
@@ -561,9 +579,8 @@ namespace SncPucmm.Controller
             {
                 if (status)
                 {
+                    Debug.Log("notifyFollowingRequest -> " + response);
                     var json = new JSONObject(response);
-
-                    Debug.Log(json.print(true));
 
                     if (json.list.Count > 0)
                     {
@@ -621,12 +638,21 @@ namespace SncPucmm.Controller
 
         public IEnumerator UserFriendsPendingToFollow()
         {
-            var userId = Convert.ToInt32(FB.UserId);
+            var idUser = "";
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                idUser = "10152587482388668";
+            }
+            else
+            {
+                idUser = FB.UserId;
+            }
+
             Dictionary<long, string> usuarioFriendsFacebook = new Dictionary<long, string>();
 
             using (var sqlite = new SQLiteService())
             {
-                var query = "SELECT idFollower, nombre FROM UserFollowingNotification WHERE idUsuarioFacebook = '" + userId + "'";
+                var query = "SELECT idFollower, nombre FROM UserFollowingNotification WHERE idUsuarioFacebook = '" + idUser + "'";
                 using (var reader = sqlite.SelectQuery(query))
                 {
                     while (reader.Read())
@@ -665,7 +691,7 @@ namespace SncPucmm.Controller
                 //Agregando la posicion relativa del hijo con relacion al padre
                 friendItem.transform.localPosition = new Vector3(
                     itemTemplate.localPosition.x,
-                    itemTemplate.localPosition.y - 60f * k,
+                    itemTemplate.position.y - 60f * k,
                     itemTemplate.localPosition.z
                 );
 
@@ -674,7 +700,7 @@ namespace SncPucmm.Controller
 
                 var menu = MenuManager.GetInstance().GetCurrentMenu() as MenuReceiveFollowingRequest;
 
-                var button = new Button("Button" + friendItem.name);
+                var button = new Button(friendItem.name);
                 button.OnTouchEvent += new OnTouchEventHandler(menu.OnTouchButton);
 
 
@@ -686,15 +712,25 @@ namespace SncPucmm.Controller
             }
         }
         
-        public void SendFollowingAcceptance(long idFollowed, long idFollower, string status)
+        public void SendFollowingAcceptance(long idFollower, string status)
         {
-            StartCoroutine(FollowingAcceptance(idFollowed,idFollower,status));
+            StartCoroutine(FollowingAcceptance(idFollower,status));
         }
 
-        public IEnumerator FollowingAcceptance(long idFollowed, long idFollower, string acceptanceStatus)
+        public IEnumerator FollowingAcceptance(long idFollower, string acceptanceStatus)
         {
             WWWForm form = new WWWForm();
-            form.AddField("followed", idFollowed.ToString());
+            var idUser = "";
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                idUser = "10152587482388668";
+            }
+            else
+            {
+                idUser = FB.UserId;
+            }
+
+            form.AddField("followed", idUser);
             form.AddField("follower", idFollower.ToString());
             form.AddField("status", acceptanceStatus);
 
@@ -705,7 +741,7 @@ namespace SncPucmm.Controller
                     {
                         using (var sqlite = new SQLiteService())
                         {
-                            sqlite.TransactionalQuery("DELETE FROM UserFollowingNotification WHERE idUsuarioFacebook = '" + idFollowed + "' and idFollower = '" + idFollower + "'");
+                            sqlite.TransactionalQuery("DELETE FROM UserFollowingNotification WHERE idUsuarioFacebook = '" + idUser + "' and idFollower = '" + idFollower + "'");
                         }
                     }
                 }
@@ -730,22 +766,27 @@ namespace SncPucmm.Controller
 
             Dictionary<long, object> followedFriends = new Dictionary<long,object>();
 
-            yield return WebService.POST(SERVER_URL + "/usuario/friends", form,
+            yield return WebService.POST(SERVER_URL + "/usuario/friendFindRequest", form,
                 (status, response) =>
                 {
                     if (status) 
                     {
+                        Debug.Log("friendFindRequest -> " + response);
                         var data = new JSONObject(response);
-                        for (int i = 0; i < data.list.Count; ++i)
+
+                        if (data.list.Count > 0)
                         {
-                            var followed = Convert.ToInt64(data.list[i].GetField("id").str);
-                            var nombre = Convert.ToString(data.list[i].GetField("nombre").str);
-                            var ubicacion = Convert.ToString(data.list[i].GetField("ubicacion").str);
-                            var fecha = Convert.ToString(data.list[i].GetField("fecha").str);
+                            for (int i = 0; i < data.list.Count; ++i)
+                            {
+                                var followed = Convert.ToInt64(data.list[i].GetField("id").str);
+                                var nombre = Convert.ToString(data.list[i].GetField("nombre").str);
+                                var ubicacion = Convert.ToString(data.list[i].GetField("ubicacion").str);
+                                var fecha = Convert.ToString(data.list[i].GetField("fecha").str);
 
-                            var obj = new { nombre, ubicacion, fecha };
+                                var obj = new { nombre, ubicacion, fecha };
 
-                            followedFriends.Add(followed, obj);
+                                followedFriends.Add(followed, obj);
+                            }
                         }
                     }
                 }
@@ -791,7 +832,7 @@ namespace SncPucmm.Controller
 
                 var menu = MenuManager.GetInstance().GetCurrentMenu() as MenuFindFriendSelection;
 
-                var button = new Button("Button" + friendItem.name);
+                var button = new Button(friendItem.name);
                 button.ObjectTag = new { ubicacion, nombre, texture, fecha };
                 button.OnTouchEvent += new OnTouchEventHandler(menu.OnTouchButton);
                 menu.GetButtonList().Add(button);
@@ -819,7 +860,7 @@ namespace SncPucmm.Controller
 
             Dictionary<long, string> friends = new Dictionary<long, string>();
 
-            yield return WebService.POST(SERVER_URL + "/usuario/friends", form,
+            yield return WebService.POST(SERVER_URL + "/usuario/friendsShareLocationRequest", form,
                 (status, response) =>
                 {
                     if (status)
@@ -843,10 +884,10 @@ namespace SncPucmm.Controller
             yield return new WaitForEndOfFrame();
 
             //Get Item Template
-            Transform itemTemplate = (Resources.Load("GUI/FriendFollowingItem") as GameObject).transform;
+            Transform itemTemplate = (Resources.Load("GUI/FriendShareLocationItem") as GameObject).transform;
 
             //Get Parent
-            Transform parent = UIUtils.FindGUI("MenuSendFollowingRequest/ScrollView").transform;
+            Transform parent = UIUtils.FindGUI("MenuShareLocationFriendSelection/ScrollView").transform;
 
             int k = 0;
             foreach (var usuario in friends)
@@ -918,7 +959,7 @@ namespace SncPucmm.Controller
 
         private IEnumerator ShareLocationRequest(WWWForm form)
         {
-            yield return WebService.POST(SERVER_URL + "/usuario/followRequest", form, (status, response) => { });
+            yield return WebService.POST(SERVER_URL + "/usuario/sharedLocationRequest", form, (status, response) => { });
         }
 
         #endregion
@@ -927,7 +968,15 @@ namespace SncPucmm.Controller
 
         private IEnumerator ReceiveSharedFriendLocatioNotification()
         {
-            var idUser = FB.UserId;
+            var idUser = "";
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                idUser = "10152587482388668";
+            }
+            else
+            {
+                idUser = FB.UserId;
+            }
 
             WWWForm form = new WWWForm();
             form.AddField("id", idUser);
@@ -936,9 +985,8 @@ namespace SncPucmm.Controller
             {
                 if (status)
                 {
+                    Debug.Log("notifySharedLocationRequest -> " + response);
                     var json = new JSONObject(response);
-
-                    Debug.Log(json.print(true));
 
                     if (json.list.Count > 0)
                     {
@@ -949,8 +997,8 @@ namespace SncPucmm.Controller
                             {
                                 var idUsuario = Convert.ToInt64(notification.GetField("id").str);
                                 var nombre = notification.GetField("nombre").str;
-                                var nodo = Convert.ToInt32(notification.GetField("idNodo").n);
-                                var mensaje = notification.GetField("message").str;
+                                var nodo = Convert.ToInt32(notification.GetField("nodo").n);
+                                var mensaje = notification.GetField("mensaje").str;
 
                                 notificationToSave.Add(idUsuario, new { nombre, nodo, mensaje });
 
@@ -958,7 +1006,7 @@ namespace SncPucmm.Controller
                             }
 
                             //Limpiar la tabla de notificaciones
-                            sqlite.TransactionalQuery("DELETE FROM UserLocalizationNotification");
+                            sqlite.TransactionalQuery("DELETE FROM UserSharedLocationNotification");
 
                             //Insertar en la base de datos
                             int id = 0;
@@ -972,7 +1020,7 @@ namespace SncPucmm.Controller
                                 var nombre = Convert.ToString(notification.Value.GetType().GetProperty("nombre").GetValue(notification.Value, null));
                                 var mensaje = Convert.ToString(notification.Value.GetType().GetProperty("mensaje").GetValue(notification.Value, null));
 
-                                queryBuilder.Append("INSERT INTO UserLocalizationNotification VALUES (" + id + ",'" + idUser + "','" + notification.Key + "','" + nombre + "'," + nodo + ",'" + mensaje + "');");
+                                queryBuilder.Append("INSERT INTO UserSharedLocationNotification VALUES (" + id + ",'" + idUser + "','" + notification.Key + "','" + nombre + "'," + nodo + ",'" + mensaje + "');");
                             }
 
                             sqlite.TransactionalQuery(queryBuilder.ToString());
@@ -1004,10 +1052,20 @@ namespace SncPucmm.Controller
 
         public IEnumerator SharedFriendLocationNotification()
         {
+            var idUser = "";
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                idUser = "10152587482388668";
+            }
+            else
+            {
+                idUser = FB.UserId;
+            }
+
             Dictionary<long, object> usuarioFriendsFacebook = new Dictionary<long, object>();
             using (var sqlite = new SQLiteService())
             {
-                var query = "SELECT idFriend, nombre, idNodo, mensaje FROM UserSharedLocationNotification WHERE idUsuarioFacebook = '" + FB.UserId + "'";
+                var query = "SELECT idFriend, nombre, idNodo, mensaje FROM UserSharedLocationNotification WHERE idUsuarioFacebook = '" + idUser + "'";
                 using (var reader = sqlite.SelectQuery(query))
                 {
                     while (reader.Read())
@@ -1025,15 +1083,15 @@ namespace SncPucmm.Controller
             Transform itemTemplate = (Resources.Load("GUI/PendingFriendFollowingItem") as GameObject).transform;
 
             //Get Parent
-            Transform parent = UIUtils.FindGUI("MenuSharedLocationRequest/ScrollView").transform;
+            Transform parent = UIUtils.FindGUI("MenuReceiveShareLocationRequest/ScrollView").transform;
 
             int k = 0;
             foreach (var usuario in usuarioFriendsFacebook)
             {
                 var id = usuario.Key;
-                var url = ("https://graph.facebook.com/" + id + "/picture?width=128&height=128&access_token=" + FB.AccessToken);
+                var url = ("https://graph.facebook.com/" + id + "/picture?width=50&height=50&access_token=" + FB.AccessToken);
                 WWW photo = new WWW(url);
-                Texture2D textFb2 = new Texture2D(128, 128, TextureFormat.DXT5, false); //TextureFormat must be DXT5
+                Texture2D textFb2 = new Texture2D(50, 50, TextureFormat.DXT5, false); //TextureFormat must be DXT5
 
                 yield return photo;
 
@@ -1053,7 +1111,7 @@ namespace SncPucmm.Controller
                 );
 
                 var nombre = Convert.ToString(usuario.Value.GetType().GetProperty("nombre").GetValue(usuario.Value, null));
-                var nodo = Convert.ToString(usuario.Value.GetType().GetProperty("idNodo").GetValue(usuario.Value, null));
+                var nodo = Convert.ToInt32(usuario.Value.GetType().GetProperty("nodo").GetValue(usuario.Value, null));
                 var mensaje = Convert.ToString(usuario.Value.GetType().GetProperty("mensaje").GetValue(usuario.Value, null));
                 
 
@@ -1062,10 +1120,10 @@ namespace SncPucmm.Controller
 
                 var menu = MenuManager.GetInstance().GetCurrentMenu() as MenuReceiveShareLocationRequest;
 
-                var button = new Button("Button" + friendItem.name);
+                var button = new Button(friendItem.name);
                 button.OnTouchEvent += new OnTouchEventHandler(menu.OnTouchButton);
 
-                button.ObjectTag = new { follower = id, name = usuario.Value, texture = textFb2, index = k, nodo, mensaje };
+                button.ObjectTag = new { index = k, nodo, mensaje };
 
                 menu.GetButtonList().Add(button);
 
@@ -1081,7 +1139,14 @@ namespace SncPucmm.Controller
         private IEnumerator SendSharedFriendsLocation(object message)
         {
             WWWForm form = new WWWForm();
-            form.AddField("id", FB.UserId);
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                form.AddField("id", "10152587482388668");
+            }
+            else
+            {
+                form.AddField("id", FB.UserId);
+            }
 
             var friends = Convert.ToString(message.GetType().GetProperty("friends").GetValue(message, null));
             form.AddField("friends", friends);

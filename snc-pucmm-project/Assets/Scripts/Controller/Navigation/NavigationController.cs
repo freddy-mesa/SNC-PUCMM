@@ -96,7 +96,7 @@ namespace SncPucmm.Controller.Navigation
                         if (!isSelectCurrentIndexSectionTour)
                         {
                             isSelectCurrentIndexSectionTour = true;
-                            //tourController.SetStartSectionTour(i);
+                            tourController.SetStartSectionTour(i);
 
                             indexCurrentTourPathData = tourPath.FindIndex(path => path.StartNode.Name == desde);
                             startTourNode = desde;
